@@ -1,0 +1,50 @@
+Nonlinear regression:       
+    Represent a relationhip that can be modelled nonlinearly 
+    polynomial, exponential, logarithmic, or any other nonlinear function 
+    useful for more complex relationships   
+        straight lines will underfit the data 
+
+
+Polynomial Regression:
+    The relationship b/w X and y is a polynomial function of nth degree 
+
+    To do this, we use ordinary linear regression to indirectly fit data to polynomial expressions 
+
+    ^ same can be extended to nonlinear regression in general; the inputs are based on functions of the given features 
+        but it doesnt necessarily reduce to linear regression the way polynomial regression does 
+
+
+    For simple polynomial regression, with a degree of 3:
+        y = a + bx + cx^2 + dx^3
+
+        basically, we transform this as follows:
+
+        x1 = x 
+        x2 = x^2 
+        x3 = x^3 
+
+        then we can use linear regression to fit:
+        y = a + bx1 + cx2 + dx3
+        ^ we have linearized the model, and use multiple linear regression here 
+
+        That is, polynomial regression has a nonlinear dependence on the input features 
+        BUT a linear dependence on the regression coefficinets (since it can be transformed to a linear regression problem)
+
+        
+
+
+    Note that with a sufficiently high degree we can make the polynomial pass through every point 
+        But this is overfitting 
+    
+
+Some relationships cannot be modelled as polynomials
+    e.g. exponential, logarithmic, or periodic (sinusoidal) relationships
+    e.g. y = a + be^x
+
+    There are also "piecewise" type relationships   
+        e.g. up to a certain point it is linear, then after that it is logarithmic (diminshing returns)
+
+
+    To optimize these other types of nonlinear models (more complex even than a simple exp/log/piecewise relationship), 
+    use gradient descent with the regression of ur choice 
+        - regression trees, random forests, nns, SVM (support vector machines), gradient boosting machines, knn 
