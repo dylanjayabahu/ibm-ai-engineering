@@ -1,0 +1,97 @@
+AI = simulating cognitive abilities of humans
+AI includes
+    - Computer Vision (CV)
+    - Natural language processing (NLP)
+    - Generative Ai
+    - Machine Learning (ML)
+        - Deep learning 
+
+ML:
+    subset of AI 
+    uses algos
+    requires feature engineering 
+
+    DL:
+        subset of ML 
+        uses multi layered neural networks 
+        automatically extracts features from large data     
+
+    lets computers learn, identify patterns, make decisions
+
+    algos use computational methods for learning (no fixed algo)
+
+
+
+ML Paradigms
+    Supervised learning: train on labelled data to be applied to new data
+    Unsupervised learning: train on unlabelled data; finds patterns in the data
+    Semisupervised learning: small subset of data is already labelled; add new labels that it makes with high confidence iteratively 
+    Reinforcement learning: simulates an agent interacting with env and learns from feedback
+
+
+ML Techniques 
+    Classification: predicts classor category of a case 
+    Regression: estimates/predicts continuous values 
+    Clustering: grouping similar data (e.g. customer segmentation)
+    Association: find items or events that co-occur 
+    Anomoly detection: discovers unusual or abnormal cases (e.g. fraud detection)
+    Sequnce mining: predict the next event (e.g. markov chain)
+    Dimension reducing: reduce data size; reduce num features 
+    Recommendation sytems: associates ppls preferences with others and recommends new items
+
+
+ML model lifecycle
+    - problem definition
+    - data collection
+    - data preparation
+        exploratory data analysis
+        data partitioning
+    - model development and evaluation
+        use existing frameworks
+    - model deployment
+
+
+    ETL = extract, transform, load
+        (collect data from various sources then prep and clean and store as ds)
+
+
+ML Libraries: pandas, skicit learn 
+ML Languages: python, r, 
+    also julia, scala, java, js 
+
+
+Tools for ml
+    Data prep/wrangling:
+        pandas - data frames/data wrangling
+        numpy - efficient numerical computation on arrs
+        (also PostgreSQL Hadoop spark r-ggplot2 outside of python)
+
+    Data vis:
+        Matplotlib - customizable plots/interactive visualization
+        Seaborn - statistical graphics 
+
+    ML:
+        scipy (built on numpy)
+        scikit learn - classical ml models
+
+    DL:
+        tensorflow
+        keras 
+        pytorch 
+        theano
+
+    CV:
+        OpenCV 
+        skikit-image (built on scipy)
+        torchvision 
+
+    NLP:
+        NLTK 
+        textblob
+        stanza
+
+    Gen AI:
+        hugging face transformers 
+        chatgpt
+        dall-e 
+        pytorch 

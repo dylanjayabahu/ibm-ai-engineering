@@ -1,0 +1,32 @@
+Regression:
+    supervised learning model 
+    models relationship b/w continuous target variable and explanatory features 
+
+    Simple/multiple regerssion
+
+
+Simple Regression
+    single feature variable estimates single dependent variable  
+    can be linear / nonlinear (e.g. quadratic)
+
+Multiple regression
+    several variables estimate single dependent variable
+    can also be linear (planar) /nonlinear 
+
+
+Applications 
+    sales forecasting 
+    predict price of house based on features 
+    predict when machine/car will require maintenance
+    predict income
+
+
+Regression algos 
+    Linear/polynomial regression 
+    Random forest 
+    Extreme Gradient Boosting (XGBoost)
+    KNN 
+    Support vector machines 
+    Neural nets
+
+

@@ -1,0 +1,25 @@
+Linear Regression:
+    models linear relationship b/w continuous target variable and explanatory features 
+
+    Simple linear regression: single feature variable (X) estimates the dependent variable (y)
+
+        y_hat = a + bx_1
+
+        residual error: vert distance b/w regression line and actual point (|yhat - y|)
+        
+        can also use MSE = avg [(yhat-y)^2]
+
+        ordinary least squares (OLS) regression:
+            find the line that minimizes average residual error
+
+            can calculate with xbar, ybar
+                ybar = avg(y)
+                xbar = avg(x)
+            
+            b = sum [ (xbar - xi)(ybar - yi) ] / sum [ (xi-xbar)^2]
+            a = ybar - b*xbar
+
+        linear regression finds line which minimizes MSE/OLS
+
+        prediction is just plugging x in and finding y; 
+            hence OLS is fast, but could be far too simplistic

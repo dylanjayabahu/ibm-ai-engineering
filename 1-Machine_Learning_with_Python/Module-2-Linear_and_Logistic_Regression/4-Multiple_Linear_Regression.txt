@@ -1,0 +1,59 @@
+Multi linear regression 
+    extension of simple linear regression 
+    uses 2 or more features to estimate a dependent variable 
+
+    y_hat = a + b*x1 + c*x2 + ...
+ 
+    X = [1, x1, x2, x3 ...] <- the constnat 1 is there so we can take the dot product; it is corresponds to the bias term 
+
+    weights: Theta = [a, b, c, ...]
+
+    y_hat = X * weights (dot product)
+
+
+    multi linear regression produces a better model than simpel 
+
+    too many variables can cause overfitting 
+
+    categorical variables can be converted to numerical variables 
+        e.g. xi = 0, 1, 2, ... n etc for n possible cateogries (a single variable with a number encoding the category)
+        or xn = 0/1 for each of the n categories (a binary variable for each category)
+
+
+Applications 
+    predict outcomes and explain relationships 
+
+    what if scenarios: "hypothetically, what will happen if we change one or more features"
+        can yeild inaccurate results:
+            if u consider impossible scenarios
+            if u extrapolate scenarios too distant (e.g. the relationship is locally linear but truly quadratic)
+            if model depends a group of correlated variables (e.g. height/weight are correlated, but ur hypothetical drastically changes height but not weight)
+                ^ as such, we remove redundant variables from the regression analysis
+    
+
+    We consider variables that are  
+        most understood
+        controllable
+        most correlated with target 
+
+
+
+
+For simple linear regression, the regression defines a line 
+For multi linear regression (2 input features), the regression defines a plane  
+    beyond 2 dims it defines a hyperplane 
+
+
+
+The weight vector, Theta, is found by minimizing MSE 
+    can also used SE (total squared error), which is proportional to MSE; minimizing SE = minimizing MSE
+
+    Least Squares Linear Regression:
+        choosing weight vector by minimizing MSE (minimizing SE)
+
+        Ordinary Least Squares:
+            - uses linear algebra to calculate optimized weight vector (the one producing lowest MSE)
+
+        Gradient Descent:
+            - start with random coefficients 
+            - roll down the loss landscape until u reach a local minimum 
