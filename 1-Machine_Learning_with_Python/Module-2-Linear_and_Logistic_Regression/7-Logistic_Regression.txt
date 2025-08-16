@@ -1,0 +1,119 @@
+Logistic Regression: statistical modelling technique, gives probability of belonging to 1/2 classes
+    - ML: binary classifier based on statistical logistic regression 
+        => class 0 if prob < threshod, and 1 otherwise 
+
+        ^ it is both a probability predictor and binary classifier 
+
+use if:
+    - target data is binary 
+    - probability is needed (e.g. prob of customer buying product)
+
+
+If data is linearly separable, decision boundary is a line/plane/hyperplane
+    e.g. class 1 if: a + bx1 + cx2 > 0, class 0 otherwise 
+
+
+    fit a line through the data; if y > threshold choose class 1, else class 0
+        ^ otherwisethe y value will increase/decrease indefinitely at the extremes; we want to limit to 0-1
+    
+    this gives a step function (no real probability, not smooth)
+
+
+To get a smooth function (unlike the step function), we use sigmoid:
+    sigmoid(x) = 1/(1+e^-x)
+
+    ^ aka the logistic function=> hence logistic regression
+    the logit function is the inverse of sigmoid 
+
+    this is a better way to compress range from 0-1, 
+    as it gives a probability that is closer to 0 as x gets more negative
+    and closer to 1 as x gets more positive 
+    at 0 the prob is 50% 
+
+    now we can determine the chance of belonging to either class, and still use a threshold to pick one 
+     => s(x) chance of being class 1, and 1-s(x) chance of being class 0
+
+
+
+
+Training a Logistic Regression Model:
+
+    goal is to find parameters that map input features to target outcomes 
+    so we can predict class with minimal error 
+    we do this by finding the parameters (theta) that minimize the cost function
+        ^ cost function is log-loss, aka crossentropy loss 
+
+
+
+    - choose a starting set of parameters for theta (randomly)
+    - predict prob that class = 1 for each data 
+    - calculate prediction error (loss function)
+    - update theta to reduce prediction error 
+    - repeat until small log-loss value, or for set number of iterations
+
+
+    The process of making a decision boundary on sigmoid(a + bx) [as described for linearly separable data above]
+    is a preliminary logistic regression model; it is not necessarily the best
+        ^ for this we need logloss 
+
+
+Log-Loss (crossentropy loss) cost function:
+    Log-loss = -1/N * Sum[ yi * log(pi) + (1-yi)log(1-pi) ]
+
+    basically, the negative average over each i:
+        yi*log(pi) + (1-yi)*log(1-pi)
+    
+    pi is the ith prediction 
+    yi is the ith label 
+
+    negative in front because log is negative for xE(0,1)
+
+    for confident correct predictions, small log-loss
+        when confidently correct, yi ~= pi, 
+        if yi = 0, pi=~0, the first term will vanish (yi=0), and the second term goes to 0 (1-pi =~ 1 => log(1-pi) =~ 0)
+        if yi = 1, pi=~1, the first term tends to 0 (pi=~1 => log(pi) =~ 0), and the second term vanishes (1-yi = 0)
+    for confident incorrect predictions, large log loss
+        when confidently incorrect, yi = 1-pi
+        if yi = 0, pi=~1. The first term vanishes (yi = 0), and the second term blows up (1-pi=~0 => log(1-pi) =~ -inf) <- -inf is why we multiply by -1 after 
+        if yi = 1, pi=~0. The first term blows up (pi =~ 0, log(pi) =~ -inf) and the second term vanishes (1-yi = 0)
+
+    
+    we stop training when:
+        we achieve satisfactory log loss 
+        gradient norm ≈ 0
+        number of iterations / epochs exceeded
+        validation loss stops decreasing (early stopping)
+
+
+Gradient Descent 
+    finds local minimum of a function (in this case the function is log loss)
+    adjusts the parameters using the derivative of log-loss function 
+
+    depends on a learning rate, which defines who far its allowed to step 
+
+    gradient vector points in direction of ascent 
+    negative gradient vector points in direction of descent
+
+    we step using negaive gradient scaled by learning rate
+    as the slope diminishes to 0 we make smaller/diminishing steps, so we know to stop training 
+
+
+    Gradient descent calculated over the entire dataset 
+
+    slow descent on large datasets 
+        can combat by incraesing lr, but may cause u to skip over minima, so u may not converge
+        can also combat by calculating gradient by a representative subset instead of whole thing  <-- Stochastic gradient descent
+
+
+    
+    Stocahstic Gradient Descent (SGD)
+        variation of gd 
+        faster but can be less accurate
+        uses a random subset of the data and scales well 
+        likely to ovelrook local minima and find global minimum 
+        converges quickly to global minimum, but can wander around
+
+
+        can improve convergence by 
+            - decrease down lr as u get closer to global minumum (makes gd slower)
+            - or increase size of data sample used to calculate gradient (also makes gd slower)
