@@ -1,0 +1,38 @@
+Classification:
+    - supervised ml method 
+    - use trained models to predict labels on new data
+    - labels are a categorical variable with discrete values 
+
+
+Supervised Learning:
+    - understand data in context when answering question 
+        ensures accuracy 
+    - model adjusts data to fit into algorithm and classifies it 
+
+Applications of classification 
+    can be used anywhere there is a mapping of feature and target variables; target is discrete
+    e.g. email filtering, speech to text, handwriting recognition, biometrics, document classification, 
+    churn prediction, customer segmentation, advertising (respond/not)
+
+
+Classifiation Algos 
+    - naive bayes 
+    - logistic regresion 
+    - decision trees
+    - knn 
+    - support vector machines 
+    - neural networks 
+
+Multiclass prediction 
+    - cant be done by certain algos that only work for binary  (e.g. logistic regression)
+        ^ can still use these algos as components
+
+        1 verse all:
+            a binary classifier for each class 
+
+        1 verse 1:
+            consider all possible pairs of classes 
+            have a binary classifier for each pair 
+            final decision made by voting scheme (class predicted by most wins)
+
+            to avoid ties use better schemes; e.g. weight votes by confidence
