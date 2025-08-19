@@ -1,0 +1,49 @@
+Basically a decision tree that predicts continuous values instead of discrete classes
+    target is float instead of categorical
+    split based on variance reduction instead of gini/entropy
+    predict based on average of targets instead of majority vote 
+
+
+Training/building method is same 
+    this time we reduce variance to increase info gain, not gini or entropy
+
+    when our final predict is just mean the values of any data in that leaf node 
+        could use median, if data is skewed 
+            median is more expensive, so for normally distributed data use mean (mean =~ median here)
+        could also use majority vote but not rlly used
+
+    we asses based on MSE; MSE is essentially measuring the variance (same calculation)
+
+    for quality of split, instead of before:
+        info_gain = entropy_before - weighted_entropies_after
+        where higher info gain = higher split quality
+    we use:
+        weighted_mses_after
+
+        weighted_mses_after = find mse for each node and take the average weighted by number in each node
+
+        lower weighted_mse_after = higher split quality
+        
+
+    Splitting:
+
+        based on discrete features:
+            for the binary features, just separate into two classes and split based on that 
+            for multiclass features, use ova or ovo 
+
+    
+        based on continuous features:
+            must choose a threshold, alpha
+            e.g.:
+                - sort the the data, remove any duplicates 
+                    now, for a specific feature x:
+                    x_i < x_{i+1} 
+                - possible thresholds will be the midpoints b/w consequtive elements of the list 
+                    alpha_i = average(x_i, x_{i+1})
+                
+                - choose the alpha_i that gives the best split quality by exhaustive search
+            
+            or: 
+                - select sparse subset of the thresholds, alpha_i but not all possible i
+                - this assumes the target values are uniformly distributed 
+                - exauhstively search only this subset so its quicker
