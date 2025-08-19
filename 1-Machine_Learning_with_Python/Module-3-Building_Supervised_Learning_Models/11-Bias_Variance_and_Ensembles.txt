@@ -1,0 +1,66 @@
+Bias = how accurate the predictions are; how on target predictions are (accuracy)
+    bias = average_predictions - average_actuals
+        ^ perfect predictors has 0 bias 
+
+
+Variance = how spread out predictions are (precision)
+    high variance means sensitive to training data changes; overfit and track noise/outliers 
+
+    robust and genrealizable models have lower variance 
+
+good model has low bias and low variance 
+
+
+u can plot both bias (or bias^2) and variance against model complexity 
+
+    with low model complexity, u get low variance but high bias
+        => underfitting
+        weak learner; slightly better than random guessing
+    with high model complexity, u get low bias but high variance   
+        => overfitting
+        strong learner
+
+
+    there is a crossover point where the two curves intersect which is at the ideal model complexity 
+    there will always be some error that is unavoidable 
+
+
+Mitigating Bias and Variance 
+    Bagging or Boosting 
+    Ensemble learning = combining sevearl base models to make an improved learner
+        Trees are commonly used as base learners for ensembles
+        bias/variance are easily controlled by the trees depth 
+
+
+Bagging:
+    Bagging / Boostrap aggregating:
+        average models across numerous iterations on subsets of training data 
+            ^ the random subsets are bootstraps
+
+            averaging reduces noise => lower variance
+
+    e.g. Random Forrest: 
+        using bagging for training several decision trees on bootratps of the training data
+            focus on reducing bias; the ensemble later will reduce the variance
+
+        aggregating several shallow trees as in RF reduces variance while only slightly increasing bias 
+    
+
+Boosting:
+    build a series of weak learners 
+    each learner corrects previous learneres errors
+    automatically reduce prediction error
+    final model is a weighted sum of all the learners
+
+    in each iteration, if u classified data incorrectly that learner weight is increased, and vice versa
+        
+    Gradient Boosting, XGBoost, and AdaBoost are all boosting algos
+
+
+bagging = reduce variance (by uing high variance, low bias base learners (e.g. deep trees))
+    decreases model complexity
+    base learners trained in parallel on boostraps of the data 
+
+boosting = reduce bias (by using low variance, high bias baselearners (e.g. shallow trees))
+    increases model complexity 
+    base learners trained in series on full data
