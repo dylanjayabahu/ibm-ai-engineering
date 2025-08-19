@@ -1,0 +1,57 @@
+SVM = support vector machine 
+    supervised learning 
+    for classification or regression 
+
+    each data is a point in multidimentional space 
+    SVM finds the hyperplane separating the data into groups 
+        goal is to find the largest margin; this will make it do better on test data
+    
+
+    can use a soft margin as data is noisy and cannot be perfectly separated
+        soft margin allows for a larger margin too
+        
+        but large margin also means more misclassifications 
+
+        need to balance between high margin and minimizing misclassifications 
+            controlled by parameter c 
+
+            smaller c allows more misclassifications (softer/larger margin)
+            higher c forces strict separation (harder margin)
+        
+    
+Binary SVMs
+    assumes the two classes are linearly separable
+        by finding a decision boundary; the hyperplane that maximizes the margin 
+        margin is dist b/w plane and nearest points <== the suppor vectors 
+    can also be adapted to solve regression problems 
+
+
+    if the classes are not linearly separable, it wont work in 2d 
+        so we extend to 3d with parabolic 3d embedding, so the classes can clearly be speparated by a horizontal plane
+
+        this is called Kernelling 
+            Kernelling = mapping data to a higher dimensional space 
+
+        Kernel functions for SVM in skicit learn 
+            linear (default)
+            polynomial 
+            RBF = radial basis functions 
+            sigmoid 
+
+Extending to regression 
+    if u have an SVR (support vector regression), 
+    then u can define a distance, epsilon, around which it is considered signal 
+    and if outside that margin its considered noise
+
+
+SVM pros and cons 
+    pros;
+        effective in high dimentional data 
+        robust to overfitting
+        works well on linearly separable data 
+        works well with weakly separable data 
+
+    limitations:
+        slow on large training sets 
+        sensitive to noise and overlapping classes 
+        relies on kernel and regularization parameters chosen 
