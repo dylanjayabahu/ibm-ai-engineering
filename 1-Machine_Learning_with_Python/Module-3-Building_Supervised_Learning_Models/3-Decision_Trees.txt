@@ -1,0 +1,49 @@
+Decision tree:
+    each node is a test
+    each branch is a result of the test 
+    each leaf is an assignment to a class 
+
+Training Decision tree 
+    use labelled training data
+    start with a seed node 
+    find the feature that best splits the data based on class (using criteria like Gini impurity, entropy, or information gain)
+    each split partitions the nodes input
+    repeat for each new node 
+    stop when stopping criteria is met:
+        max tree depth reached; stop so that tree is not too deep
+        min data points in a node exceeded; node must have at least n samples to split; if no node has this we stop 
+        min samples in a leaf exceeded; ^ same rule applied to leafs specifically
+        max leaf nodes reached; stop so that tree doesnt have too many leaves
+
+Why prune 
+    - overcomplex trees may be overfitting training data
+    - may capture noise/irrelevant details if overcomplex 
+    - pruning simplifies model so it can generalize 
+    - pruned tree is more concise and ez to understand 
+    - better predictive (Test) accuracy
+
+Choosing best-splitting feature
+    Entropy (information gain)
+        measure of information disorder (randomness) in the dataset 
+        how random the resulting classes in a node are (how uncertain the feature split is)
+        0 entropy for single-class data
+        1 entropy for equally distributed data 
+
+        entropy = sum[-p_i * log(p_i)]
+            p_i is the percentage of class i 
+
+
+        information gain = entropy_before - weighted_entropy_after
+            we use weighted entropy by taking the weighted average of all the nodes that result from the split 
+            e.g. if the split gives node A and node B, we take the average of A and B's entropies weighted by the size of A and B's data
+        
+        choose the split that gives the highest information gain 
+    
+
+    Gini impurity 
+        gini impurity = sum[(p_i^2)]
+
+        same idea as entropy 
+    
+    
+
