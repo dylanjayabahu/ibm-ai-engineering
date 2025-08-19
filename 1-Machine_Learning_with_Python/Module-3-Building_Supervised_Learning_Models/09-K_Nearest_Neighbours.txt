@@ -1,0 +1,36 @@
+KNN
+    use labelled data points to label new data points 
+    closer points tend to be like each other
+
+    find the k nearest neighborus to a new point, 
+    then apply a prediction based on the average (regression)/ majority (classification) label of the k neighbours
+
+    neighbours are those closest to the point in n-dim space 
+
+finding optimal k 
+    test a range of k values on a val set for best one 
+
+
+knn is a lazy learner; doesnt really learn any parameters just looks at the train data over and over 
+
+if k is too small => overfit, fluctuating values 
+if k is too large => underfit, too smooth
+ideal k is in between 
+
+
+high prevalence of classes:
+    skew the knn model 
+    frequent classes are more common in the k neighbourhoods
+
+    to overcome this u can weight each vote by closeness to the query point
+        / penalize higher dist 
+
+
+Feature selection and processing:
+    must scale features since large value features dominate predictions (standardization)
+        so that each feature contributes equally to the dist measurement
+    should remove irrelvant features => they cause need for higher k to avoid overfit => more cost and dec acc
+    only using relevant features lowers the optimal k and improves cost and accuracy
+        includes removing redundant/highly correlated features w/ each other 
+
+    can also select features based on domain knowledge and iteratively testing what happens to k as u remove them 
