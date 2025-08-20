@@ -1,0 +1,41 @@
+Dim reduction algos 
+    reduce num data features w/o losing important info
+    simplify ds for ml models
+
+    Principle Component Analysis (PCA)
+    t-distributed stochastic neighbour embedding (t-SNE) 
+    Uniform Manifold Approximation and Projection (UMAP)
+
+PCA: linear dim reduction algo 
+    assumes ds features are linearly correlated 
+    reduces dim and noise with minimal info loss
+
+    transforms the features into uncorrelated variables (the principle components) without losing critical info
+
+    principle components:
+        orthoganal to each other
+        define a new coord system (just like x/y/z axes are orthoganal)
+        organized in order of importance => how much of feature space variance they explained
+            first few components contain most info 
+
+t-SNE: nonlinear dim red algo
+    maps high dim points to lower dim space 
+    good at finding clusters in complex high dim data 
+
+    works well with images and text 
+
+    preserve similarity of close points (similarity = proximity)
+
+    doesnt scale well and difficult to tune; very sensitive to hyperparameters
+
+
+UMAP: nonlinear dim red algo 
+    makes a high dim graph of data based on manifold theory 
+        assumes data is in a lower dimensional manifold embedded in higher dim space
+    
+    optimizes a low dim graph structure preserving relationships b/w points 
+
+    scales better than t-SNE
+    provides global strucutre 
+
+    basically just better than t-SNE

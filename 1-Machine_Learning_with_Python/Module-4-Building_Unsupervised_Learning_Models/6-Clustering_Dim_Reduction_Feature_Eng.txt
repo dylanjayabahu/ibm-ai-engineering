@@ -1,0 +1,53 @@
+Clustering, Dim reduction, and feature engineering are all complimentary ML techniques 
+    improve model performance, quality, and interpretability 
+
+
+Clustering  
+    helps with feature selection and feature creation 
+    supports dimension reduction 
+    enhance computational efficiency and scability
+
+Dimensnion reduction    
+    simplifies the visualization of high dimensional clustering 
+    helps feature engineering and improving model quality 
+    reduces num required features for a model 
+
+    used as a preprocessing step before clustering => simplifies data structures and improves outcome
+    high dim data is  hard for dist-based clustering algos (k-means, dbscan)
+        volume increases rapidly as dims increase, so data becomes sparesr and more clusters get formed
+
+    PCA, t-SNE, UMAP are all dim reduction algos 
+
+
+Face Recognition eg 
+    use eigenfaces as the input for supervised face recognition 
+
+    perform PCA on the face dataset to make the eigenfaces 
+        eigenfaces are like building blocks that can be layered with diff weights to make any face  
+
+        966 og faces => 150 eignfaces 
+
+        so, we provide the model with 150 weights (corresponding to he weight for each eigenface)
+        instead of providing the og image (e.g. 100x100 pixels; much larger than 150)
+
+        we have reduced the dimensionality while keeping important info 
+    
+    we can now train a svm to predict faces based on that 150 dim input
+
+
+Dim reduction after clustering 
+    hard to visualize high dim clusters 
+    can use dim reduction (PCA, t-SNE, UMAP) to project high dim clusters into 2/3 space
+    so u can visualize clustering qualtiy 
+
+
+    also makes clusters more interpretable
+    allow u to identify patterns that u wouldnt be able to see in higher dims
+
+
+
+Clustering for feature selection 
+    clustering can identify redundant features; 
+        cluster similar/correlated features and only include 1 from each cluster
+
+    can reveal subgroups in data, which can give insight on feature interaction
