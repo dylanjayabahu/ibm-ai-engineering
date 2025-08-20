@@ -34,7 +34,9 @@ Types of clusterign
         create clusters of any shape 
         suitable for irregular clusters 
         e.g. DBSCAN algo 
-    Heirarchical clustering 
+
+
+    Heirarchical clustering (can be both parition/density based)
         organizes data into nested clusters 
         cluters contain smaller subclusters 
         generates a dendrogram (like a tree diagram)

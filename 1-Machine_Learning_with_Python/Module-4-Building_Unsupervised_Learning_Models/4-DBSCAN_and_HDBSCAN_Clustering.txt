@@ -1,0 +1,60 @@
+DBSCAN = Density-based Spatial Clustering of Applications with Noise
+HDBSCAN = Heirarchical DBSCAN
+
+
+DBSCAN
+    - density based clustering algo
+    - clusters centered around spacial centroids 
+    - provide density value 
+    - goal is to define neighbourhood clusters with specified density 
+
+
+    can discover clusters of any shape/size/density 
+    distinguishes data that is part of cluster vs noise 
+    useful when num clusters unknown
+
+centroid (partition) based vs density based
+    - centroid based   
+        finds convex clusters 
+        assigns every point to a cluster even when it doesnt fit well 
+    
+    - density based 
+        addresses more complex clusters and noise 
+        identifies connected regions of high density
+
+
+
+DBSCAN algo:
+    select N, epsilon
+        N is minimum num points in a neighbourhood 
+        epsilon is the radius of each neihgbourhood
+
+    
+    for every point in ds, label as:
+        core point if there are N-1 points within dist epsilon of it (there are N points in the epsilon neighbourhood)
+        border point if is within a neighbourhood, but is not a core point itself 
+        noise point if its not in any epsilon neighbourhood
+    
+        clusters are the core points and their neighbourhoods
+
+not iterative; one pass 
+any unassigned points remaining are considered noise 
+
+
+HDBSCAN 
+    variant of DB scan that doesnt require u to set N and epsilon 
+    less sensitive to noise and outliers 
+
+
+    cluster stability: cluster persistance over a range of reasonable epislon values
+    HDBSCAN locally adjusts epsilon for cluster stability 
+    imporves culstering for variable-density and noisy data
+
+    algo:
+        combine agglomerative and density based clustering 
+
+        start with each point as its own cluster (noise)
+        progressively agglomerates clusters into a hierarchy 
+
+        ^ this creates a heirarchical tree, which gets simplified to a condensed tree with the stable clusters
+
