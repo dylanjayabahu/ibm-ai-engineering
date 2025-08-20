@@ -1,0 +1,39 @@
+Supervised learning evaluation
+    - how well ml model can predict on unseen data 
+    - compare predictions to ground truth labels 
+
+    in training goal is to optimize evaluation metrics 
+    after training evaluate again on unseen data 
+
+Train/test split 
+    train is for developing model  (70-80%)
+    test is for evaluating generalization to unseen data (20-30%)
+
+
+Accuracy:
+    correctly_predicted/total
+    Acc = (TP + TN)/(TP + FP + TN + FN)
+
+Confusion matrix:
+    table of predictions against actuals for each class 
+
+       pred
+      0   1
+      ------
+    0|TN FP
+act 1|FN TP
+
+want high values along the diagonal (TN and TP)
+
+Precision:  
+    how many actually positive of predicted posities 
+    Prec = (TP) / (TP + FP)
+
+Recall (TPR)
+    how many predicted positive of actual positive 
+    Rec = (TP) / (TP + FN)
+
+F1:
+    harmonic mean of prec and recall 
+
+    F1 = 2 * Prec * Rec / (Prec + Rec)
