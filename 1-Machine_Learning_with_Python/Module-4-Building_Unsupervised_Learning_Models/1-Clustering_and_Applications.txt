@@ -1,0 +1,65 @@
+Clustering:
+    - unsupervised ML technique 
+    
+    use cases:
+        - music genres
+        - market segments
+        - user groups
+    
+    like classification but works on unlabelled data 
+        e.g. k-means model segments customers into groups 
+
+Applications 
+    - exploratory data analysis 
+        uncover natural groupings for target markets 
+    - pattern recognition 
+        group objects
+        help image segmentation
+        detecting medical abnormalities/fraud/equipment malfunctions
+    - feature engineering 
+        reduce dimensionality => improve performance and interpretability 
+    - data summarization
+        simplifies data into smaller clusters 
+    - data compression 
+        replace data points with cluster centers 
+        image compression (autoencoders)
+    - feature selection 
+
+Types of clusterign 
+    Partition based 
+        divides into non overlapping groups
+        k-means (most popular) identifies k clusters with minimal variance
+        scales well with large ds 
+    Density based 
+        create clusters of any shape 
+        suitable for irregular clusters 
+        e.g. DBSCAN algo 
+    Heirarchical clustering 
+        organizes data into nested clusters 
+        cluters contain smaller subclusters 
+        generates a dendrogram (like a tree diagram)
+        reveals relationships b/w clusters
+
+        main algos:
+            agglomerative (merges clusters) vs divisive (splits clusters)
+
+            divisive:
+                top down approach                 
+                start with ds in small cluster 
+                repeatedly split clusters into two until stopping a criterion is met 
+                    e.g. min cluster size
+            
+            agglomerative:
+                bottom up approach 
+                each data is in its own cluster
+                iteratively merge related clusters
+
+                more formally 
+
+                initialize each point in its own cluster
+                make a proximity matrix of clusters' closeness (the diagonal will be 0)
+                    e.g. proximity found based on a dist metrix, e.g. dist b/w centroids 
+                merge the two closest clusters
+                
+                update proximity matrix with this new cluster 
+

@@ -1,0 +1,47 @@
+K-means 
+    iterative centroid based clustering algo 
+    splits data into smaller groups based on dist b/w centroids 
+
+    divides data into k nonoverlapping clusters; k is a chosen parameter 
+        clusters have minimal variance around centroid
+        and max dissimilarity b/w clusters
+
+    higher k = small clusters, more detail 
+    low k = large clusters, less detail
+
+
+K-means algo 
+    - select K 
+    - randomly select k centroids (any k points in the feature space)
+    
+    repeatedly assign points to clusters and update centroids:
+        compute distance matrix (dist from each point to each centroid)
+        assign each point to the cluster with nearest centroid 
+        update cluster centroids now that each cluster has updated points 
+            (centroid = mean of points)
+
+    ^ stop when centroids converge/stop moving
+
+
+limitations/assumptions of k means:
+    k means doesnt work very well with unbalanced clusters 
+    assumes that all clusters are convex 
+    assumes balanced clusters
+    sensitive to outliers/noise
+    efficient and scales well to big data
+
+
+K means optimizes by minimizing the sum of variance in each cluster
+    minimize = sum for each cluster i[variance of cluster i]
+             = sum from i = 1 to k [sum for every data x |x-mu_i|^2]
+             ^ x is the data point, mu_i is the centroid of cluster i
+
+Determining K 
+    u can choose k feasibly if the data is separable 
+        if in 1/2/(3) dimensions u can visually tell; harder in high dim feature spaces
+            for high dims u can plot variables against each other in 2 dim one by one 
+
+    can also use heuristic techniques; 
+        - silhouette analysis: measures cohesion and separation; choose k that mazimizes this
+        - elbow method: plot sum of squares (variance) for diff k values; choose “elbow” point (where improvement flattens)
+        - davies bolden index: measures each clusters average similarity ratio; choose k that maximizes this
