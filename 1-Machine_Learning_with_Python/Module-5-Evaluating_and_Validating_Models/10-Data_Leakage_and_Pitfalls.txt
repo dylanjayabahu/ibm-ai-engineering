@@ -1,0 +1,31 @@
+Data leakage: when training data includes info unavailable in real world deployment
+    e.g. u scale all data along with test data 
+    or ur test data becomes ur val data
+
+    deceptively boosts performance on training/eval/test
+
+    processing pipelines should be done independently on train/val/test
+
+- avoid future data (e.g. global averages)
+- make sure train/val/test are properly segregated and dont get contaminated 
+- make sure training features are ones ull have for real world deployment
+- careful with cross val so data isnt leaked across folds, e.g. with time series data
+- fit with hyperparams to each training fold and then apply to val set to evaluate which is best
+- for temporal data dont select randomly, do it based on sequential time intervals so no future data is leaked in  
+    ^ train should preced to test; can use skicit learns TimeSeriesSplit
+
+Feature importance pitfalls
+    - features that are redundant share their influence with the others, so the apparent influence is lowered 
+        as such, blindly selecting the apparent most important features can mean u leave out a significant one 
+    - unscaled data can skew importance ranking leading u to choose important features badly 
+    - assuming causation over correlation 
+    - overlooking feature interactions 
+        features that interact have combined impact which could be over/underestimated 
+        e.g. longitiude and lattitude, each individuall is low impact but together is high 
+
+Other modelling pitfalls    
+    - selecting or extracting inappropriate features 
+    - misinterpreting evaluation metrics/wrong metrics
+    - class imbalance
+    - blind reliance on automation 
+    - what-if scenarios based on correlation but not causation relationships => misleading predictions

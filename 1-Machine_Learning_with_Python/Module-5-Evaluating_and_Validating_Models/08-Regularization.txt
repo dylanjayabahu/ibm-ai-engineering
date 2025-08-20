@@ -1,0 +1,27 @@
+Regularization: regression technique to prevent overfitting 
+    constrains model complexity by discouraging perfect fitting (kinda like dropout in a NN)
+    suppress the size of coefficients 
+
+instead of usual cost function, MSE, use regularized cost function:
+    C = MSE + lambda * penalty 
+
+    lambda = regularization hyperparameter 
+    penalty E {ridge, lasso, etc} <- measure size of coefficients
+
+
+
+Ridge regression:
+    linear regression but cost function has an aded L2 term (sum of squares)
+
+    C = MSE + lambda * [sum (theta_i)^2 for all theta coefficients]
+
+Lasso regression:
+    linear regression but cost function has an added L1 term (abs of terms)
+    
+    C = MSE + lambda * [sum |theta_i| for all theta coefficients]
+
+    lasso can find 0 coefficients very well, unlike linear and ridge regression 
+
+Sparse coefficients means only 1 or 2 vars contribute significantly to the outcome 
+
+Ordinary linear regression is sensitive to noisy data but ridge and lasso arent

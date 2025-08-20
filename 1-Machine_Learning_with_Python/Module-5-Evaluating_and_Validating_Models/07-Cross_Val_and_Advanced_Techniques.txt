@@ -1,0 +1,43 @@
+Model validation 
+    trying to optimize model without runing its ability to predict on unseen data 
+    prevent overfitting when tuning hyperparameters/training 
+
+train/test split => if u choose best hyperparams based on test, u are fitting to test data 
+this is called data snooping: u check performance and make changes on test set before u are finished 
+    aka data leakage 
+
+instead use a validation set or cross val 
+
+Train/val/test split 
+
+Cross-val:
+    split train data into train/val 
+    optimize hyperparams based on val 
+
+    then test on test data 
+
+k-fold cross-val:
+    split train data into k parts 
+    cycle through ecah of the k parts being the val set 
+    optimize based on val set 
+
+    then test best model on test data 
+
+    typicaly k = 5 - 10 
+
+    advantages:
+        - increase amt of data trained/validated on 
+        - vary val set and smooth out unwanted details/noise 
+        - improves model generalizability
+    
+
+handlign imbalance data (classification) or skewed data (regression)
+    classification (imbalance data):
+        stratified cross-val:
+            preserves class distribution within folds (stratified sampling)
+        
+    regression (skewed data):
+        transform target to approx normal distribution 
+        e.g. log transform, box cox transform 
+    
+

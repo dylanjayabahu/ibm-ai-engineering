@@ -1,0 +1,82 @@
+harder than with supervised - no labels or ground truth to compare to 
+
+unsupervised learnign finds hidden patterns and structures 
+    => evaluation methods asses the quality of these patterns to determine effectiveness of model
+
+    also need stability in a model 
+
+no single method for evaluation:    
+    - heuristics
+    - domain expertise
+    - metrics
+    - ground truth comparisons
+    - visualization tools
+
+
+clustering heuristics:
+    - internal evaluation metrics
+    - external evaluation metrics (rely on ground truth)    
+    - generalizability/stability evaluation (cluster consistency across data variations)
+    - dimensionality reducing techniques (visualizing clustering outcomes) 
+    - cluster assisted learning (refining clusters throug supervised learning)
+    - domain expertise
+
+
+
+Internal evaluation metrics (no ground truth):
+    silhouette score: 
+        cohesion within clusters 
+        + seprataion from other clusters 
+        -1 to 1 
+        high val = betted defined 
+    davies-boulden index: 
+        measures cluster compactness ratio 
+        + separation from nearest cluster
+        low values = more distinct + compact clusters 
+        0 to 1
+    inertia:
+        used in k-means clustering 
+        sum of variance within each cluster 
+
+        more clusters reduces variance and hence inertia => no point of too many clusters
+
+
+External eval metrics (using ground truth):
+    adjusted rand index:
+        measures similarity between true labels and outcomes 
+        -1 to 1 
+        1 = perfect alignment
+        0 = random 
+        neg is worst than random 
+    
+    normalized mutual information 
+        quantifies shared information b/w cluster assignments 
+        0 to 1 
+        1 = perfect agreement
+        0 = no shared info
+    
+    Folwlkes-Mallow index   
+        geometric mean of precision and recall againsg ground truth 
+            like f1 equiavelnt but with geometric instead of harmonic mean 
+        high score = better
+        range from 0 to 1
+
+
+For dim reducing unsupervised ml:
+
+    explained variance ratio (PCA)
+        measures variance captured by princniple components
+        help determine how many needed for acceptable total variance
+
+    reconstruction error 
+        assesses how data can be reconstructed 
+        low reconstruction error = data reconstructed better = better info preservation
+    
+    neighbour presrevation 
+        how well relationships in high dim space are maintained in low dim space
+        esp for manifold like t-SNE and UMAP
+
+
+overall, use diverse metrics and expertise 
+subjective tools like scatterplots and dendrograms 
+projection methods like PCA, t-SNE, and UMAP
