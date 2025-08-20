@@ -1,0 +1,24 @@
+unlike with classification, we want to determine how accurately we can predict a continuous output 
+
+regression metrics:
+    mean average error: average absolute diff between pred and act
+        MAE = avg[|y_pred - y|] => same units as target variable
+    mean squared error: average of squared diff between pred and act 
+        MSE = avg[(y_pred - y)^2]
+    root mean squared error
+        RMSE = sqrt(MSE) => same units as target variable 
+    r squared, coefficient of determination 
+        r^2 = 1 - [sum (y_pred - y)^2 ]/[sum (y_bar - y)^2] 
+
+        explained variance = (y_pred_i - y_bar)^2
+        unexplained variance = sum (y_pred_i - y_i)
+        total variance = sum (y_bar - y_i) = sigma^2 = st_dev^2
+
+        r^2 = 1 - unexplained_variance/total_variance
+
+        perfect model: all variance is explained; exlained variance = total variance; r^2 = 1
+        mean-value model: explained variance = 0; total variance = unexplained variance; r^2 = 0
+        
+        for a negative r^2, unexplained variance is larger than total variance; the model is so rubbish 
+
+
