@@ -5,10 +5,8 @@ This repository contains projects and exercises completed as part of the **IBM A
 ---
 
 ## Certificate
-
-- 
-- [View Verified Certificate on Coursera](YOUR_CERTIFICATE_LINK_HERE)  
-
+![Data_Science_Machine_Learning](https://github.com/user-attachments/assets/0f3bc710-5779-42ec-bd5c-2987eca16b8c)
+> *IBM - Machine Learning with Python — 2025*
 ---
 
 ## Program Highlights
@@ -52,9 +50,7 @@ This repository contains projects and exercises completed as part of the **IBM A
 
 ---
 
-## Disclaimer
-The projects and exercises in this repository are based on the IBM Professional Certificates on Coursera.  
-They are shared here **for educational and portfolio purposes only**.  
+**Disclaimer:**
 
 > **Please do not copy this work.**  
 > Doing so would violate Coursera’s Honor Code.  
