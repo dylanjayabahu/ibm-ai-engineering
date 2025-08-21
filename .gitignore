@@ -23,3 +23,6 @@ venv/
 # Temporary files
 *.tmp
 *.swp
+
+# Other 
+ignoreme.txt
