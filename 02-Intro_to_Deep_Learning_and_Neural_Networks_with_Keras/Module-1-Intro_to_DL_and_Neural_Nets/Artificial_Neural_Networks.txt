@@ -1,0 +1,20 @@
+Single neuron is a perceptron 
+    neuron is fundamental unit in artificial neural networks 
+    multiple neurons combined in layers to make a nn
+
+input layer and output layer of neurons 
+hidden in between 
+
+forward prop:
+    how data flows from input to output 
+
+    input neurons' values are multiplied by weights and then summed 
+        (the dot product of the weigths and the neuron values)
+    final bias term is added => this is the linear combination of the inputs, which we will call z 
+    activation function is applied 
+    this gives the new value of the current neuron, which we will a
+        a = f(z), f is the activation function 
+    
+    activation function:
+        a neural net without activation functions is just a chunky linear regression model
+

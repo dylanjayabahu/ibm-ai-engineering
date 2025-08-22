@@ -1,0 +1,31 @@
+w/o actiavtion functions nn is just a big linear regression 
+
+
+Activation functions:
+    - binary step 
+        prone to vanishing gradient; restricts slope vals to 0 or 1 
+        0 slope = no learning
+    - linear (identity) function 
+        useless, no nonlinearity 
+    - sigmoid 
+        prone to vanishing gradient 
+        useful for final output neuron
+    - tanh 
+        literally a scaled sigmoid 
+        symmetic over the origin 
+        still prone to vanishing gradient 
+        still useful for final output neuron
+    - ReLU 
+        non linear 
+        negatives are converted to 0 
+        makes network sparse and efficient 
+        overcomes vanishing gradient
+    - leak ReLU 
+        instead of 0, choose smaller slope for negatives
+        prelu learns the slope of the negative side as a parameter 
+    - softmax 
+        converts vector to probabilitiies who sum to 1
+        useful as activation for output layer
+    
+
+    relu is typical choice

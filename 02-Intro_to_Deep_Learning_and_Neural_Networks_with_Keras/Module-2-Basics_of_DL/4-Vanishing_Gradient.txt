@@ -1,0 +1,16 @@
+Vanishing Gradient Problem:
+    b/c sigmoid transforms a domain of any real number to be in [0, 1], the values will be restricted to this range 
+    if u use sigmoid as activation 
+
+    as such, when u compute the gradients witih respect to the weights, the will be very small 
+
+    they will continue to get smaller as u go towards the front of the nn 
+        since u keep multiplying numbers less than 1 
+
+        hence vanishing gradient
+    
+    so the parameters at the start will learn very very slowly
+    
+    as such, we dont use sigmoid as activation function for hidden layers, only for output layer 
+
+    

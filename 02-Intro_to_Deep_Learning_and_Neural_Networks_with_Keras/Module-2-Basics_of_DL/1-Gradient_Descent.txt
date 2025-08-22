@@ -1,0 +1,10 @@
+Cost Function 
+    e.g. MSE = avg [(y_pred = y_act)^2]
+    
+    take steps proportional to negative gradient at current point 
+
+    eta, or learning rate, controls how big the step is (scales the gradient)
+
+    step = -eta * d[cost]/d[w]
+                    ^ partial derivative of cost function with respect to w 
+

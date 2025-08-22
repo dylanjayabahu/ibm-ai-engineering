@@ -1,0 +1,77 @@
+let T be ground truth (normally denoted as y)
+let a be the prediction (normally y_hat)
+
+a != T, so how do we train?
+
+calculate the error, E b/w ground truth and estimate output (b/w T and a)
+    with whatever loss function; in this case MSE
+
+    note that we often use 1/2 MSE, since that way when we take the derivative it cancels out 
+
+    E(a) = 1/2 * 1/m * (T-a)^2
+    dE/da = 2 * 1/2 * 1/m * (T-a) * -1 
+               = -1/m (a-T)
+
+then we update all the weights and biases by propogating the error backwards 
+
+    update w_i as:
+        w_i - eta * dE/dw_i <- but we need to compute the partial derivative of error with respect to w to do this 
+
+    E is a function of a (activated value)
+        E = 1/2 (T-a)^2
+        
+        we can compute dE/da = (a-T)
+            ^ this is why we had the half; it makes it ez to compute deriative
+    
+    a is a function of z (weighted sum)
+        a = f(z) = 1/(1+e^-z)
+
+        1-a = 1 - 1/(1+e^-z) = (1+e^-z - 1)/(1+e^-z) = e^-z/(1+e^-z)
+
+        we can compute da/dz = -(1+e^-z)^-2 * (-e^-z) = 
+                             = 1/(1+e^-z)^2 * e^-z
+                             = a * e^-z/(1+e^-z)
+                             = a * (1-a)
+                             = a(1-a)
+    
+    z is a function of w 
+        z = w * a_prev + b
+
+        we can compute dz/dw = a_prev
+            ^ partial derivative; treat all other vars as constants
+    
+    we can use the chain rule to combine the derivatives we computed 
+
+    dE/da * da/dz * dz/dw = dE/dw
+    dE/dw = [a-T][a(1-a)][a_prev]
+        ^ now we have the partial derivative of error wrt w 
+        so we can update w_i 
+    
+    w_i = w_i - eta * dE/dw_i
+    w_i = w_i - eta * a(a-T)(1-a)(a_prev)
+    
+
+    updating b is the same, but the last part, dz/db = 1 instead of a_prev 
+    b_i = b_i - eta * dE/db_i
+    b_i = b_i - eta * a(a-T)(1-a)
+
+
+    for earlier on terms its the same, just longer chain rule 
+        E is a function of a2; can find dE/da2
+        a2 is a function of z2; can find da2/dz2
+        z2 is a function of a1; can find dz2/da1
+        a1 is a function of z1; can find da1/dz1
+        z1 is a function of w1; can find dz1/dw1
+
+        dE/dw1 = dE/da2 * da2/dz2 * dz2/da1 * da1/dz1 * dz1/dw1
+
+
+full training algo:
+    initialize random weights and biases
+    repeat until converge or set epochs: 
+        find network output with forward prop 
+        calculate error b/w ground truth and estimated output
+        update weights and biases through backprop 
+
+
+(so beutiful :)
