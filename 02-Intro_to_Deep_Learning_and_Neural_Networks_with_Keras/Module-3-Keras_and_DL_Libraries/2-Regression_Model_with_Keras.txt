@@ -1,0 +1,19 @@
+side note: dense network is when all nodes are connected to all other nodes in next layer 
+
+when given a dataset, split into predictors (inputs) and target (outputs)
+
+import keras 
+from keras.models import Sequential # Sequential is base, but also exists a model class 
+from kears.layers import Dense()
+
+model = Sequential()
+model.add(Dense(5, activation='relu', input_shape=))
+#add other layers
+model.add(Dense(1)) # output node 
+
+model.compile(optimizer='adam', loss = 'mean_squared_error')
+    adam is a better optimizer than gradient descent; no need to specify learning rate 
+
+model.fit(predictors, target) # train 
+
+predictions = model.predict(test_data)

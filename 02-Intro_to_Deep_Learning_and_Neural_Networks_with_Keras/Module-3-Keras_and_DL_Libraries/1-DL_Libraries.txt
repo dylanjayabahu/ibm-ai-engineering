@@ -1,0 +1,20 @@
+Popular DL libraries:
+    - tensorflow
+    - pytorch
+    - keras
+    - also theano; but not as possible 
+
+tensorflow: 
+    most popular, made by google 
+pytorch: 
+    competitor to tensorflow, supports gpu
+    used in academic research 
+    used at meta 
+
+keras:
+    easier than tensorflow and pytorch 
+    API for fast development 
+    complex DL with few lines 
+
+    normally runs on top of low level like tensorflow 
+    also supported by google 
