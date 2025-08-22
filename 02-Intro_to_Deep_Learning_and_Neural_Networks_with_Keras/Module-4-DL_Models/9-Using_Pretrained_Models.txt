@@ -1,0 +1,48 @@
+pretrained models = models already trained on large amts of data 
+    can be used as feature extractors 
+    used for downstream tasks without additional training 
+
+e.g. imagenet (vgg16) or resnet extract feature maps from images 
+    can be used for clustering, visualization, or feed into smaller ml model
+    dont have to modify the original weights with additional training 
+
+benefits of pretrained models 
+    - no additional training 
+    - efficient use of learned features 
+    - suitable for limited resources
+
+
+sample code 
+
+from tensorflow.keras.applications import VGG16 
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+
+# freeze layers 
+for layer in base_model.layers:
+    layer.trainable = False 
+
+model = Sequential([
+    base_model, 
+    Flatten(),
+    Dense(256, activation='relu'),
+    Dense(1, activation='Sigmoid')
+])
+
+# compile train etc 
+model.fit(...)
+
+# afterwards, we can slowly unfreeze the base layers 
+# so we can fine tune performance to our specific task 
+for layer in base_model.layers[-4:]:
+    layer.trainable = True 
+
+# and train a bit more 
+model.compile()
+
+mode.fit(...)
+
+
+
+^ this is called transfer learning 
+    leads to improvement in performance since the vgg/pretrained model is traiend an a lotlot of data 
+    less data and training time in this way 

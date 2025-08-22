@@ -1,0 +1,28 @@
+Autoencoders:
+    unsupervised deep learning model 
+
+    data compresion algo 
+    compresion/decompression learned from data, with nns 
+
+    data specific - only works on the data kind it was traiend on
+
+    used for data denoising and dim reduction 
+
+
+    input -> encoder -> compression representation -> decoder -> og image (ideally)
+
+    backprop; sets target variable to input 
+        i.e. tries to approximate the identity function 
+
+
+    AEs can learn projections more interesting than PCA 
+
+
+
+Restricted Boltzman Machines (RBMs)
+    very popular type of autoencoder 
+
+    applicaitons 
+        fixing imbalanced datasets => can generate more of the minority class 
+        estimate missing feature values 
+        automatic feature extraction 
