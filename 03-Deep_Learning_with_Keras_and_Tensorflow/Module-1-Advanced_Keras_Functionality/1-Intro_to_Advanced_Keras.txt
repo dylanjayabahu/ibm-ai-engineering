@@ -1,0 +1,78 @@
+Keras sequential: good for simple linear stack of layers 
+Funcitonal api: gives more flexibility and control, more intricate models 
+    - multiple inputs and outputs 
+    - shared layers 
+    - non sequential data flows 
+
+
+make sequential model:
+    model = Sequential([
+        Conv2D(...),
+        MaxPool2D(...),
+        Flatten(),
+        Dense(...),
+        ...
+    ])
+
+    model.add(Dense(10, activation='softax'))
+
+    model.compile(...)
+
+
+make functional model:
+    inputs = Input(...)
+
+    x = Conv2D(...)(inputs)
+    x = MaxPool2D(...)(x)
+    x = Flatten()(x)
+    x = Dense(...)(x)
+    outputs = Dense(10, activation='softmax')(x)
+
+    # ^ we are passing each layers input in at the end with brackets 
+
+    model = Model(inputs=inputs, outputs=outputs)
+    model.compile(...)
+
+
+Benefits of functional api:
+    Flexibility for complex architecture 
+        like multi branch, residual connections
+    Clarity of model structure
+    Reusability 
+        layers/models can be used across diff parts of the architecture
+    
+
+make a multi input model:
+    inputA = Input(shape=(64,64,1))
+    inputB = Input(shape=(128,))
+
+    # work on first input 
+    x = Conv2D(...)(inputA)
+    x = Flatten()(x)
+    x = Dense(8, activation='relu')(x)
+    x = Dense(4, activation='relu)(x)
+
+
+
+    # work on second input 
+    y = Dense(16, activation='relu)(inputB)
+    y = Dense(4, activation='relu)(y)
+
+    combined = concatenate([x, y]) # add and multiply combining methods exist as well
+
+    # work on combined result
+    z = Dense(2, activation='relu')(combined)
+    z = Dense(1, activatoin='sigmoid')(z)
+
+    model = Model(inputs=[inputA, inputB], outputs=outputs)
+
+    model.compile(...)
+
+    ...
+
+    model.fit([X1, X2], y, ...)
+
+
+
+
+    # merge two branches

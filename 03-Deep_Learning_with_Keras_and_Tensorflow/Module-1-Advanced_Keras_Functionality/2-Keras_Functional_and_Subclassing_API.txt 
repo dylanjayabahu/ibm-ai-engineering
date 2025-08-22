@@ -1,0 +1,70 @@
+Functional Api (contd, already coverd in prev lesson ):
+
+    shared layers:
+        inp1 = Input(shape=(10,))
+        inp2 = Input(shape=(10,))
+
+        shared = Dense(4, activation="relu")
+
+        out1 = shared(inp1)  # both use SAME layer weights
+        out2 = shared(inp2)
+
+        model = Model(inputs=[inp1, inp2], outputs=[out1, out2])
+    
+    can also combined models:
+        inputA = Input(shape=(64,64,3))
+        inputB = Input(shape=(128))
+
+        x = Conv2D(..)(inputA)
+        x = MaxPooling2D(...)(x)
+        x = Dense(128, activation='relu')(x)
+        x = Dense(4, activation='relu')(x)
+        x = Model(inputs=inputA, outputs=x)
+
+        y = Dense(16, activation='relu')(inputB)
+        y = Dense(8, activation='relu')(y)
+        y = Model(inputs=inputA, outputs=y)
+
+        combined = concatenate([x.output, y.output])
+         
+        z = Dense(64, activation='relu')(combined)
+        z = Dense(4, activation='relu')(z)
+        x = Dense(4, activation='softmax')(z)
+
+        model = Model(inputs=[x.input, y.input], outputs=z)
+
+
+Subclassing API:
+    gives even more flexibility 
+    lets u define custom and dynamic models
+
+    u subclass the Model class, and implement ur own call method 
+
+    used for custom training loops and nonstandard architecture 
+
+
+
+    class MyModel(tf.keras.Model): # extends keras Model class
+        def __init__(self): 
+            super(MyModel, self).__init__()
+            self.dense1 = tf.keras.layers.Dense(64, activation='relu')
+            self.dense2 = tf.keras.layers.Dense(10, activation='softmax')
+        
+
+        def call(self, inputs)
+            # forward pass 
+            x = self.dense1(inputs)
+            return self.dense2(x)
+    
+    model = MyModel()
+
+    loss = tf.keras.losses.SparseCategoricalCrossentropy()
+    optimizer = tf.keras.optimizers.Adam()
+
+
+    use cases:
+        models with dynamic architectures 
+            e.g. dynamic graphs
+        custom training loops
+            e.g. with tf.GradientTape() 
+        research and prototyping - experimenting with new layers/proceudres not available in standard
