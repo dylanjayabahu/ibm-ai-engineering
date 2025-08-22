@@ -1,0 +1,12 @@
+Need to one hot encode categorical data so network can predict it 
+    => turn into an array with binary values, with a 1 in the spot of the label
+    can be done with keras to_categorical function 
+
+    rest is the same 
+
+    softmax is good for classification final activation
+
+    use cateogrical crossentropy loss instead of MSE for classification 
+
+    can also monitor metrics (like accuracy) that are appicable to classification 
+        specified when u do model.compile, provide a list to the metrics arg 

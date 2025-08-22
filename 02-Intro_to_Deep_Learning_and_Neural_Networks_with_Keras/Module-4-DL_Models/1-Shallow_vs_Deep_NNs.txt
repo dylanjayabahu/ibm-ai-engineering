@@ -1,0 +1,18 @@
+Shallow vs Deep:
+    shallow = 1-2 hidden layers 
+    deep = >3 hidden layers, large # neurons in layers
+
+    shallow can only take vector inputs 
+    deep can take raw data like images and text and extract features (e.g. CNN)
+
+
+Why DL took off:
+    1. advancement in field
+        e.g. relu overcoming vanishing gradient
+    2. data
+        more data, more available data
+        conventional ml algos only improve up to a point with more data 
+        deep learning keeps improving with more data 
+    3. computational power increases
+        better GPUs
+        can train and experiment faster than before 

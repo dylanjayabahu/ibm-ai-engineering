@@ -1,0 +1,46 @@
+CNN are a type of NN specializing in image processing / computer vision 
+    neurons work the same way as in regular nn 
+
+    because we know the input is image, we can extract features, pool layers, etc to make 
+    the model more accurate and more efficient 
+
+
+image inputs are typically tensors of mxnx1 (grayscale) or mxnx3 (color, rgb)
+
+Conv layer 
+    define a filter/kernel 
+    convolve the kernel over the image to extract features, moving by strides at a time
+    can use many filters in a single conv layer
+    kernel values can be trained with the same chain rule idea as before 
+
+    conv layers also have relus/activation functions 
+
+Pool layer 
+    reduce spatial dimensions 
+
+    maxpooling = keep highest value of each 2x2 block (doesnt have to be 2x2)
+    averagepooling = average the values of the 2x2 block
+
+FC layers 
+    basically the dense layers from regular nn 
+
+    need to flatten conv/pool layers before this 
+
+
+CNN in keras 
+
+model = Sequential()
+model.add(Input(shape=_))
+
+# conv layers 
+model.add(Conv2D(filters, kernel_size=tuple ,strides = tuple, activation = 'relu'))
+
+# pool layers 
+model.add(MaxPooling2D(pool_size = tuple, strides = tuple))
+
+# flatten layers 
+model.add(Flatten())
+
+# fc layers 
+model.add(Dense(100, activation='relu))
+...

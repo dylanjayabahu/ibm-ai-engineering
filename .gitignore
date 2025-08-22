@@ -30,3 +30,6 @@ ignoreme.txt
 # Media
 **/media/
 **/Media/
+
+# Keras models
+**.keras
