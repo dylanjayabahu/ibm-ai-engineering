@@ -1,0 +1,26 @@
+RNN = recurrent neural networks 
+
+typical nn assumes input data points are independant instances 
+    not suited for things like video analysis (frames depend on each other)
+    or text inputs (words depend on each other)
+
+Rnns solve this 
+    rnn will Take a new input as well as output from prev data point 
+
+    good at modelling patterns and sequences of data 
+        text 
+        genomes 
+        handwriting 
+        stock markets 
+    
+    take time and sequence into account (temporal dimension)
+
+
+LSTM model 
+    = long short term memory model 
+    popular example of rnn 
+
+    used for 
+        image generation 
+        handwriting generation 
+        captioning images and videos 

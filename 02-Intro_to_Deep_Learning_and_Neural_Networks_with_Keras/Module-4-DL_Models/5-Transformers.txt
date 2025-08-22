@@ -1,0 +1,81 @@
+NN architecture 
+Revolutionalized NLP + more 
+    - machine translation 
+    - text summarization 
+    - question answering 
+    - text to image generation 
+
+they power chat gpt and gemini 
+
+very good at capturing long-range dependences of sequential data 
+
+
+Transformer types:
+    GPT (generative pre trained transformer) <- chat gpt and gemini
+    BERT (Bidirectional Encoder Representations from Transformers) <- used in google search/translate
+    Image transformers <- used in photoshop
+
+
+Attention mechanism 
+    the key innovatin of transformers 
+
+    weigh importance to different parts of the input sequence 
+    so that u can capture long range dependencies 
+
+Self-attention mechanism 
+
+    generate Q, K, and V vectors
+        Q = query vector 
+        K = key vector 
+        V = value vector 
+
+        Q is the current token 
+        K is all other tokens 
+        V is the info to be passed to next layer 
+    
+
+    attention scores
+        compare token vector to key vectors of other tokens (dot product)
+        this gives a set of attention scores, showign each tokens relevance to the current one
+    
+    weighted sum 
+        normalize attention scores 
+        then take a weighted sum of the value vector based on the normalized attention scores 
+        this gives the context vector for the current token 
+    
+
+Cross-attention mechanism
+    for text to image generation 
+
+    allows the sequence of a type of data to influence generation of a diff type of data 
+        e.g. text vs images 
+
+
+    - learn contextualized embeddings from text input with self attention 
+    - pass these embeddings through the transformer encoder => we have a squence of queries, Q, representing the text 
+    - use cross attention to make an image based on Q 
+    - use a variant of the auto regressive model to generate image 
+
+    ^ model predicts next part of image based on previous image parts and text prompt 
+
+    output is making up its own image 
+    may contain nonsensical combinations of objects that dont exist in real world 
+    can also combine unrelated concepts 
+    can give variants of image from same input 
+
+
+Transformers vs RNN 
+    rnn requires data to be computed in series 
+        slower to train 
+        better for tasks with short dependencies; short dist relationships
+        suffer from vanishing gradients 
+    
+    transformers can be parallelized 
+        effective for machine translation, text generation, NLP applications 
+        better at handling long-dist relationships in the text
+
+    
+Cons of transformers
+    - need a crap ton of training data
+        inherit the bias in their training data
+    
