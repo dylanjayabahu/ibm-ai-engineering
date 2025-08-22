@@ -33,3 +33,7 @@ ignoreme.txt
 
 # Keras models
 **.keras
+
+# Datasets
+aircraft_damage_dataset_v1/
+*aircraft_damage_dataset_v1.tar
