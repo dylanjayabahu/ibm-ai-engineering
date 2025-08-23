@@ -1,0 +1,62 @@
+Transfer learning:
+    just has someone who learned piano can easily switch to organ 
+    u can use knowledge gained from training on one task and apply to a diff but related other task
+        reuse models trained on large comprehensive datasets
+        improves performance and reduces training resources
+
+e.g. VGG16, trained on millions of images, learns to identify edegs, textures, shapes, features, etc.
+    learned features useful for other image classification tasks
+    by reusing base of vgg16 u can get better results with less training time 
+
+benefits of transfer learning 
+    reduce training time 
+    improved performance
+    can work with smaller datasets
+
+
+e.g. use vgg on a smaller dataset 
+from tensorflow.keras.applications import VGG16 
+
+...
+
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 244, 3)) 
+    # include_top is whether or not to include the final fc layers from vgg16
+    # we set it to false so we can define our own 
+
+# freeze base model layers
+for layer in base_model.layers:
+    layer.trainable=False
+
+
+##make new model on top of base model 
+model = Sequential([
+    base_model, 
+    Flatten(),
+    Dense(256, activation='relu'),
+    Dense(1, activation='sigmoid'),
+])
+
+# compile model 
+
+train_datagen = ImageDataGenerator(rescale=1.0/255)
+train_generator = train_datagen.flow_from_directory(
+    'training_data', # a directory with the images; can be png, jpg, ppm, itif
+    target_size=(224, 224), # resize images to right size
+    batch_size=32, 
+    class_mode='binary' # use categorical if more than 0/1; used for one hot encoding based on folder 
+)
+
+model.fit(train_generator, epochs=n_epochs)
+
+"""
+for above to train generator to work, the training_data dir must be structured as:
+training_data/
+    cats/
+        cat1.jpg
+        cat2.jpg
+    dogs/
+        dog1.jpg
+        dog2.jpg
+"""
+
+then u can unfreeze base model's top few layers and keep training (layer.trainable = true for layer in base_mode.layers[-4:])
