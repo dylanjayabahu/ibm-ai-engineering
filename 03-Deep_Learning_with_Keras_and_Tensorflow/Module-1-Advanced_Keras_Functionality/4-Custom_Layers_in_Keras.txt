@@ -1,0 +1,31 @@
+Custom Layers:
+    let u define ur own operations in a nn 
+    lets u tailor models to specific tasks or experiment with new ideas for research 
+    
+    needed when standard layers (e.g. dense, conv, lstm, etc)
+        - implement novel research ideas 
+        - optimize performance for specific data 
+        - enhance flexibility
+        - improve readability/maintenance; allows uto encapuslate complex logic 
+    
+
+custom layer in keras 
+
+from tensorflow.keras.layers import Layer 
+
+class MyCustomLayer(Layer):
+    def __init__(self, units=32, **kwargs): # intialize layer object
+        super(MyCustomLayer, self).__init(**wkargs)
+        self.units=units
+
+    def build(self, input_shape): whenever the layer is called; create weights and is called ones
+        self.w = self.add_weight(shape=(input_shape[-1], self.units), initializer = random.normal)
+        self.b = self.add_weight(shape=(self.units), initializer = 'zeros')
+
+    def call(self, inputs): # forward path logic
+        return tf.manual(inputs, self.w) + self.b
+
+
+## touse custom layers in a model use them the way you would any other layer 
+model.add(MyCustomLayer(64))
+
