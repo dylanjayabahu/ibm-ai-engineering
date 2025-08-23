@@ -31,8 +31,9 @@ ignoreme.txt
 **/media/
 **/Media/
 
-# Keras models
+# saved models
 **.keras
+**model.png
 
 # Datasets
 aircraft_damage_dataset_v1/

@@ -1,0 +1,26 @@
+tensorflow 
+    opensource platform for ml 
+    developed by google 
+
+    deploy models across various envs, from serves to edge devices
+
+
+
+key features of tensorflow 2.x 
+    eager execution 
+        - allows operations to be executed immediately without building graphs
+        - improved debugging, simplified code, 
+        - before u hat to define a graph then run session, now runs like normal python code
+    intuitive high level APIs
+        integrates keras; modular and composable
+    support for various platofmrs and devices (mobile, web,etc)
+    scalability and performance     
+        works across cpu/gpu etc
+    rich ecosystem 
+        tensorflow lite, tflite: lightweight solution, can deploy on mobiles and edge devices; ow latency and high performance inference 
+        tensorflow.js: deploy ml models injavascript, lets u use web apps 
+        tensorflow extended, tfx: deploy production ml pipelines, can monitor and manage
+        tensorflow hub: repo of resuable ml modules
+        tensorboard: visualization toolkit during training
+    
+
