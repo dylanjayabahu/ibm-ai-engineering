@@ -1,0 +1,48 @@
+Data augmentation = adding variations in training data to improve genrealizability 
+    e.g. rotate, shift, shear, zoom, flip
+
+Data aug techniques
+    use keras ImageDataGenerator to do this
+
+datagen = ImageDataGenerator(
+    rotation_range=40,
+    width_shift_range=0.2, 
+    height_shift_range=0.2, 
+    shear_range=0.2, 
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+
+# then to get batches of augmented images:
+for batch in datagen.flow(x, batch_size):
+    #...
+
+
+other advaned data aug techniques
+
+    normalization:
+        feature-wise normalization 
+            in ImageDataGenerator, add the arguments:
+                featurewise_center=True # sets mean of data in dataset to 0
+                featurewise_std_normalization=True # normalizes data in dataset to have stdev of 1
+
+        sample-wise normalization (less common)
+            in ImageDataGenerator, add the arguments:
+                samplewise_center=True # sets mean of data in a sample to 0
+                samplewise_std_normalization=True # normalizes data in sample to have stdev of 1
+        
+        ^ useful b/c nns train better on normalized inputs
+            prevents weights from blowing up
+            speeds up convergence
+            helps gradients flow (less vanishing/exploding)
+    
+    
+    custom augmentation functions
+        e.g. for things like adding random noise 
+
+        in ImageDataGenerator add the argument:
+            preprocessing_function=lambda image: image + np.random.normal(0, 0.1, image.shape)
+
+            # or, more generally:
+            preprocessing_function = my_own_augmentation_function

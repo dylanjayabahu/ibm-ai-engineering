@@ -38,3 +38,5 @@ ignoreme.txt
 # Datasets
 aircraft_damage_dataset_v1/
 *aircraft_damage_dataset_v1.tar
+**sample.jpg
+sample_images/
