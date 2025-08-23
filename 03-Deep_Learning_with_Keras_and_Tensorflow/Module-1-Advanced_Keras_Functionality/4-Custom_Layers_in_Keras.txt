@@ -28,4 +28,4 @@ class MyCustomLayer(Layer):
 
 ## touse custom layers in a model use them the way you would any other layer 
 model.add(MyCustomLayer(64))
-
+    
