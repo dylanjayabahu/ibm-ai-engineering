@@ -1,0 +1,172 @@
+Transformers:
+    - for text based input and output
+    - Applied to image processing and time series prediction 
+    'Attention is all you need' paper 
+
+    leverage self attention to process input data in parallel 
+
+    BERT,  GPT 
+
+Transformer architecture:
+    Encoder and decoder
+        encoder processes input sequence 
+        decoder generates output sequence
+
+    Self attention layers allow model to weigh importance of words
+        capture dependencies that are far apart in input sequence
+
+        enables each input word to attend to every other word, caputres context and relationships
+        Represented by Query, Key and Value 
+
+        Attention score = query dot key
+        Attentino score vector weights the value vectors
+
+
+    Feed forward layers transform input data after self attention is applied
+
+
+
+
+implement in keras:
+
+class SelfAttention(Layer): 
+    def __init__(self, d_model): # each token is embedded by a vector of length d_model
+        super(SelfAttention, self).__init__()
+        self.d_model = d_model 
+        self.query_dense = tf.keras.layers.Dense(d_model)
+        self.key_dense = tf.keras.layers.Dense(d_model)
+        self.value_dense = tf.keras.layers.Dense(d_model)
+
+    def call(self, inputs):
+        q = self.query_dense(inputs)
+        k = self.key_dense(inputs)
+        v = self.value_dense(inputs)
+
+        attention_weights = tf.matmul(q, k, transpose_b=True) # dotproduct of the matrices
+        attention_weights /= tf.math.sqrt(tf.cast(self.d_model, tf.float32)), axis=-1 
+            # dot products get big fast, so we scale down the scores by sqrt(d_model)
+            # in this case, scale down by sqrt(512)
+            # otherwise softmax becomes very peaky, almost one hot encoded
+        attention_weights = tf.nn.softmax(attention_weights)
+
+        output = tf.matmul(attention_weights, v)
+
+        return output
+    
+# example usage
+inputs = tf.random.uniform((1, 60, 512)) #shape = (batch_size, seq_len, embedding_size) # 
+    # batch size of 1 
+    # seq_len of 60 tokens 
+    # each token embedded as a vector of 512 dims
+self_attention = SelfAttention(d_model=512) # tokens are encoded as 512 dim vectors
+output = self_attention(inputs)
+print(output.shape) # still 1, 60, 512, but now they have had a chance to share attention with each other
+
+
+
+
+
+
+Transformer Encoder:
+    multiple layers 
+    self attention layers
+    feed forward layers (aka mlp, multi layer perceptron)
+    residual connections 
+    layer normalization 
+
+    the input is embedded as tokenized vectors, and passed through positional encoding for orer of words    
+        the tokeinzed vectors contain info not just about the word itself but also about what position the word is in 
+
+class TransformerEncoder(Layer):    
+    def __init__(self, d_model, num_heads, dff, dropout_rate=0.1):
+        super(TransformerEncoder, self).__init__()
+
+        # multi headed attention layers
+        # num_heads is the number of attention heads
+        self.mha = tf.keras.layers.MultiHeadedAttention(num_heads=num_heads, key_dim=d_model)
+        
+        # feed forward layers (MLP), applied to each token individually
+        # dff is hidden layer size
+        self.ffn = tf.keras.Sequential([
+            tf.keras.layers.Dense(dff, activation='relu'),
+            tf.keras.layers.Dense(d_model) # d_model is the embedding vector size - make sure we bring back down to this size so its ready for next attention head
+        ])
+        #^ we expand the embedding space up to dff, alowing for richer transformations, then bring back down to d_model
+
+        self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
+        self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
+        self.dropout1 = tf.keras.layers.Dropout(dropout_rate)
+        self.dropout2 = tf.keras.layers.Dropout(dropout_rate)
+
+
+    def call(self, inputs, training=False):
+        #training parameter needed so we know if we should use dropout or not (dropout used in training but not inference)
+
+
+        attention_output = self.mha(inputs, inputs) 
+        attention_output = self.dropout1(attention_output, training=training)
+        out1 = self.layernorm1(inputs + attention_output) # add the attention output back to the original inputs 
+
+        ffn_output = self.ffn(out1)
+        ffn_output = self.dropout2(ffn_output, training=training)
+        out2 = self.layernorm1(out1 + fnn_output) # add the residual connection to the og out1 with the new processed added 
+
+        return out2
+
+
+
+
+
+Transfomer Decoder 
+    similar thing, but with corss attention to attend to encoders output
+    lets decoder generate sequences based on context by encoder
+    - decoder takes target sequence as input
+    - applies self attention  + cross attention with encoder output, 
+    - passes through a ffn (fc layers)
+
+
+
+
+
+class TransfomerDecoder(Layer):
+    def __init__(self, d_model, num_heads, dff, dropout_rate=0.1):
+        super(TransformerDecoder, self).__init__()
+
+        self.mha1 = tf.keras.layers.MultiHeadedAttention(num_heads=num_heads, key_dim=d_model)
+        self.mha2 = tf.keras.layers.MultiHeadedAttention(num_heads=num_heads, key_dim=d_model)
+
+        self.ffn = tf.keras.Sequential([
+            tf.keras.layers.Dense(dff, acivation='relu),
+            tf.keras.layers.Dense(d_model)
+        ])
+
+        self.layernorm1 = tf.keras.layesr.LayerNormalization(epsilon=1e-6)
+        self.layernorm2 = tf.keras.layesr.LayerNormalization(epsilon=1e-6)
+        self.layernorm3 = tf.keras.layesr.LayerNormalization(epsilon=1e-6)
+
+        self.dropout1 = tf.keras.layers/Dropout(dropout_rate)
+        self.dropout2 = tf.keras.layers/Dropout(dropout_rate)
+        self.dropout3 = tf.keras.layers/Dropout(dropout_rate)
+
+        
+    def call(self, x, enc_output, training=False, look_ahead_mask=None, padding_mask=None):
+        #training parameter needed so we know if we should use dropout or not (dropout used in training but not inference)
+
+        # self attention mask 
+        self_attention_output = self.mha1(x, x, x, attention_mask=look_ahead_mask)
+        self_attention_output = self.dropout1(self_attention_output, training=training)
+        out1 = self.layernorm1(x + self_attention_output)
+
+
+        # cross attention mask 
+        cross_attention_output = self.mha2(out1, enc_output, enc_output, attention_mask=padding_mask)
+        cross_attention_output = self.dropout2(cross_attention_output, training=training)
+        out2 = self.layernorm2(out1 + cross_attention_output)
+
+        # feed forward net 
+        ffn_output = self.ffn(out2)
+        ffn_output = self.dropout3(ffn_output, training=training)
+        out3 = self.layernorm3(out2 + ffn_output)
+
+        return out3
+
