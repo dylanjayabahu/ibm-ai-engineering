@@ -26,6 +26,6 @@ class MyCustomLayer(Layer):
         return tf.manual(inputs, self.w) + self.b
 
 
-## touse custom layers in a model use them the way you would any other layer 
+## to use custom layers in a model use them the way you would any other layer 
 model.add(MyCustomLayer(64))
     
