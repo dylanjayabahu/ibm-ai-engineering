@@ -1,0 +1,53 @@
+Basic CNN:
+    conv, pool, and fc layers
+
+More advanced cnn architectures:
+    VGG
+    Resnet
+    inception networks
+
+    ^ involve deeper networks, residual connections, and multiscale feature extraction
+
+VGG (visual geometry group)-like architecture:
+    n x [
+        a x [conv]
+        pool
+    ]
+
+    #increasing channels for conv as n increases
+    
+    fc layers
+
+    # decreasing neurons for fc layers towards classification
+
+ResNet-like architecure 
+    resnet uses residual connections 
+        adresses vanishing gradient 
+        allow network to learn identity mappings
+    
+    def residual_block(x, filters, kernel_size=3, stride=1):
+        shortcut = x 
+        x = Conv2D(filters, kernel_size, strides=stride, padding='same')(x)
+        x = BatchNormalization()(x)
+        x = Activation('relu')(x)
+        x = Conv2D(filters, kernel_size, strides=1, padding='same')(x) # stride=1 so input ad output shapes match
+        x = BatchNormalization()(x)
+        x = Add()([x, shortcut]) # <-- add back the original block (shortcut) to the processed block (x)
+        x = Activation('relu')(x)
+        return x
+    
+    # if the processed block goes to 0, the block just outputs x, the identity mapping 
+        # thus, in worst case it can just pass information through 
+        # adding more layers can make model worst, but with this we can get very deep networks without worrying about that
+    
+    ##resnet like architecture
+    input = Input(shape=(64, 64, 3))
+    x = Conv2d(64, (7,7), strides=2, padding='same')(input)
+    x = BatchNormalization()(x)
+    x = Activation('relu')(x)
+    x = residual_block(x, 64)
+    x = residual_block(x, 64)
+    x = Flatten()(x)
+    outputs=Dense(10, activation='softmax')(x)
+
+    #compile with adam and categorical crossentropy
