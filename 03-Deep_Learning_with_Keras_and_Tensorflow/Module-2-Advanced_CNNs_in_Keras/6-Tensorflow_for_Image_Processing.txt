@@ -1,0 +1,10 @@
+Image Processing: transofrming or analyzing images to extract useful info  
+    medical imaging, autonomous vehciles, facial recognition 
+
+tf good for image processing b/c 
+    ez to use 
+    includes pre trained models
+    suitable for small and large scale
+    community support
+
+    e.g. ImageDataGenerator from prev lessons

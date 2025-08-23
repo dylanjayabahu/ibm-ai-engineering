@@ -1,0 +1,42 @@
+Regular convolution 
+    slide kernel across image with specified stride 
+    reduces spatial dims
+
+Transpose convolution - inverse of reg convolution 
+    upsamples input to larger size
+
+    inserts 0 b/w elements of input feature map (image)
+    apply convolution 
+
+    this increase sptial dims of input and creates an upsampled feature map
+
+Applications 
+    - Generative Adversarial Networks (GANs)
+        generate images from latent vectors 
+    
+    - Super resolution tasks (e.g. enhance image resolution)
+
+    - Semantic segmentation 
+        upsample intermediate feature maps to produce pixel-wise classification maps on larger map
+    
+
+implementing transpose_conv in keras:
+
+transpose_conv_layer = Conv2DTranspose(filters=1, kernel_size=(3,3), activation='relu', padding='same)(prev_feature_map)
+
+
+issues u may run into:
+    checkerboard artifacts:
+        a checkerboard like pattern after a conv2d transpose 
+        happens if there us uneven overlapping of convolution kernels 
+        some kernels get convolved over more, making the checkerboard appearance
+
+        ^ mitigate replacing with bilinear upsampling + conv 
+        (or make sure u choose kernel sizes that are multiples of the stride)
+
+        e.g 
+
+        x = UpSampling2D(size=(2,2))(input_layer)
+        x = Conv2D(filters=64, kernel_size=(3,3), padding='same')(x)
+
+        instead 
