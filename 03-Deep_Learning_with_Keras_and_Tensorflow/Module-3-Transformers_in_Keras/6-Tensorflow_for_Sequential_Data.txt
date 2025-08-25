@@ -1,0 +1,92 @@
+Sequential Data => order of data points is crucial
+    e.g. time series (stock price, temperature data, sensor data), text, audio (speech, music)
+
+
+Tensorflow tools for sequential data 
+    layers:
+        RNN (recurrent neural networks)
+        LSTM (Long short term memory networks)
+        Gated Recurrent Units (GRUs)
+        Convolutional layers for sequence data (Conv1D)
+
+
+################################## Build Simple RNN model ##################################
+
+def create_sine_wave_dataset(seq_length = 100)
+    x = np.linspace(0, 50, seq_length)
+    y = np.sin(x)
+    return y
+
+data = create_sine_wave_dataset()
+time_steps = np.arange(len(data))
+
+def prepare_data(data, time_steps, time_window):
+    X, Y = [], []
+    for i in range(len(data) - time_window):
+        X.append(data[i:i + time_window])
+        Y.append(data[i + time_window])
+    return np.array[X], np.array[Y]
+
+time_window = 10
+X, Y = prepare_data(data, time_steps, time_window)
+X = X.reshape((X.shape[0], X.shape[1], 1))
+
+model = Sequential([
+    SimpleRNN(50, activation='relu', input_shape=(time_window, 1)),
+    Dense(1)
+])
+
+model.compile(optimizer='adam', loss='mse')
+model.fit(X, Y, epochs=20, batch_size=16)
+
+predictions = model.predict(X)
+
+plt.plot(time_steps, data, label='True Data)
+plt.plot(time_stes[time_window:], predictions, label='Predictions')
+plt.legend()
+plt.xlabel('Time Steps')
+plt.ylabel('Value)
+plt.show()
+
+
+
+
+
+
+################################## Build LSTM ################################## 
+# LSTM is special kind of RNN capable of learning long term dependencies 
+    same thing as before but replace RNN layer with LSTM layer 
+
+lstm_model = Sequential([
+    LSTM(50, activation='rely', input_shape=(time_window, 1)),
+    Dense(1)
+])
+
+# all other parts are the same 
+
+
+
+################################## Text Data with Tf ###############################
+
+
+
+"""
+Handling Text data with Tensorflow
+    - tensorflow TextVectorization layer 
+        converts text data into numerical format 
+"""
+
+from tensorflow.keras.layers import TextVectorization 
+texts = [
+    "Hello, how are you?",
+    "I am fine, thank you.", 
+    "How about you?", 
+    "I am good too.", 
+    "I like monkeys."
+]
+
+vectorizer = TextVectorization(output_mode='int', max_tokens=100, output_Sequence_length=10)
+
+vectorizer.adapt(texts)
+text_vectorized = vectorizer(texts)
+print(text_vectozed.numpy())

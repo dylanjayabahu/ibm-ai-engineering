@@ -1,0 +1,223 @@
+additional transformer applications 
+    - cv 
+    - speech rec
+    - reinforcement learning
+
+
+
+
+--------------------- VISION TRANSFORMERS ---------------------
+
+Vision Transformers (VIT)
+    in the same way that self attention works on diff parts of input sequence
+        self attention mechanisms can be applied to diff parts of an image
+
+    often outperforms traditional computer vision like CNN 
+
+    method:
+        divide an image into patches and treat them as a sequence
+
+
+#VIT with tf:
+
+
+class TransformerBlock(Layer):
+    # define as before 
+
+    ...
+
+class PatchEmbedding(Layer): # embeds image patching into embedded dimention
+    def __init__(self, num_patches, embedding_dim):
+        super(PatchEmbedding, self).__init__()
+        self.num_patches = num_patches
+        self.embedding_dim = embedding_dim 
+        self.projection = Dense(embedding_dim)
+        
+    def call(self, patches):
+        return self.projection(patches)
+
+
+Class VisionTransformer(tf.keras.Model):
+    def __init__(self, num_patches, embedding_dim, num_heads, ff_dim, num_layers, num_classes):
+        super(VisionTransformer, self).__init__()
+
+        self.patch_embed = PatchEmbedding(num_patches, embedding_dim)
+        self.transformer_layers = [TransformerBlock(embedding_dim, num_heads, ff_dim) for _ in range(num_layers)]
+        self.flatten = Flatten()
+        self.dense = Dense(num_classes, activation='softmax')
+    
+    
+    def call(self, images, training):
+        patches = self.extract_patches(images)
+        x = self.patch_embed(patches)
+
+        for transformer_layer in self.transformer_layers:
+            x = transformer_layer(x, training=training)
+        
+        x = self.flatten(x)
+        x = self.dense(x)
+
+        return x 
+    
+    def extract_patches(self, images):
+        batch_size = tf.shape(images)[0]
+        patches = tf.image.extract_patches(
+            images=images,
+            sizes=[1, 16, 16, 1], 
+            strides=[1, 16, 16, 1], 
+            rates=[1, 1, 1, 1], 
+            padding='VALID'
+        )
+
+        patches = tf.reshape(patches, [batch_size, -1, 16*16*3])
+        return patches
+
+# example usage 
+num_patches = 196 (14x14)
+embedding_dim = 128 
+num_heads = 4
+ff_dim = 512 
+num_layers = 6 
+num_classes = 10 $ CIFAR-10 dataset 
+
+vit = VisionTransformer(num_patches, embedding_dim, num_heads, ff_dim, num_layers, num_classes)
+images = tf.random.uniform((32, 224, 224, 3))
+    # batches of 32 images 
+    # each image of size 224x224x3
+output = vit(images)
+print(output.shape) # 32, 10
+
+
+
+
+
+
+--------------------- SPEECH TRANSFORMERS ---------------------
+
+Transformers in Speech recognition 
+    convert audio signals to spectograms
+    process sequential nature of speech data
+
+    e.g.
+        wave2vec 
+        speech-transformer
+
+# Speech rec transformer
+
+class TransformerBlock(Layer):
+    # same as before 
+    ...
+
+
+class PatchEmbedding(Layer):
+    def __init__(self, num_patches, embedding_dim):
+        super(PatchEmbedding, self).__init__()
+        self.num_patches = num_patches 
+        self.embedding_dim = embedding_dim 
+        self.projection = Dense(embedding_dim)
+
+    def call(Self, patches):
+        return self.projection(patches)
+
+class SpeechTransformer(Model):
+
+    def __init__(self, num_mel_bins, embedding_dim, num_heads, ff_dim, num_transformer_layers, num_classes):
+        super(SpeechTransformer, self).__init__()
+
+        self.conv1 = Conv1D(filters=embedding_dim, kernel_size=3, strides=1, padding='same', activation='relu') # num_mel_bins is inferred here so we dont actually need it 
+        self.batch_norm = BatchNormalization()
+        self.reshape = Reshape((-1, embedding_dim))
+
+        self.transformer_layers = [TransformerBlock(embedding_dim, num_heads, ff_dim) for _ in range(num_transformer_layers)]
+
+        self.flatten = Flatten()
+        self.dense = Dense(num_classes, activation='softmax')
+
+    
+    def call(self, spectograms):
+        x = self.conv1(spectograms)
+        x = self.batch_norm(x)
+        x = self.reshape(x) 
+            # reshapes Conv1D output into a (time_steps, embedding_dim)
+            # so the transformer layers can process it.
+
+        for transformer_layer in self.transformer_layers:
+            x = transformer_layer(x)
+        x = self.flatten(x)
+        x = self.dense(x)
+
+        return x
+
+# example usage 
+num_mel_bins = 80 # frequency dimension; frequency bins in the spectogram
+embedding_dim = 128 
+num_heads = 4 
+ff_dim = 512 
+num_transformer_layers = 6 
+num_classes = 30 
+
+st = SpeechTransformer(num_mel_bins, embedding_dim, num_heads, ff_dim, num_transformer_layers, num_classes)
+
+spectrograms = tf.random.uniform((32, 100, num_mel_bins))
+    # batches of 32 spectograms with 100 time frames
+
+output = st(spectrograms)
+print(output.shape)
+
+
+
+--------------------- DECISION TRANSFORMER (REINFORCEMENT LEARNING) ---------------------
+
+Trasnformers in reinfocrment learning (RL)
+    model complex dependencies in sequences of states and actions 
+    leverage transformer architecture to predict actions based on past trajectories 
+
+
+class TransformerBlock(Layer):
+    # same 
+    ...
+
+class DecisionTransformer(Layer):
+    def __init(self, state_dim, action_dim, embedding_dim, num_heads, ff_dim, num_transformer_layers):
+
+        Super(DecisionTransformer, self).__init__()
+
+        self.state_embed = Dense(embedding_dim, activation='relu')
+        self.action_embed = Dense(embedding_dim, activation='relu')
+
+        self.transformer_layers = [TransformerBlock(embedding_dim, num_heads, ff_dim) for _ in range(num_transformer_layers)]
+
+        self.dense = TimeDistributed(Dense(action_dim))
+
+    
+    def call(self, states, actions): 
+        state_embeddings = self.state_embed(states)
+        action_embeddings = self.action_embed(actions)
+
+        x = state_embeddings + action_embeddings 
+        for transformer_layer in self.transformer_layers:
+            x = transformer_layer(x)
+        
+        x = self.dense(x)
+
+        return x 
+
+# example usage 
+state_dim = 25
+action_dim = 5
+embedding_dim = 128 
+num_heads = 4 
+ff_dim = 512 
+num_transformer_layers = 6 
+
+dt = DecisionTransformer(state_dim, action_dim, embedding_dim, num_heads, ff_dim, num_transformer_layers)
+
+states = tf.random.uniform((32, 100, state_dim))
+    # bathces of 32 sequences of 100 states 
+actions = tf.random.uniform((32, 100, action_dim))  
+    # batches of 32 sequences of 100 actions 
+
+output = dt(sates, actions)
+
+print(output.shape) # (32, 100, 5)
+    # batches of 32 for sequences of 100 and action dimension of 5

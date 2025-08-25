@@ -1,0 +1,86 @@
+Time Series data = data points collected at successive points in time 
+
+    models typically used for time series prediciton:
+        ARIMA (auto regressive integrated moving average)
+        RNN 
+        LSTM (long short term memory)
+
+    transformers have shown great promise for time series forcasting
+
+    advantages of transformers for time series prediction 
+        capture long range temporal dependencies
+        parallelized processing 
+        handle sequences of diff length and missing data better
+    
+
+# time series forecasting transformer:
+
+"""
+need to prep time series data, e.g. stock prices 
+    - normalize data 
+    - create sequences of data points as input 
+        - each sequence has specified number of time steps 
+        - label is next value in sequence
+"""
+
+data = pd.read_csv('/content/stock_prices.csv')
+data = data[['Close']].values
+
+# normalize 
+scaler = MinMaxScaler(feature_range=(0, 1))
+data = scaler.fit_transform(data)
+
+def create_dataset(data, time_step=1):
+    X, Y = [], []
+
+    for i in range(data - time_step - 1):
+        X.append(data[i:i+time_step , 0])
+        Y.append(data[i+time_step, 0])
+    return np.array(X), np.array(Y)
+
+time_step = 60
+X, Y = create_dataset(data, time_step=time_step)
+X = X.reshape(X.shape[0], X.shape[1], 1) # assuming x is nonempty
+
+class TransformerBlock(Layer):
+    # same 
+    ...
+
+
+# define transformer 
+input_shape =(X.shape[1], X.shape[2])
+inputs = Input(shape=input_shape)
+
+# embedding layer 
+embed_dim = 128
+x = Dense(embed_dim)(inputs)
+
+#transformer blocks
+num_transformer_layers = 4
+num_heads=4
+ff_dim = 512
+for _ in range(num_transformer_layers):
+    x = TransformerBlock(embed_dim, num_heads, ff_dim)(x)
+
+# flatten and last dense layer 
+x = Flatten()(x)
+outputs = Dense(1)(x)
+
+
+# make model 
+model = Model(inputs, outputs)
+model.compile(optimizer='adam', loss='mse')
+model.fit(X, Y, epochs=32, batch_size=32)
+
+
+#make predictions 
+predictions = model.predict(X)
+predictions = scaler.inverse_transform(predictions)
+
+#plot predictions
+plt.plot(Y, label='True Data')
+plt.plot(predictions, label='Predictions')
+plt.legend()
+plt.xlabel('Time')
+plt.ylabel('Stock price')
+plt.show()
