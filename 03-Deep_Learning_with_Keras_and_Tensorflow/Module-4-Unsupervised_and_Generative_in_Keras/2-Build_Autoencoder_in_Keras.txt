@@ -1,0 +1,43 @@
+Applications of autoencoder:
+    Dim reduction: 
+        train autoencoder mapping image to image
+        the encoded representation is in the latent vector at the bottleneck
+    Data denoising:
+        train autoencoder mapping noisy image to clean image 
+    Feature learning:
+        train autoencoder mapping image to image 
+        encoder has now learned ideal features to extract 
+        can apply encoder as feature extraction for a classification/other model with weights frozen 
+    
+Types of autoencoders:
+    basic autoencoder 
+    variatonal autoencoder
+        include probabilistic elements used for generating new samples
+    convolutional autoencoder 
+        use convolutional layers in the encoder (and undoes them with conv2d transpose)
+        effective on image data 
+
+# build basic autoencoder in keras 
+input_layer = Input(shape=(784, ))
+encoded = Dense(64, activation='relu')(input_layer)
+
+encoded = Dense(32, activation='relu')(input_layer)
+
+decoded = Dense(64, activation='relu')(encoded)
+decoded = Dense(784, activation='sigmoid')(decoded)
+
+autoencoder = Model(input_layer, output_layer)
+
+autoencoder.compile(optimizer='adam', loss='binary_crossentropy)
+
+autoencoder.summary()
+
+
+(x_train, _), (x_test, _) = mnist.load_data()
+x_train = x_train.astype('float32')/255.0
+x_test = x_test.astype('float32')/255.0
+
+x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))
+x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
+
+autencoder.fit(x_train, x_train, epochs=50, batch_size=256, shuffle=True, validation_data=(x_test, x_test))
