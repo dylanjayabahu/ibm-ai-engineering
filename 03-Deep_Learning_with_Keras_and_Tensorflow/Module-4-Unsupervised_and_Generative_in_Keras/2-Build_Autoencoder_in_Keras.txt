@@ -28,7 +28,7 @@ decoded = Dense(784, activation='sigmoid')(decoded)
 
 autoencoder = Model(input_layer, output_layer)
 
-autoencoder.compile(optimizer='adam', loss='binary_crossentropy)
+autoencoder.compile(optimizer='adam', loss='binary_crossentropy) # binary crossentropy is applied to each pixel and summed
 
 autoencoder.summary()
 
