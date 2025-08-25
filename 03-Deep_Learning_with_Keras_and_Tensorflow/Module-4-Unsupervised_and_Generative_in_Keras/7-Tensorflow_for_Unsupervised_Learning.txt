@@ -1,0 +1,39 @@
+Clustering with tensorflow 
+
+# implement kmeans with tf (and scikit learn)
+
+import tensorflow as tf 
+from tensorflow.keras.datasets import mnist
+import numpy as np 
+from sklearn.cluster import KMeans 
+import matplotlib.pyplot as plt 
+
+(x_train, _), (_, _) = mnist.load_data()
+x_train = x_train.astype('float32')/225.0
+x_train = x_train.reshape(-1, 28*28) #-1 = infer what it should be
+
+kmeans = KMeans(n_cluster=10)
+kmeans.fit(x_train)
+labels = kmeans.labels_
+
+def display_cluster_images(x_train, labels):
+    plt.figure(figsize=(10,10))
+    for i in range(10):
+        idx = np.where(labels==i)[0]
+        for j in range(10):
+            plt_indx = i * 10. + j + 1
+            plt.subplot(10, 10, plt_idx)
+            plt.imshow(x_train[idxs[j]].reshape(28,28), cmap='gray')
+            plt.axis('off')
+    plt.show()
+display_cluster_images(x_train, labels)
+
+
+Dimensionality reduction 
+    - build an autoencoders (see lesson 2)
+
+    u can visualize the compressed representations of the autoencoder with an extra dim-reducing technique 
+
+    e.g. after u train ur autoencoder with latent dim of 64, use tsne to visualize in 2d space 
+
+    
