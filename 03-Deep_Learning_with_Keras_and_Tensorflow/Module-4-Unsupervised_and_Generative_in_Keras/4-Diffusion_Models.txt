@@ -1,0 +1,92 @@
+Diffusion Models
+    Class of generative models
+    used in image generation and enhancement 
+
+    probabilistic models (continouous output not definite answers)
+
+    start with random noise
+    apply transformations (learned by model) to make a coherent sample 
+    iteratively refine 
+
+
+    noising process (forward process):
+        adds noise to data in series of steps 
+
+        apply gaussian noise over many steps 
+        after enough steps image ends up being pure noise 
+        ^ just like chemical diffusion; info spreads out and dissipates into noise
+            hence diffusion model 
+
+    denoising process (reverse process):
+        learns to denoise data in series of steps
+            maps the image at iteration i of noising process to iteration i-1
+            repeat until u get to i=0 
+
+            this way u go from noise to slightly less noise, not directly from all noise to no noise
+        reconstruct og data 
+
+
+applications of diffusion models   
+    Image generation
+    Image denoising 
+    Data augmentation 
+
+
+
+# diffusion model in keras
+
+input_layer = Input(shape=(28,28,1))
+x = Conv2D(32, (3,3), activation='relu', padding='same')(input_layer)
+x = Conv2D(64, (3,3), activation='relu', padding='same')(x)
+x = Flatten()(x)
+x = Dense(128, activation='relu')(x)
+x = Dense(784, activation='sigmoid')(x)
+output_layer = Reshape((28,28,1))(x)
+
+diffusion_model = Model(input_layer, output_layer)
+
+diffusion_model.compile(optimizer='adam', loss='binary_crossentropy')
+
+diffusion_model.summary()
+
+(x_train, _), (x_test, _) = mnist.load_data()
+
+x_train = x_train.astype('float32')/255.0
+x_test = x_test.astype('float32')/255.0
+x_train = np.expand_dims(x_test, axis=-1)
+x_test = np.expand_dims(x_test, axis=-1)
+
+
+## add noise 
+noise_factor = 0.5
+x_train_noisy = x_train + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=x_train.shape) # add random normal noise scaled by noise factor
+x_test_noisy = x_test + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=x_test.shape)
+x_train_noisy = np.clip(x_train_noisy, 0., 1.) # make sure values remain between 0 and 1
+x_test_noisy = np.clip(x_test_noisy, 0., 1.)
+
+
+# train model 
+diffusion_model.fit(
+    x_train_noisy, x_train,
+    epochs=50, 
+    batch_size128,
+    shuffle=True,
+    validation_data=(x_test_noisy, x_test)
+)
+
+denoised_images = diffusion_model.predict(x_test_noisy)
+n=10
+plt.figure(figure_size=(20, 6))
+for i in range(n):
+    ax = plt.subplot(3, n, i+1+n)
+    plt.imshow(x_test[i].reshape(28,28), cmap='gray')
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+    ax = plt.subplot(3, n, i+1+2*n)
+    plt.imshow(denoised_images[i].reshape(28,28), cmap='gray')
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+
+# fine tune by unfreezing top layers of model if they were used from transfer learning
