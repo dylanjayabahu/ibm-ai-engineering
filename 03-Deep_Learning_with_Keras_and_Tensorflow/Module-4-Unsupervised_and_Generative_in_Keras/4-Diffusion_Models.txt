@@ -89,4 +89,4 @@ for i in range(n):
     ax.get_yaxis().set_visible(False)
 
 
-# fine tune by unfreezing top layers of model if they were used from transfer learning
+# fine tune by freexing bottom layers of model and only unfreeze the top layers of model
