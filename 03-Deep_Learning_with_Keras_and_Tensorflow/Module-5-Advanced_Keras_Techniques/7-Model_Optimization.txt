@@ -1,0 +1,26 @@
+model optimization = improving performance efficiency and scaleablity of models
+
+optimization techniques
+    weight initializiation
+    learning rate scheduling
+    batch normalization
+
+weight initializiation 
+    -> "Xavior" (glorot) initialization
+    -> "He" initializations
+
+    # apply he initialization with keras 
+
+    from tensorflow.keras.initializers import HeNormal 
+    # import sequential dense flatten etc too
+
+    model = Sequential([
+        Flatten(input_shape=(28, 28)),
+        Dense(128, activation='relu', kernel_initializer=HeNormal()),   # apply  He initialization 
+        Dense(10, activation='softmax')
+    ])
+
+
+
+learning rate scheduling    
+    

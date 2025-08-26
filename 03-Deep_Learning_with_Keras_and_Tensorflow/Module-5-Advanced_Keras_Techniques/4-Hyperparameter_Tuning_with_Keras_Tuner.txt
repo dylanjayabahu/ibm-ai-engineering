@@ -1,0 +1,77 @@
+Hyperparameter tuning helps optimize model performance
+    finds best set of hyperparameters 
+    keras tuner provides easy to use interface 
+
+Hypeparameters = variables that govern training process of a model 
+    not learned during training; must be set before 
+    e.g. 
+        learning rate, 
+        batch size, 
+        num layers, units per layer (u can tune model architecture?!?!)
+    
+Keras Tuner 
+    library to automate process of hyperparameter (hp) tuning 
+
+    provides search algos to find best set of hps 
+        random search
+        hyperband
+        bayesian optimization
+
+
+# setting up keras tuner 
+!pip install keras-tuner 
+import keras_tuner as kt
+## import sequential dense flatten mnist adam as well
+
+def build_model(hp):
+    model = Sequential([
+        Flatten(input_shape=(28,28)),
+        Dense(
+            units=hp.Int('units', min_value=32, max_value=512, step=32), # check all units from 32 to 512 increasing by jumps of 32
+            activation='softmax'),
+        Dense{10, activation='softmax'}
+    ])
+
+    model.compile(
+        optimizer=Adam(learning_rate=hp.Float('learning_rate', min_value=1e-4, max_value=1e-2, sampling='LOG')), # find best learning rates between 1e-4 and 1e-2
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+
+    return model
+
+    """
+    #hp.Int used for integer hyperparameters
+        pass name of hyperparameter as first argument, then min and max value and step
+    #hp.Float used for continuous hyperparameters 
+        pass name of hyperparameter as first arugment, then min and max and then how to sample from the continuous range (e.g. 'LOG)
+    """
+
+
+tuner = kt.RandomSearch(
+    build_model,
+    objective='val_accuracy', # find best config to optimize for val_accuracy
+    max_trials=10, # how many different combinations to test 
+    executions_per_trial=2, # how many times the same combination is tested (reduces bias from randomness in training); takes average of all results in that combo
+    directory='my_dir',
+    project_name='intro_to_kt'
+)
+
+
+(x_train, y_train), (x_val, y_val) = mnist.load_data()
+x_train, x_val = x_train / 255.0, x_val / 255.0
+tuner.search(x_train, y_train, epochs=5, validation_data= (x_val, y_val)) # run the hyperparameter search
+    # evaluates diff combos (up to max_trials combos) and will allow u to retrieve the best combo
+
+best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
+print(f"""
+Optimal num units in first dense layers is {bes_hps.get('units')}.
+Optimal lr for optimizer is {best_hps.get('learning_rate')}
+""")
+
+model = tuner.hypermodel.build(best_hps)
+model.summary()
+
+# rest of process is same
+model.fit(x_train, y_train, ...)
+model.evaluate(...)

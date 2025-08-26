@@ -17,9 +17,6 @@ env/
 venv/
 *.env
 
-# Logs
-*.log
-
 # Temporary files
 *.tmp
 *.swp
@@ -35,10 +32,14 @@ ignoreme.txt
 **.keras
 **model.png
 
-# Datasets
+# Datasets and logs
 aircraft_damage_dataset_v1/
 **aircraft_damage_dataset_v1.tar
 **sample.jpg
 sample_images/
 sample_data/
 **.csv
+my_dir/
+*.log
+tuner_results/
+tuning_results/
