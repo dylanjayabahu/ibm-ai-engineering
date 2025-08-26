@@ -1,0 +1,110 @@
+Custom Training Loops
+    allows u to implemented custom training strategies or custom loss functions
+
+    # sample custom training loop 
+
+    import tensorflow as tf 
+    from tensorflow.keras.models import Sequential 
+    from tensorflow.keras.layers import Dense 
+
+    model = Sequential([Dense(64, activation='relu), Dense(10)])
+
+    optimizer = tf.keras.optimizers.Adam()
+    loss_fn = tf.keras.losses.SparesCategoricalCrossentropy(from_logits=True) #set a loss function 
+
+    # get sample data
+    x_train = tf.random.uniform((100, 10))
+    y_train = tf.random.uniform((100,), maxval=10, dtype=tf.int64)
+    train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_Train)).batch(32)
+
+    # itearte through the number of epochs wanted
+    num_epochs = 10
+    for epoch in range(num_epochs):
+        for x_batch, y_batch in train_dataset:
+            with tf.GradientTape() as tape:
+                logits = model(x_batch, training=True) #forward pass
+                loss = loss_fn(y_batch, logits) # compute loss
+
+            grads = tape.gradient(loss, model.trainable_weights) # compute gradients
+            optimizer.apply_gradients(zip(grads, model.trainable_weights)) # back propagation
+        
+        print(f'Epoch {epoch+1}, Loss: {loss.numpy()}')
+
+
+
+
+
+Specialized Layers
+    e.g. custom dense layers, custom activation functions, lambda functions 
+
+    # sample custom dense layer 
+
+    class CustomDenseLayer(Layer):
+        def __init__(self, units=32):
+            super(CustomDenseLayer, self).__init__()
+            self.units = units # default number of nodes
+        
+        # must have a build if defining a layer class that does not build when you init
+        def build(self, input_shape):
+            self.w = self.add_weight(
+                shape=(input_shape[-1], self.units),
+                initializer ='random_normal',
+                trainable=True,
+            )
+
+            self.b = self.add_weight(
+                shape=(self.units,),
+                initializer='zeros',
+                trainable=True
+            )
+        
+        def call(self, inputs):
+            return tf.matmul(inputs, self.w) + self.b
+        
+
+    model = Sequential([CustomDenseLayer(64), Dense(10)]) # can be used like any other layer
+
+
+
+
+
+
+Advanced callback functions
+    used for:
+        monitor training 
+        early stopping
+        model checkpoints 
+        custom callbacks 
+    
+    # sample custom callback to log more metrics 
+
+    from tensorflow.keras.callbacks import Callback 
+
+    class CustomCallback(Callback):
+        def on_epoch_end(self, epoch, logs=None)
+            logs = logs or {}
+            print(f'End of epoch {epoch}, loss: {logs.get('loss')}, accuracy: {logs.get("accuracy")})
+
+    
+    # usage in model training 
+    model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=['accuracy'])
+    model.fit(train_ds, epochs=10, callbacks=[CustomCallback()])
+
+
+
+Model Optimization 
+    tools include:
+        Mixed precision training 
+        tensorflow optimization toolkit
+
+    mixed precision training:
+        use both 16 bit and 32 bit floats for training 
+        some parts run on FP16 (Faster, less memory)
+        critical parts (Weight update, loss scaling, accumulation of gradients) use Fp32
+    
+    # mixed precision training intensorflow
+    from tensorflow.keras import mixed_precision 
+
+    mixed_precision.set_global_policy('mixed_float16')
+
+    # then define compile and train model as usual

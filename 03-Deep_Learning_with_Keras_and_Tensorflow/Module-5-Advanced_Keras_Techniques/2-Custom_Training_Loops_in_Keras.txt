@@ -1,0 +1,52 @@
+Components of custom training loop 
+    includes dataset model, optimizer, and loss function
+
+# implement custom training loop 
+
+# import tf keras etc
+...
+
+# prepare dataset and batch it form training
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+x_train, x_test = x_train/255.0, x_test/255.0
+train_dataset = tf.data.Datset.from_tensor_slices((x_train, y_train)).batch(32)
+
+
+# define loss function and optimizer 
+
+loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) # measures poorness of model
+optimizer = tf.keras.optimizers.Adam() # how weights are updated 
+
+# make simple model 
+model = Sequential([
+    Flatten(input_shape=(28, 28)),
+    Dense(128, activation='relu'),
+    Dense(10)
+])
+
+epochs=5
+
+
+for epoch in range(epochs):
+    print(f'Start of epoch {epoch+1}')
+
+    for step, (x_batch_train, y_batch_train) in enumerate (train_dataset):
+        with tf.GradientTape() as tape: # tensorflow api that records operations for autamatic differentiation; 
+            # it 'watches' the operations performed on the forward pass so that it can take the derivatives needed for backprop with respect to each weight
+
+
+            logits = model(x_batch_train, training=True) # compute the logits; logits = unnormalized output of neural net
+            loss_value = loss_fn(y_batch_train, logits)
+
+        gradients = tape.gradient(loss_value, model.trainable_weights)
+        optimizer.apply_gradients(zip(gradients, model.trainable_weights))
+
+        if step%200 == 0:
+            print(f'epoch {epoch+1} step {step}: Loss = {loss_value.numpy()})
+        
+
+Benefits of custom training loop 
+    custom loss functions and optimization stratgies 
+    advanced logging and monitoring 
+    flexibility for research and development 
+    integration with custom operations and layers
