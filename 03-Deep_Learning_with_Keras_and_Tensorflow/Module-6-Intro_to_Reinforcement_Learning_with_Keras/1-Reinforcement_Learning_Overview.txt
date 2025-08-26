@@ -1,0 +1,27 @@
+Reinforcement Learning (RL)
+    agent interacts with environment
+    agent chooses from a set of available actions 
+
+    actions u take impact the environment
+        which impacts agent through rewards
+        rewards are generally unkown and must be estimated by agent 
+    repeat this dynamically; agents continuously learn 
+
+    limitations
+        significatn data and computational requirements
+        such a large environment/action space for most contexts 
+
+
+    positive actions are reinforced via rewards
+    negative actions are reinforced via less reward or punishment
+
+    over training we develop a policy that agents use to choose actions based on state 
+
+# implementing in python 
+# most common library for RL is OpenAI GYM 
+
+import gym 
+
+env = gym.make("environment_type")
+
+env.render() # show the current state of environment

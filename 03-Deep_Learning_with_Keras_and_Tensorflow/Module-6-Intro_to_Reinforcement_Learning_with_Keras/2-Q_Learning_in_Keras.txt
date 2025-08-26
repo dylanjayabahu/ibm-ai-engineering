@@ -1,0 +1,159 @@
+Q-learning 
+    RL algorithnm 
+    q learning learns value of a specific action in a state 
+    agent policy is to choose the optimal action 
+
+    q-value function; Q(s, a)
+        provides the measure of expected utility of action a in state s 
+        
+        updated iteratively with Bellman equation 
+            takes into account immediate reward and estimated future rewards
+
+
+            s = current sate 
+            a = current action 
+            r = reward after taking action a 
+            s' = state resulting from taking action a 
+            a' = next action
+
+            alpha = lr, controls how much new info overrides old info 
+            gamma = discount factor; importance of future rewards
+
+
+            update Q(s, a) as:
+                Q(s, a) += alpha * [ new_estimate - old_estimate ]
+
+                new_estimate = r + future_reward_estimate 
+                             = r + gamma * Max(Q(s', a'))
+                    Max(Q(s', a')) is best possible reward of all our next actions; expected future reward 
+                
+                old_estimate = Q(s, a)
+
+                so, we update as
+
+                Q(s, a) += alpha * [ (r + gamma * Max(Q(s', a'))) - (Q(s, a)) ]
+            
+implementing q-learning with keras 
+    define platform (e.g. openai gym) and environment 
+        e.g. cart pole env from gym; balance a cart pole 
+
+    initialize q table 
+        if q table is not feasible for large state space, use a nn (q-network) instead 
+        this q network will approximate q value funciton 
+        can be built in keras witha few dense layers
+            input_layer_size = state_size
+            output_layer_size = action_size
+
+    set hyperparameters 
+        lr (alpha)
+        discount factor (gamma), how much to weight future rewards 
+        exploration rate (epsilon), allow for random exploration to gain more info 
+   
+    train network 
+
+        start with Q(s, a) = 0 for all s and a 
+        or, for q network implementation, it will be random output intially
+
+        implement training loop    
+            initialize state 
+            select action with epsilon-greedy policy 
+                choose a random action epsilon with probability epsilon [exploration]
+                else, choose the best action (greedy) based on Q(s, a) [exploitation]
+            execute chosen action in env 
+            update q-values with bellman equation 
+                Q(s, a) += alpha * [ (r + gamma * Max(Q(s', a'))) - (Q(s, a)) ]
+            
+            repeat until agent achieves goal 
+            gradually reduce epislon as training goes on to shift towards exploitation
+
+            
+    evaluate agent 
+        test agnet in environment with the learned policy 
+        exploit learned q-values to maximize rewards    
+            (typically) no exploration once the policy has been made; epsilon = 0
+        measure performance as total rewards
+
+# code 
+
+import gym
+import numpy as np
+
+env = gym.make('CartPole-v1')
+
+# Set hyperparameters
+alpha = 0.001  # Learning rate
+gamma = 0.99   # Discount factor
+epsilon = 1.0  # Exploration rate
+epsilon_min = 0.01 # minimum that epsilon can decay to
+epsilon_decay = 0.995 # decay rate; shift from exploration to exploitation
+episodes = 100 # we iterate episodes, not epochs any more
+
+# Initialize the Q-table
+state_size = env.observation_space.shape[0]
+action_size = env.action_space.n
+q_table = np.zeros((state_size, action_size))
+
+
+## Use Q network if state/action landscape is too big for a q table 
+
+def build_q_network(state_size, action_size):
+    model = Sequential()
+    model.add(Dense(24, input_dim=state_size, activation='relu'))
+    model.add(Dense(24, activation='relu'))
+    model.add(Dense(action_size, activation='linear'))
+    model.compile(loss='mse', optimizer=Adam(learning_rate=alpha))
+    return model
+
+# Build the Q-network
+q_network = build_q_network(state_size, action_size)
+
+# train q network
+episodes = 100
+for episode in range(episodes):
+    state, info = env.reset()
+    state = np.reshape(state, [1, state_size])
+    total_reward = 0
+    for time in range(500):
+        if np.random.rand() < epsilon:
+            action = np.random.choice(action_size)
+        else:
+            q_values = q_network.predict(state)
+            action = np.argmax(q_values[0])
+        
+        next_state, reward, done, trunc, _ = env.step(action)
+        next_state = np.reshape(next_state, [1, state_size])
+
+        total_reward += reward
+
+        if done:
+            reward = -10
+
+        q_target = q_network.predict(state)
+        q_target[0][action] = reward + gamma * np.amax(q_network.predict(next_state)[0])
+        q_network.fit(state, q_target, epochs=1, verbose=0)
+        state = next_state
+
+        if done:
+            print(f"Episode: {episode+1}/{episodes}, Score: {total_reward}")
+            break
+
+        if epsilon > epsilon_min:
+            epsilon *= epsilon_decay
+    
+# evaluate agent 
+for episode in range(10):
+    state, info = env.reset()
+    state = np.reshape(state, [1, state_size])
+    total_reward = 0
+    for time in range(500):
+        env.render()
+        q_values = q_network.predict(state) #note - no epsilon, no more exploration when not training
+        action = np.argmax(q_values[0])
+        next_state, reward, done, trunc, _ = env.step(action)
+        next_state = np.reshape(next_state, [1, state_size])
+        total_reward += reward
+        state = next_state
+        if done:
+            print(f"Episode: {episode+1}, Score: {total_reward}")
+            break
+env.close()
