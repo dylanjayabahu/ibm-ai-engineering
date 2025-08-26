@@ -1,0 +1,89 @@
+Benefits of optimized models 
+    faster training times 
+    reduced model size
+    efficient resource utilization 
+    perform better for training and inference 
+    scalability for deployment 
+    lower memory and power consumption 
+
+mixed precision training 
+    leverages 16 and 32 bit floating pionts
+    accelerates model training and reduces memory usage
+    reduces memory bandwith
+    uses lower precision 
+    trains faster without loss of model acc
+
+    # see previous lesson
+
+
+knowledge distillation
+    trains a smaller student model to mimic behaviour of larger teacher model 
+    teacher is typically a deep and complex nn trained to high acc 
+    student is a smaller simpler nn that learns from teacher and tries to match teacher output 
+    reduces model size, faster inference
+    suitable on resource constrained devices
+    retains performance of more complex model 
+
+    #teacher model (complex model)
+    teacher_model = models.Sequential([
+        layers.Input(shape=(28,28)),
+        layers.Fatten(),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(10, activation='softmax')
+    ])
+
+    teacher_model.compile(
+        optimizer=optimizers.Adam(),
+        loss='spares_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    
+    # train teacher model 
+    ...
+
+
+    # student model (simple model)
+    student_model = models.Sequential([
+        layers.Input(shape=(28,28)),
+        layers.Flatten(),
+        layers.Dense(32, activation='relu'),
+        layers.Dense(10, activation='softmax')
+    ])
+
+    student_model.compile(
+        optimizer=optimizers.Adam(),
+        loss='spares_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+
+def distillation_loss(logits, student_logits, temperature=3):
+    teacher_probs = tf.nn.softmax(teacher_logits / temperature)
+    student_probs = tf.nn.softmax(student_logits / temperature)
+
+    loss = tf.reduce_mean(tf.keras.losses.categorical_crossentropy(teacher_probs, student_probs))
+
+    return loss
+
+def train_student(studnet, teacher, x_train, _train, batch_size=32, epochs=2, temperature=3);
+    for epoch in range(epochs):
+        num_batches = len(x_train)
+
+        for batch in range(num_batches):
+            
+            x_batch = x_train[batch * batch_size: (batch+1) * batch_size]
+            y_batch = y_train[batch * batch_size: (batch+1) * batch_size]
+
+            teacher_logits = teacher.predict(x_batch)
+
+            with tf.GradientTape() as tape:
+                student_logits = studnet(x_batch)
+                loss = distillation_loss(teacher_logits, student_logits, temperature)
+            
+            grads = tape.gradient(loss, student.trainable_variables)
+            student.optimizer.apply_gradients(zip(grads, student_trainable_variables))
+
+        print(f"Epoch {epoch+1} completed. Loss: {loss.numpy()}")
+    
+    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+    
+    # train student model now

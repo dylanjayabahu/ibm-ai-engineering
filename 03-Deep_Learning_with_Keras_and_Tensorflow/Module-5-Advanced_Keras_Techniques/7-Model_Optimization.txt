@@ -1,11 +1,16 @@
 model optimization = improving performance efficiency and scaleablity of models
 
-optimization techniques
+optimization techniques include
     weight initializiation
     learning rate scheduling
     batch normalization
+    mixed precision training 
+    quantization
 
-weight initializiation 
+
+
+
+---------------------- weight initializiation ----------------------
     -> "Xavior" (glorot) initialization
     -> "He" initializations
 
@@ -22,5 +27,69 @@ weight initializiation
 
 
 
-learning rate scheduling    
+---------------------- learning rate scheduling ----------------------
+
+# imports and load data 
+
+
+from tensorflow.keras.callbacks import LearningRateScheduler
+def scheduler(epoch, lr):
+    if epoch < 10:
+        return lr 
+    else:
+        return float(lr * tf.math.exp(-0.1)) # exponentially decrease after 10 epochs
     
+lr_scheduler = LearningRateScheduler(scheduler)
+
+#make and compile model yadayada
+
+history = model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=20, callbacks=[lr_scheduler])
+
+
+
+------------------------ batch normalization --------------------------
+
+model = Sequential([
+    Flatten(input_shape=(28, 28)), 
+    Dense(128, activation='relu'),
+    BatchNormalization(),
+    Dense(10, activation='softmax')
+])
+
+
+------------------------ mixed precision training --------------------------
+
+from tensorflow.keras import mixed_precision
+
+policy = mixed_precision.Policy('mixed_float16')
+mixed_precision.set_global_policy(policy)
+
+
+------------------------ model pruning --------------------------
+- reduces number of parameters in model by removing less significant connections or neurons 
+
+import tensorflow_model_optimization as tfmot 
+
+prune_low_magnitude = tfmot.sparsity.keras.prune_low_magnitude
+pruning_params={
+    'pruning_shcedule': tfmot.sparsity.keras.PolynomialDecay(
+        initial_sparsity=0.0,
+        final_sparsity=0.5,
+        begin_step-0,
+        end_step2000
+    )
+}
+
+model_pruned = prune_low_magnitude (model, **pruning_params)
+
+
+------------------------ quantization --------------------------
+- reduces precision of model weights 
+- useful for deploying on edge models
+
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations=[tf.lite.Optimize.DEFAULT]
+quantized_model = converter.convert()
+
+with open('quantized_model.tflite', 'wb') as f:
+    f.write(quantized_model)

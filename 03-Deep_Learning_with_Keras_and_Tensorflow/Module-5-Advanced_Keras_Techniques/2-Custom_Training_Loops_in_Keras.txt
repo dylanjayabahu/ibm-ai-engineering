@@ -1,5 +1,5 @@
 Components of custom training loop 
-    includes dataset model, optimizer, and loss function
+    includes dataset, model, optimizer, and loss function
 
 # implement custom training loop 
 
