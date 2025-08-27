@@ -1,0 +1,14 @@
+Minibatch gradient descent 
+    in between batch gd and stochastic gd 
+    u process data in batches and compute loss on that batch, then repeat till all data is covered - that is still one epoch 
+    
+    number of iterations per epoch = num_data//batch_size + 1
+
+    batch_size = 1 is the same as stochastic gd 
+    batch_size = num_data is same as batch gd 
+
+to implement in pytorch
+change batch_size parameter in DataLoader object
+rest of code is same as it was in sgd 
+
+convergence rate = how quickly we get to point where loss stops decreasing

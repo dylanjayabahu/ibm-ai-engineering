@@ -13,10 +13,14 @@ lr = 0.1
 
 approx_costs = [] # the cost after each data point; each step within the epoch
 costs=[]
+
+trainloader = DataLoader(dataset = dataset, batch_size = 1) # set batchsize=1 for sgd
+
 for epoch in range(num_epochs):
 
     total_cost = 0
     for x, y, in zip(X,Y): # same process, but run on each x,y pair in ds individually; 
+    for x, y, in trainloader: # if using train loader, use this line instead
         yhat = w*X + b 
         loss = mse(yhat, Y)
 
