@@ -1,0 +1,52 @@
+Linear regression 
+    find a linear relationship between independent/feature variables, X, and dependent/target variables y
+        in simple linear regression X is only 1 dim 
+    
+    y = b + wx 
+
+    y_hat denotes an estimate
+
+# import torch 
+
+#initialize weights and biases (randomly)
+w = torch.tenor(2.0, requires_grade = True)
+b = torch.tenor(-1.0, requires_grade = True)
+
+def forward(x):
+    y = w*x + b 
+    return y
+
+x = torch.tensor([1.0])
+y_hat = forward(x)
+
+x = torch.tensor([1],[2])
+y_hat = forward(x) # apply to every row of tensor 
+
+# Class Linear 
+from torch.nn import Linear
+
+torch.manual_seed(1) # initialize 
+model = Linear(in_features=1, out_features=1)
+print(list(model.parameters())) # first term bias, second term weight
+x = torch.tensor([0.0])
+yhat = model(x) 
+x = torch.tensor([1],[2])
+yhat = model(x) # same as above; can be done on several x values
+
+
+# Custom MOdule 
+    # lets u wrap complex objects for more complex models 
+class LR(nn.Module):
+    def __init__(slef, in_size, output_size):
+        super(LR, self).__init__()
+        self.linear = nn.Linear(in_size, output_size)
+
+    def forward(self, x): # behaves like __call__
+        return = self.linear(x)
+model = LR(1,1)
+#can forcefully change parameters with .state_dict 
+    # state_dict returns a dictionary
+model.state_dict()['linear.weight'].data[0] = torch.tensor([0.5])
+model.state_dict()['linear.bias'].data[0] = torch.tensor([0.25])
+print*list(mode.parameters())
+yhat = model(x)
