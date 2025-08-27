@@ -1,0 +1,82 @@
+from torch.utils.data import Dataset
+import torch
+
+# sample dataset class with usless data
+class toy_set(Dataset):
+    def __init__(self, length=100, transform=None):
+        self.x = 2 * torch.ones(length, 2)
+        self.y = torch.ones(length, 1)
+        self.len = length
+        self.transform = transform
+
+    def __getitem__(self, index):
+        sample = self.x[index], self.y[index]
+        if self.transform:
+            sample = self.transform(sample)
+        return sample
+
+    def __len__(self):
+        return self.len # num samples in dataset 
+    
+
+# toy_set behaves like a list/tuple/other iterable python object
+dataset = toy_set()
+dataset[0] # __getitem__ is what is called here 
+
+for i in range(3):
+    x,y=dataset[i]
+    print(f"{i} x: {x}, y: {y}")
+
+# transforms (e.g. normalize or standardize) 
+
+# create a sample (useless) transform class that is callable
+class add_mult(object):
+    def __init__(self,addx=1,muly=1):
+        self.addx=addx
+        self.muly=muly
+    def __call__(self, sample): # is run whenever the object is called
+        x=sample[0]
+        y=sample[1]
+        x= x+self.addx
+        y=y*self.muly
+        sample=x,y 
+        return sample
+    
+
+dataset=toy_set() # None is passed as transform, so just the og sample is returned 
+a_m = add_mult()
+x_,y_ = a_m*data_set[0] # manually apply transform to datase[0]
+
+
+# or just apply transform when dataset is created
+a_m = add_mult()
+dataset_= toy_set(transform=a_m) # put an underscore after var name to indicate a transform has been applied
+    # indicates not raw data 
+
+dataset[0] # now returns the transformed version of dataset[0]
+
+# composing transforms; can be done with compose class 
+
+#lets add an extra transform on top of the one we already have 
+def mult(object):
+    def __init__(self, mul=100):
+        self.mul=mul
+    
+    def __call__(self, sample):
+        x = sample[0]
+        y=sample[1]
+        x *= self.mul
+        y *= self.mul
+        sample = x,y
+        return sample
+
+
+# to compose the tranforms:
+from torchvision import transforms
+
+data_transform = transforms.Compose([mult(), add_mult()]) # compose add_mult with mult; mult happens first
+
+# can apply composed transform on data directly 
+x_, y_ = data_transform(data_set[0])
+# or pass it in as a transform when initializing the class object
+dataset_= toy_set(transform=data_transform)
