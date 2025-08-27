@@ -1,0 +1,43 @@
+Batch gradient descent - minimize based on cost function on whole ds at once
+Stochastic gradient descent - minimize based on each sample of ds each time; once we cover all samples its still an epoch
+    cost fluctuates rapidly with iterations this way - not as stable as batch gd 
+
+# sgd in pytorch 
+
+w, b, X, f, Y are made as before 
+
+def forward(X)...
+def criterion(yhat, y)... # aka loss, mse
+
+lr = 0.1
+
+approx_costs = [] # the cost after each data point; each step within the epoch
+costs=[]
+for epoch in range(num_epochs):
+
+    total_cost = 0
+    for x, y, in zip(X,Y): # same process, but run on each x,y pair in ds individually; 
+        yhat = w*X + b 
+        loss = mse(yhat, Y)
+
+        loss.backward()
+
+        w.data -= lr * w.grad.data # partial derivatives
+        b.data -= lr * b.grad.data 
+        
+        w.grad.data.zero_()
+        b.grad.data.zero_() 
+
+        approx_costs.append(loss.item())
+        total_cost += loss.item()
+    
+    costs.append(total_cost/len(Y)) # true MSE for this epoch
+
+
+SGD with data loader 
+
+class Data(Dataset): #define same as before 
+    ...
+
+dataset = Data()
+trainloader=DataLoader(dataset=dataset, batch_size=1)
