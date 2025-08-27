@@ -1,0 +1,130 @@
+1 dimensional tensors 
+    0d tensor is a single number; a scalar
+    1d tensor is a vector 
+        all elements are same data type (e.g. float32)
+        tensor type is type of tensor (e.g. torch.*.FloatTensor)
+
+
+# creating tensor in code 
+
+import torch 
+a = torch.tensor([7, 2, 4, 3, 6])
+# can index a tensor in the same way as list 
+a[0] ##7
+a.dtype ## torch.int64
+a.type() ## torch.LongTensor
+
+
+# float tensor
+a = torch.tensor([0.1, 0.2, 0.3, 0.6])
+a.dtype ##torch.float32
+a.type() ## torch.FloatTensor
+
+
+# can specify dtype in constructor 
+a = torch.tensor([1.0, 2.0, 3.0, 4.0], dtype=torch.int32)
+# or explicitly make tensor a specific type
+a = torch.FloatTensor([1, 2, 3, 4])
+a.type() # float tensor 
+
+# can convert tensors to diff type 
+a = torch.tensor([1, 2, 3, 4])
+a = a.type(torch.FloatTensor)
+a.type() # torch.FloatTensor 
+a.dtype # float32
+
+
+a.size() # gives num elements in tensor 
+a.ndimension() # num dims in the tensor; in this case 1
+
+# often u need to convert 1d densor to 2d to pass into nn 
+    like in tensorflow u would to .reshape(-1, 784)
+# do this in pytorch with the view method 
+a = torch.tensor([1, 2, 3, 4, 5])
+a_col = a.view(5, 1) # 5 rows 1 col
+#or just like in tf u can do -1 if u dont know a dim 
+a_col = a.view(-1, 1) # infers what should go in the -1 spot 
+
+
+# converting b/w np and torch 
+np_array = np.array([1, 2, 3, 4, 5, 6, 7])
+torch_tensor = torch.from_numpy(numpy_array)
+back_to_np = torch_tensor.numpy()
+# note that these retain pointer references; 
+    if u change np array, torch_tensor changes as well, and hence back_to_numpy also gets updated 
+
+
+# converting b/w pandas series and torch 
+pd_series = pd.Series([0.1, 0.2, 0.3, 0.4])
+pd_to_torch = torch.from_numpy(pd_series.values)
+
+
+# converting b/w lists and torch 
+torch_tensor = torch.tensor([1, 2, 3, 4, 5])
+torch_to_list = torch_tensor.tolist()
+
+
+# tensor slicing and indexing 
+    #slicing a tensor also returns a tensor 
+t = torch.tensor([1, 2, 3, 4])
+t[0] # a tensor of rank 0 with the value 1; torch.tensor(5)
+
+# if we wanted the value, we could use 
+t[0].item() ## 5
+
+
+c = torch.tensor([1, 2, 3, 4, 5])
+c[0] = 100 # c is now tensor([100, 2, 3, 4, 5])
+c[4] = 0 # c is now tensor([100, 2, 3, 4, 0])
+
+# can also slice just like python list 
+d = c[1:4]# d is now tensor([2, 3, 4])
+    # last index is noninclusive 
+    # if u update d then the corresponding values in c will get updaeted
+c[3:5] = tensor([400, 500]) # c is now tensor([100, 2, 3, 400, 500])
+
+
+# vector addition and subtraction     
+u = some torch tensor 
+v = some torch tensor 
+z = u+v ##adds vectors u and v
+d = u-v ##subtracts vectors u and v
+
+# can also apply the same operation to every value 
+u = some tensor 
+u+1 # add 1 to each element of u
+#^ this is called braodcasting
+
+
+#vector scalar multiplication 
+u = some torch tensor 
+c = some scalar 
+r = u*c # scale u by c
+
+
+# hadamard product of two tensors
+    # hadamard product = just multiply the corresponding components to give u a new vector 
+z = u * v ## gives the hadamard product of u and v 
+
+# dot product 
+z = torch.dot(u, v)
+
+# functions on tensors 
+# e.g. tensor.mean(), tensor.max()
+
+
+# can make functions mapping tensors to tensors 
+x = torch.tensor(0, np.pi/2, np.pi)
+y = torch.sin(x) # gives tensor(0, 1, 0)
+
+
+# linspace function 
+# returns evenly spaced numbers over an interval 
+
+torch.linspace(-2, 2, steps=5) # 5 samples eventlu between -2 and 2
+
+# can be used to plot functions 
+x = torch.linspace(0, 2*np.pi, 100)
+y = torch.sin(x)
+plt.plot(x.numpy(), y.numpy())
+plt.show()

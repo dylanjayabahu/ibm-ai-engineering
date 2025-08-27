@@ -1,0 +1,17 @@
+Tensors: data structure that is a generalization for numbers/dimensional arrays in python 
+    e.g. an array of scalors is a vector, an array of vectors is a matrix, etc. the general term is a tensor
+    scalar is a rank 0 tensor
+    vector is a rank 1 tensor
+    matrix is a rank 2 tensor 
+    stack of matrices is a rank 3 tensor 
+    batch of images w/ rgb is a rank 4 tensor
+
+Neural nets are composed of tensors
+    hence 'tensor'flow 
+    nns in pytorch are made of pytorch tensors
+
+Operations on tensors are extentions of vector and matrix Operations
+
+Convert data to pytorch tensors so that it can be fed into a nn 
+    ez to turn np arrays into pytorch tensors and vice versa
+    hence pytorch can work with the rest of python ecosystem very well 
