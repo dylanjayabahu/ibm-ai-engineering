@@ -1,0 +1,37 @@
+2d tensor; matrix 
+    images (grayscale) are often stored as 2d tensors 
+        rgb images are 3d tensors; 3 2d tensors for r g and b 
+
+a = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] # 2d array 
+A = torch.tensor(a)
+A.ndimension() # 2, also referred to as rank 
+A.shape # torch.Size(3,3) # given as rows, columns
+    # vertical axis is 0 
+    # horizontal axis is 1 
+A.numel() # 9; total number of elements     
+    # found by multiplying num rows and cols together
+
+#indexing and slicing of pytorch tensors
+#use rect brackets just as in python 2d arrays 
+A[i][j]
+    # i is row index, j is colindex 
+A[i, j] # is the same as A[i][j], and is preferred
+    # note that if u want several/a range for i and j u can put lists or tensors of ints in their place 
+    # basically slicing of non sequential rows/cols
+A[0, 0:2] # slices cols 0 and 1 from row 0 
+A[0, [0,1]] # gives same result as above, but it isn't a view (it makes a whole new tensor, not a reference)
+
+
+
+# tensor operations in 2d
+A + B # adds two tensors, as is done in matrix addition 
+A - B # subtracts two tensors, as is done in matrix subtraction 
+A * scalar # multiplies matrix by scalar; multiply every element of A by scalar 
+A * B # gives the hadamard product; component wise multiplication
+
+# multiplying matrices with dot product; follows linear algebra 
+    # as is required by lin alg, if shape of A is (p, q), then shape of B must be (q, s)
+    # for the result, A @ B, (@ is python syntax for matrix multiplication)
+    # the ith row and jth column of new matrix = dot product of ith row in A and jth row in B 
+    # this gives a matrix of shape (p, s) as a result
+c = torch.mm(A, B)
