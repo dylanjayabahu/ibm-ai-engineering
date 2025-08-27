@@ -1,0 +1,31 @@
+instead of y = wx, as we have done so far 
+y = wx + b 
+
+now we have to visualize loss in a 3d; 
+bottom plane is the parameters, with w/b on either axis. third axis is loss
+
+# hard way of doing lin regression with w and b
+
+# same procedure as before, but instead of just updated w we update b as well 
+
+def mse(yhat, y) ...
+
+w =...
+b =...
+
+X, Y = get_data....
+
+for epoch in range (epochs)
+    yhat = w*X + b 
+    loss = mse(yhat, Y)
+
+    loss.backward 
+
+    w.data -= lr * w.grad.data # partial derivatives
+    b.data -= lr * b.grad.data 
+    
+    w.grad.data.zero_()
+    b.grad.data.zero_() 
+
+note gradient is the partial derivatives of each component as a vector 
+thus we are stepping in the opposite direction of gradient => hence gradient descent

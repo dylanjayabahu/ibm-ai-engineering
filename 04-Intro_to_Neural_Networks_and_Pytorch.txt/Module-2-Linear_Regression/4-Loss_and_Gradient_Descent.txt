@@ -1,0 +1,19 @@
+Loss = some function that determines how poorly a model does on data 
+    e.g. MSE 
+
+    loss function is aka criterion function 
+
+Gradient descent goes opposite to gradient of loss function so u go towards a local minimum 
+    weve gone over this many times - see previous notes
+
+Lr problems 
+    too big lr will miss minimum 
+    too small lr will take too long to converge 
+
+Stop gradient descent 
+    set num iterations 
+    monitor loss; stop when loss increase 
+
+gradient descent sometimes called batch gradient descent 
+    it is done in batches; all data is done in 1 batch for batch gradient descent; one batch per epoch
+    diff than minibatch gradient descent, which uses smaller batches; several batches per epoch

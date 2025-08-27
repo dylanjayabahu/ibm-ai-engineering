@@ -1,0 +1,14 @@
+Dataset
+    n points of (x, y)
+    correspodning x and y values are marked with same subscript, x_i, y_i 
+    in simple linear regression x is a single value; later we will see X as a vector of feature values 
+
+Noise assumption 
+    we assume gaussian noise in linear regression 
+    there will always be noise regardless of the model in real world data
+
+    higher stdev means more deviatino from line 
+
+Training linear regression  = finding line that fits the best 
+    use MSE as cost function 
+    best fitting line minimizes MSE 

@@ -1,0 +1,33 @@
+# hard way: with slope and do calcs manually 
+
+w = torch.tensor(-10.0, requires_grad=True)
+X = torcharange(-3,3,0.1).view(-1,1) # .view is like .reshape
+f = -3*X
+
+plt.plot(X.numpy(), f.numpy())
+plt.show()
+
+Y = f+0.1*(torch.randn(X.size())) # add random noise 
+plt.plot(X.numpy(), Y.numpy(),'ro')
+plt.show()
+
+def forward(x):
+    return w*x 
+
+def mse(yhat, y);
+    return torch.mean((yhat-y)**2)
+
+lr = 0.1 
+COST=[]
+for epoch in range(4):
+    yhat = forward(x)
+    loss = mse(yhat, Y)
+
+    loss.backward()
+
+    w.grad # partial derivitative of loss with respect to w at w = whatever it currently is 
+
+    w.data = w.data - lr * w.grad.data 
+    w.grad.data.zero_() # reset grad for next derivative calculation
+
+    COST.append(loss.item()) # we can use this to plot the loss curve over epochs_

@@ -1,0 +1,8 @@
+Best Practices - Linear Regression (PyTorch)
+
+LR: start ~0.01, too high=overshoot, too low=slow, use lr schedulers
+Data: standardize inputs (0 mean, 1 var), normalize output if large
+Validation: train/val split, early stopping to avoid overfit
+Gradients: clip grads (clip_grad_norm_) to prevent exploding
+Loss: monitor loss trend, adjust LR/data if plateau, use TensorBoard
+Overall: manage LR, std data, val split, grad clip, track loss
