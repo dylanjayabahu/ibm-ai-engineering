@@ -1,0 +1,43 @@
+#load csv, convert to dataframe with pd.read_csv, etc.
+#load and visualize images 
+
+# make a dataset class 
+    # kinda of like tensorflows flow_from_directory 
+
+class Dataset(Dataset):
+    def __init__(self, csv_file, data_dir, transform=None):
+        self.transform = transform
+        self.data_dir=data
+        data_dircsv_file=os.path.join(self.data_dir,csv_file)
+        self.data_name = pd.read_csv(data_dircsv_file)
+        self.len=self.data_name.shape[0]
+
+    def__len__(self):
+        return self.len
+    
+    def __getitem__(self, idx):
+        img_name=os.path.join(self.data_dir,self.data_name.iloc[idx, 1])
+        image = Image.open(img_name)
+        y = self.data_name.iloc[idx, 0]
+        if self.transform:
+            image = self.transform(image)
+        return image, y
+
+# now we can use it just like before in simple_dataset lesson 
+# but we arent loading everything into memory all at once 
+
+
+# torch vision transformers
+import torchvision.transforms as transforms
+transforms.CenterCrop(20)
+transforms.ToTensor()
+croptensor_data_transform = transforms.Compose[transforms.CenterCrop(20), transforms.ToTensor()] # compose the image transformations we want to apply
+dataset = Dataset(csv_file=csv_file, data_dir = directory, transform=croptensor_data_transform)
+dataset[0,0].shape  # (1, 20, 20)
+
+
+# torchvision-included datasets (e.g. mnist)
+import torchvision.datasets as dsets
+dataset = dsets.MNIST(root='./data', train=False, download=True, transform=transforms.ToTensor()) 
+    # train indicates if u want to use the train/test dataset; true mean strain ds, false means test ds 
+    # if download=true, it will download from internet (but wont redownload if it already exists in root)

@@ -45,6 +45,9 @@ tuner_results/
 tuning_results/
 fruits-360-original-size/
 o-vs-r-split/
+img/
+**img.tar.gz
+data/
 
 # screenshots
 Final_Project_Screenshots/
