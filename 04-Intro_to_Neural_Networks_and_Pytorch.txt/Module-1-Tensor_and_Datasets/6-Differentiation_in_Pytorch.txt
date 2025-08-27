@@ -1,0 +1,29 @@
+Derivatives in torch: 
+x = torch.tensor92, requires_grad=True
+y = x**2 
+y.backward() # first find dy/dx, then evaluate at x=2 
+    # this will compute the derivatives 2(x=2) = 4
+
+    # behind the scenes pytorch takes derivatives by computing a backwards graph; showing all the operations done in reverse order 
+    # then just differentiate with chain rule on all those steps
+x.grad # now holds 4, the (partial) derivative of y wrt x at x=2
+
+
+Partial Derivatives 
+    ∂f/∂x means:
+        differentiate f(x, y, z ...) with respect to x, treating all other variables (i.e. y, z, ...) as constants 
+
+    this gives how much x contributes to the gradient 
+
+    gradient vector (of a multivariable function like f, or in the context of nns, the loss function) is:
+        [∂f/∂x, ∂f/∂y, ∂f/∂z, ...]
+    
+
+u = torch.tensor(1, requires_grad=True)
+v = torch.tensor(2, requires_grad=True)
+f = u*v + u**2
+
+# ∂f/∂u = v + 2u 
+# ∂f/∂v = u + u**2
+
+f.backward() # gives a tensor with [∂f/∂u, ∂f/∂v] at u=1 and v=2
