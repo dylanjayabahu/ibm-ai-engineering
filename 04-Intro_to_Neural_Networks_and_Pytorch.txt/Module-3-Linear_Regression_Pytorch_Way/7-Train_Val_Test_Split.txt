@@ -1,0 +1,67 @@
+Overfitting = works well on train data but poor performance on data not trained on 
+
+train data = use to train 
+    develop parameters (e.g. weights and biases)
+val data = refer to to prevent overfitting 
+    tune hyperparameters (eg. lr, batch_size)
+test data = not touched till finalized model; estimate performance on unseen data/real world
+
+class Data(Dataset):
+    def __init__(self, train=True):
+        self.x = torch.arange(-3,3,0.1).view(-1,1)
+        self.f = 3*self.x+1
+        self.y= = self.f + 0.1*torch.randn(self.x.size())
+        self.len=self.x.shape[0]
+
+        if train: # make training data include outliers (but not val/test) for demonstration purposes
+            self.y[0] = 0
+            self.y[50:55] = 20 
+
+    def __getitem__(self, index):
+        return self.x[index], self.y[index]
+    
+    def __len__(self):
+        return self.len
+
+
+train_data = Data()
+val_data = Data(train=False)
+
+# define model, criterion etc etc 
+
+
+epochs = 10 
+lrs = [10**(-x) for x in range(-4, 1)]
+validation_error = torch.zeros(len(learning_rates))
+train_error = torchzeros(len(learning_rates))
+MODELS=[] # to save models with diff lrs 
+
+from torch import optim 
+for i, lr = enumerate(lrs):
+    model = LR(1,1)
+    optimizer=optim.SGD(model.parameters(), lr=lr)
+
+    for epoch in range(epochs):
+        yhat = model(x)
+        loss=criterion(yhat,y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    # save loss on train/val data
+
+    # note that holding train_data and val_data fully in memory may note be feasible - may need data loader
+    yhat_train= model(train_data.x)
+    train_loss=criterion(yhat_train, train_data.y)
+    train_error[i] = train_loss.item()
+    
+    
+    yhat_val=model(val_data.x)
+    val_loss=criterion(yhat_val, val_data.y)
+    validation_error[i]=val_loss.item()
+
+    MODELS.append(model)
+
+
+now can choose the model from MODELS that produced the lowest loss in validation_error
+
