@@ -1,0 +1,30 @@
+from torch.utils.data import Dataset, DataLoader 
+
+class Data(Dataset): # define as before 
+    ...
+
+import torch.nn as nn
+class LR(nn.module): # define same as before 
+    def __init__(self, input_size, output_size)
+    def forward(self, x)
+
+criterion=nn.MSELoss() # dont need to make our own function anymore
+trainloader = DataLoader(dataset=dataset, batch_size=1) # sgd 
+
+model = LR(1,1)
+
+from torch import nn, optim 
+optimizer = optim.SGD(model.parameters(), lr=0.01)
+    # model.parameters() gives all learnable parameters 
+    # lr can be provided along with several other optional arguments_
+
+
+optimizer.state_dict() # can show learnable parameters and manually update them 
+
+for epoch in range(num_epochs):
+    for x,y in trainloader:
+        yhat = model(x)
+        loss=criterion(yhat,y)
+        optimizer.zero_grad() #reset grads before recomputing them 
+        loss.backward()
+        optimizer.step() # updates all the learnable parameters, instead of manually doing w.data -=... etc etc for each parameter 
