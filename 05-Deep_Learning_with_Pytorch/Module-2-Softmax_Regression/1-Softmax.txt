@@ -1,0 +1,38 @@
+What is Softmax?
+- Extends logistic regression for multi-class classification.
+- Converts raw model outputs (logits) into probabilities that sum to 1.
+- Prediction = argmax of Softmax outputs (highest probability).
+
+For multiclass regression with softmax:
+    have n different lines for the n different classes 
+
+    let z_i = the ith line, corresponding to class i 
+
+    for features with class 0, have z0 > all other z 
+    for features with class 1, have z1 > all other z
+
+    this way, when we run softmax([z0, z1, z2 ...] )
+        z_i will have the highest probability since z_i is above all other z for class i features 
+    
+
+Argmax:
+    return the index of the highest argument 
+    could use argmax alone to predict with the method described above 
+        (kinda like how we could use step function over sigmoid, but sigmoid is preferred as it gives probabilities)
+    usually we do softmax to get probabilities and then use argmax to pick element with highest prob 
+    use:
+        _, yhat = z.max(1)
+            # choose the maximum index of z along the first axis
+            # works when z is a single row or many rows 
+        # can also use just argmax - this is preferred 
+        torch.argmax(z, dim=1)
+MNIST example 
+    have 10 vectors for each of the 10 digits 
+        these will be 784 dim vectors since the input space is 784 
+    
+    we will classify as class i if the input data is aligned with vector i  
+        dot product tells us how aligned two vectors are 
+
+    so we do argmax_i(w_i dot x)
+        where w_i is the vector that corresponds to digit i
+

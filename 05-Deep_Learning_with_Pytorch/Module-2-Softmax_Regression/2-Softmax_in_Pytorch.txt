@@ -1,0 +1,45 @@
+import torch 
+import torch.nn as nn 
+import torchvision.transforms as transforms
+import torchvision.datasets as dsets 
+
+train_dataset = dsets.MNIST(root='./data', train=True, download=True, transform=transforms.ToTensor())
+validation_dataset = dsets.MNIST(root='./data', train=False, download=True, transform=transforms.ToTensor())
+
+# x_i, y_i = train_dataset[i] 
+    # x_i is.a 28x28 float tensor 
+    # y_i is a long tensor 
+
+# use custom softmax class, implemented as lin regression with argmax for prediction 
+model = SoftMax(input_dim, output_dim)
+
+criterion = nn.CrossEntropyLoss() # no longer binary crossentropy; extension of bce to many dims 
+    # input to this function must be a torch.LongTensor of dim N (not Nx1)
+
+optimizer = optim.SGD(model.parameters(), lr=0.01)
+
+n_epochs = 100 
+accuracy_list = []
+
+train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=128)
+validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=5000)
+
+for epoch in range(n_epochs):
+    for x,y in train_loader:
+        optimizer.zero_grad()
+        z = model(x.view(-1, 28*28)) # reshape to flatten to 784
+        loss = criterion(z,y)
+        loss.backward()
+        optimizer.step()
+    
+    correct = 0 
+    for x_test, y_test in validation_loader:
+        z = model(x_test.view(-1, 28*28))
+        yhat = torch.argmax(z, dim=1)
+        correct += (yhat==y_test).sum().item()
+    accuracy = correct / N_test
+    accuracy_list.append(accuracy)
+
+# note that there are a set of weights - a weight vector - for each class
+# initially these are initialized randomly and look random when plotted 
+# after training, when we plot the weights, it starts to look like the digit it is meant to recognize  
