@@ -1,0 +1,30 @@
+Given a data matrix x and a class vector y, 
+    row i of data matrix correponds to element i of class vector 
+    for categorical data y can contain only discrete values representing diff classes
+
+    u can plot points and color code them by class label for data visualization purposes 
+
+Binary linear classifier:
+    z = wx + b
+
+    or wx when we add the 1 in the x vector to encompas the bias term as well 
+    
+    generalizes to higher dims when w and x are vectors 
+
+    if z > 0, predict class 0 
+    else predict class 1
+    ^ threshold function
+
+    that is, the line/plane/hyperplane is now trying to separate the data, not fit it 
+    data is linearly separable if it can be separated by a line/plane/hyperplane 
+
+
+Logistic regression: 
+    instead of threshold function, use the sigmoid function 
+
+    sigmoid(z) = 1/(1+e^(-z))
+
+    better performance than threshold function; outputs continuous probabilties 
+
+    use a threshold value between 0-1, usually 0.5
+

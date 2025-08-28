@@ -1,0 +1,44 @@
+Bernoulli Distribution 
+
+    consider flipping biased coin; 
+    p(heads) = p(y=0) = 0.2
+    p(tails) = p(y=1) = 0.8
+
+    theta is bernoulli parameters 
+
+    p(y=0) = theta 
+    p(y=1) = 1-theta
+
+    likelihood of sequence of events is product of individual probabilities 
+        assume independant events 
+
+    P(y={0,0,1}) 
+        = theta * theta * (1-theta) 
+        = 0.2 * 0.2 * 0.8 
+        = 0.032
+
+    so, when choosing what theta we should assign, 
+        we choose the value of theta that maximizes the likelihood
+    
+    p(y|theta) = theta^y * (1-theta)^(1-y)
+        ^ this gives us the formulas we had above 
+        p(y=0|theta) = theta^0 * (1-theta)^(1-0) = 1-theta 
+
+        p(y=1|theta) = theta^1 * (1-theta)^(1-1) = theta 
+    
+    ^ we can generalize the above for any value of y 
+
+    p(Y|theta) = prod[p(yn|theta)] # take a product across the probabilites of all y components
+               = prod[ theta^yn * (1-theta)^(1-yn) ]
+
+    Best theta = theta that maximizes p(Y|theta)
+        ^ it is hard to do this mathematiclaly. 
+        instead we maximize the log of this function, giivng the same result 
+
+    best theta = theta that maximizes ln(p(Y|theta))
+        ^ now that we have taken the log we can apply log laws to transform the product into a sum 
+
+    p(Y|theta) = prod[ theta^yn * (1-theta)^(1-yn) ]
+
+    ln(p(Y|theta)) = sum [ yn*ln(theta) + (1-yn)*ln(1-theta) ]
+        ^ much easier to find best theta now 

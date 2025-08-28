@@ -1,0 +1,49 @@
+Logistic regression:
+    z = w dot x
+    yhat = sigmoid(z)
+
+# implement in pytorch
+z = torch.arange(-100, 100, 0.1).view(-1, 1)
+sig = nn.Sigmoid()
+yhat = sig(z)
+
+# or 
+yhat = torch.sigmoid(z)
+
+
+##make logistic regression model in pytorch 
+
+model = nn.Sequential(nn.Linear(1,1), nn.Sigmoid())
+    #apply linear layer then sigmoid layer
+yhat = model(x)
+
+
+# or subclass nn.module 
+class logistic_regression(nn.Module):
+    def __init__(self, in_size):
+        super(logistic_regression, self).__init__()
+        self.linear = nn.Linear(in_size,1)
+    
+    def forward(self, x):
+        return torch.sigmoid(self.linear(x))
+
+custom_model = logistic_regression(in_size = 1)
+yhat = custom_model(x) # functionally the same as above
+
+
+works when x is multi sample or single sample 
+X = torch.tensor([
+    [1.0],
+    [2.0],
+])
+yhat = custom_model(X)
+yhat = model(X)
+#^ both give a vector of corresponding probabilites for each input row 
+
+
+# 2d logistic regression 
+custom_2d_model = logistic_regression(2)
+# or 
+2d_model = nn.Sequential(nn.Linear(2,1), nn.Sigmoid())
+
+# rest is the same as before 

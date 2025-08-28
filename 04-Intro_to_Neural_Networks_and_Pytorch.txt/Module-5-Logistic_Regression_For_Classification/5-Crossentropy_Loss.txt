@@ -1,0 +1,60 @@
+With MSE Loss using a threshold instead of sigmoid: 
+    the loss function is no longer a smooth curve 
+    it has discrete staircase like jumps 
+    if u land on the flat part of the staircase, the deriative is 0 and u wont go anywhere with gradient descent 
+
+if instead we use sigmoid:
+    the loss function is smooth 
+    now there are no flat places to get stuck 
+
+    however, if there are 2 parameters to train, not just 1 
+    then there are still flat areas on the loss surface with mse 
+
+if instead we use maximium likelihood over mse (develop crossentropy loss)
+
+    ln(p(Y|parameters)) = sum [ yn*ln(parameters) + (1-yn)*ln(1-parameters) ]
+
+    but we want to maximimize likelihood, not minimize it 
+    so we multiply by -1 so that now we are minimizing the function 
+
+    we get -ln(p(Y|parameters))
+        ^ this is a new loss function; the minimum of this function corresponds to maximizing likelihood 
+    
+    let theta denote trainable parameters 
+    crossentropyloss(theta) = - average[ yn*ln(yhatn) + (1-yn)*ln(1-yhatn)]
+
+    def criterion(yhat, y):
+        return -1 * torch.mean(y*torch.log(yhat) + (1-y)*torch.log(1-yhat))
+    
+    the loss surface is now only flat at the minimum, solving the problem of mse 
+
+
+#now we can train a logistic reg model with crossentropy loss 
+class logistic_reg(nn.Module): ##same as before 
+    ...
+
+
+# define loss: MSE
+criterion = nn.MSELoss() 
+
+# define loss: crossentropy 
+def criterion(yhat, y):
+        return -1 * torch.mean(y*torch.log(yhat) + (1-y)*torch.log(1-yhat))
+    
+criterion = nn.BCELoss() # instead of writing out our own crossentropy loss as we did above 
+    # BCE = Binary CrossEntropy
+
+
+trainloader = DataLoader(dataset=dataset, batch_size=1)
+model = logistic_reg(1,1)
+optimizer=optim.SGD(model.parameters(), lr=0.01)
+
+for epoch in range(epochs):
+    for x,y in trainloader:
+        yhat = model(x)
+        loss = criterion(yhat,y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+# everything is same as before; just choose loss function appropriately
