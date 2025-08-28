@@ -1,0 +1,72 @@
+Used to develop a function that can capture complex relationships/most functions
+
+neural net is a bunch of linear classifier in series 
+    with activation functions applied at each layer to introduce nonlinearity 
+    z is the results of the linear computation 
+    a(z) is the activation function 
+
+    each linear function + activation block is an artificial neuron 
+
+we can adapt nns for regression by changing activation from sigmoid to whatever is relevant (e.g. identity function or relu)
+
+
+
+#implement our own nn class in pytorch
+class Net(nn.Module):
+    def __init__(self, D_in, H, D_out):
+        super(Net, self).__init__()
+        self.linear1 = nn.Linear(D_in, H)
+        self.linear2 = nn.Linear(H, D_out)
+
+    def forward(self, x):
+        x = sigmoid(self.linear1(x)) # use sigmoid activation (vanshing gradient is irrelevant in such a small netowrk )
+        x = sigmoid(self.linear2(x))
+        return x 
+
+model = Net(1,2,1)
+x = torch.tensor([0.0])
+yhat_prob = model(x) # works when x is a tensor of several inputs as well 
+
+yhat = (yhat>0.5)
+model.state_dict() shows parameters
+
+
+
+
+# can also achieve the same with a sequential model (no need for custom class)
+model = torch.nn.Sequential(
+    torch.nn.Linear(1, 2),
+    torch.nn.Sigmoid(),
+    torch.nn.Linear(2, 1),
+    torch.nn.Sigmoid()
+)
+# functionally same as above 
+
+
+
+# train model 
+
+def train (X, Y, model, optimizer, criterion, epochs=1000): 
+    cost=[]
+    total=0 
+    for epoch in range(epochs):
+        total = 0
+        for x,y in zip(X, Y):
+            yhat = model(x)
+            loss = criterion(yhat, y)
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+
+            total+=loss.item()
+        cost.append(total)
+
+criterion = nn.BCELoss() # since we are using sigmoid output 
+X = torch.arange(-20, 20, 0.1).view(-1,1).type(torch.FloatTensor)
+Y = torch.zeros(X.shape[0])
+Y[(X[:,0]) > -4 and (X[:,0]) < 4] = 1.0 #set values between -4 and 4 to 1 in this simulated dataset 
+
+
+model = Net(1,2,1)
+optimizer = optim.SGD(model.parameters(), lr=0.01)
+train(X, Y, model, optimizer, criterion)
