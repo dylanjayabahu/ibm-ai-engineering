@@ -70,3 +70,6 @@ Y[(X[:,0]) > -4 and (X[:,0]) < 4] = 1.0 #set values between -4 and 4 to 1 in thi
 model = Net(1,2,1)
 optimizer = optim.SGD(model.parameters(), lr=0.01)
 train(X, Y, model, optimizer, criterion)
+
+
+# More hidden neurons allow u to capture more complex relationships 
