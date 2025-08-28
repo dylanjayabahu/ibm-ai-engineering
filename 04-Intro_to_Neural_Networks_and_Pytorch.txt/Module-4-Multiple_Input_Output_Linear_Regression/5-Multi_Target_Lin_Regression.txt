@@ -1,0 +1,45 @@
+y1 = X dot W1 
+y2 = X dot W2
+^ for however many outputs is wanted 
+a separate W tensor for each output 
+same X tensor inputted each time 
+
+y = xW 
+
+y is now a vector 
+X is a vector, X = [1, x1, x2, ...]
+W is a matrix 
+
+to get y[i], you do x dot W[i] (a vector; W is a matrix so indexing it will get u a vector)
+
+
+
+for M outputs and D inputs:
+    X is a vector of length D+1 (the first term is 1)
+    W is a matrix with D+1 rows and M columns 
+
+    Y is a vector of length M 
+
+    ^ note this is what happens between layers in a neural network; 
+        D is the dim of the first dense layer, L1, M is the dim of the following dense layer, L2 
+        L2 is calculated as L1*W 
+        (and then activation is applied)
+
+
+class LR(nn.Module) ... 
+
+model = LR(input_size=2, output_size=2)
+model.state_dict 
+X = torch.tensor([[1.0,2.0]])
+yhat = model(x) # we get 2 outputs 
+
+X = torch.tensor([
+    [1.0, 2.0],
+    [3.0, 2.0],
+    [4.0, 1.0],
+    [5.0, 3.0],
+])
+# many data points ^ 
+
+yhat = model(X)
+yhat is a 2d tensor where yhat[i] is the size-2-output vector predicted from input X[i]

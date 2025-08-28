@@ -1,0 +1,43 @@
+Multiple linear regression 
+    many predictor variables to predict an output variable 
+    X = [1, x1, x2, x3... xD]
+        X is a 1 by D+1 tensor/vector
+
+        note the 1 at the start to act as the bias term when we take the dot product of X and W
+        in some implementations the 1 is left out and we add a final bias after computing the dot product
+
+    W is a D+1 x 1 tensor of weights 
+    W = [w1, w2, w3, ..., wd]
+
+    yhat = x dot w 
+
+from torch.nn import Linear 
+torch.manul_seed(1)
+model=Linear(in_features=2, out_features=1)
+list(mode.parameters()) # or use model.state_dict
+
+X = torch.tensor([1.0,3.0]) 
+yhat = model(X)
+
+# can apply to many samples as well 
+
+X = torch.tensor([
+    [1.0,1.0],
+    [1.0,2.0],
+    [1.0,3.0]
+])
+yhat = model(X) # gives the result of model on each row of x together as a 3x1 tensor
+
+
+# custom modules (useless now but used later)
+
+class LR(nn.Module):
+    def __init__(self, input_size, output_size):
+        super(LR,self).__init__()
+        self.linear=nn.Linear(input_size,output_size)
+    
+    def forward(self, x):
+        return self.linear(x)
+
+model = LR(input_size=2, output_size=1)
+# same behaviour as model created above

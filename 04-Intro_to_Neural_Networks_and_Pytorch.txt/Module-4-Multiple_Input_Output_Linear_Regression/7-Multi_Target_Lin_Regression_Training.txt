@@ -1,0 +1,27 @@
+cost function is now the sum of squared distance 
+    yhat - y
+    ^ yhat-y is a vector representing the dist b/w predicted an actual 
+
+    |yhat - y| 
+    ^ take the magnitude of that vector 
+
+    avg[|yhat-y|^2]
+    and square it, then take the average over all yhat/y vectors 
+
+    (basically extending MSE loss to many dimensional yhats/ys)
+
+    everything else is same 
+
+data_set = data2D()
+criterion=nn.MSELoss()
+trainloader = DataLoader(dataset=data_set, batch_size=1)
+model = LR(input_size=2,output_size=2)
+optimizer = optim.SGD(model.parameters(), lr=0.01) # no changes 
+
+for epoch in range (epochs):
+    for x,y in trainloader:
+        yhat = model(x)
+        loss=criterion(yhat,y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()

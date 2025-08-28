@@ -1,0 +1,28 @@
+cost is still mse
+minimize cost with gradient descent 
+
+if X has n dimensions, the loss function will be a function of n+1 parameters 
+
+same logic as for simple lr, but update the weight vector 
+
+# use same LR model class as before 
+
+class LR(nn.module)...
+
+class Data2D(Dataset) # define a 2d dataset class ....
+
+data_set = Data2D()
+criterion = nn.MSELoss()
+trainloader = DataLoader(dataset=data_set, batch_size=2)
+model = LR(input_size=2, output_size=1)
+optimizer = optim.SGD(model.parameters(), lr=0.1)
+
+for epoch in range (epochs):
+    for x,y in trainloader:
+        yhat = model(x)
+        loss=criterion(yhat, y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step() # does the updating on all the parameters 
+    
+    
