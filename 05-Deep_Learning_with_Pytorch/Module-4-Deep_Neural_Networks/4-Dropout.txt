@@ -1,0 +1,66 @@
+Manually trying diff combos of model architecutre to balance over/under fitting is not practical 
+Solution: start with complex model and apply regularization 
+    regularization = set of techniques used to prevent overfitting
+
+    dropout is a regularization technique 
+
+
+    multiply activated result of a layer by a bernoulli random variable r 
+        r takes value 0 with probability p and 1 with probability 1-p 
+        that is, turn off a random p proportion of the neurons by multiplying them by 0 
+
+        note that we have to account for this by dividing by 1-p so the magnitudes of overall values in neurons remains the same 
+
+    this make sure that no single neuron is taking the weight of the prediction 
+    making it more robust and generalizable, preventing overfitting 
+
+    dropout is only done when training; on inference we set p to 0 
+
+    more neurons in a layer => use higher p 
+
+
+    p is a hyperparamater - can tune it with validation or cross val 
+
+
+# dropout in pytorch 
+
+class Net(nn.Module):
+    def __init__(self, in_size, n_hidden, out_size, p=0):
+        super(Net, self).__init__()
+        self.drop = nn.Dropout(p=p)
+        self.linear1 = nn.Linear(in_size, n_hidden)
+        self.linear2 = nn.Linear(n_hidden, n_hidden)
+        self.linear3 = nn.Linear(n_hidden, out_size)
+    
+    def forward(self,x):
+        x = torch.relu(self.linear1(x))
+        x = self.drop(x)
+        x = torch.relu(self.linear2(x))
+        x = self.drop(x)
+        x = torch.relu(self.linear1(x))
+        return x 
+
+model = Net(2,300,2,p=0.5)
+
+model.train() # lets model know it is in training phase; use dropout 
+
+#optimize as usual; 
+# note use adam as it gives better performance than sgd 
+
+model.eval() # lets model know it is in inference/testing phase; dont use dropout
+
+
+
+extra notes:
+    Why Effective:
+    - Acts like training many smaller networks (ensemble effect).  
+    - At test time, the full network is used, but neurons are more generalized.  
+
+    When to Use:
+    - Dense layers in fully connected networks (image, text tasks).  
+    - High-capacity networks (many parameters, prone to overfitting).  
+    - Limited data scenarios (encourages diverse feature learning).  
+
+    Limitations:
+    - Less common in convolutional layers (CNNs, spatial dependencies matter).  
+    - RNNs often use alternatives like variational dropout.  

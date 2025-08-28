@@ -1,0 +1,22 @@
+instead of manually adding each individual hidden layer we can do it with nn.ModuleList 
+
+class Net(nn.Module):
+    def __init__(self, Layers):
+        super(self, Layers)
+
+        self.hidden = nn.ModuleList()
+
+        for input_size, output_size in zip(Layers, Layers[1:]):
+            self.hidden.append(nn.Linear(input_size, output_size))
+    
+    def forward(self, x):
+        L = len(self.hidden)
+
+        for (l, linear_transform) in zip(range(L), self.hidden):
+            x = torch.relu(linear_transform(x)) if l < L-1 else linear_tranform(x)
+                # relu activatin for all layers except last one 
+        
+        return x
+
+layers = [2, 3, 4, 3] # layer sizes 
+model = Net(layers)
