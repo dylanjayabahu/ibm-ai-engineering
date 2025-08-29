@@ -1,0 +1,62 @@
+momentum
+    solves
+        - parameters stuck at saddle points
+        - getting stuck in local minima 
+
+Quick physics momentum recap / analogy 
+    moment = mv 
+
+    position is like the value of the weight; it gets updated each time based on velocity (times dt)
+        we will assume 1 step is 1 unit of time
+    
+
+    acceleration is like the partial_derivative term of backprop 
+
+    velocity is what will update the weight 
+    v2 = v1 + a* delta_t
+
+    since accel is partial deriv, and we assume 1 step is 1 dt 
+
+    v2 = p * v1 + d(loss)/d(weight)
+        p (ro) is the momentum term 
+        positive value 
+        usually less than 1
+
+        momentum of 1 
+
+
+    just as in physics, we update position based on velocity 
+
+    w_new = w_old + eta * v2 
+        eta is learning rate 
+        v2 is new velocity we just calculated 
+
+
+    initially, weight (position) is randomized based on weight init from prev lesson 
+    velocity is set to 0 initially (stationary ball, for example)
+    acceleration is calculated based on loss (just like acceleration would be calculated based on a force)
+
+    as the iterations go, the velocity will be updated by accel, and the position (weight paramter) will be updated by the velocity
+
+    small ro means its like a light ball; the force (impulse) applied will move its velocity a lot 
+    large ro means its like a heavy ball; the force(impulse) has less of an effect on its velocity
+
+
+
+Saddle Points: 
+    a flat point on the loss surface; gets worst and worst in higher dimensions 
+    if u follow the loss landscape wrt a weight, we may come to a saddle point along the curve
+
+    the derivative of this saddle point is 0 (or close to 0), so the weight wont be adjusted much anymore 
+
+    if we have momentum, the momentum will allow the ball to get through the saddle point   
+        that is, the weight will get passed the saddle point and continue to be updated towards lower loss
+        essentially, we can maintain a nonzero velocity even when the gradient is 0 
+
+Local Minima 
+    if we converge to a local minmum on the loss surface, momentum can help us roll up over so that we can find the global minimum 
+
+    if the momentum term is too small, it will still get caught in local minima
+        the ball doesnt have enough momentum to make it over the hump 
+
+    if momenum is too large we may overshoot global minimum; like a ball that never losses any eneger and just keeps rolling around without stopping

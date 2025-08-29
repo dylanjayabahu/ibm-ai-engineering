@@ -1,0 +1,51 @@
+if u init all weights with a value of 1, and bias with a value of 0 
+    model will do very poorly even after training 
+    
+    because every weight in the same layer will take on same value 
+        ( each neuron in layer will have same output, so same gradient, so the weights updated the same way each time)
+
+    hence random init is important 
+        - sample randomly with a uniform distribution within a range 
+        how to select range?
+            narrow range = basically like init with same rates 
+            large range = large neuron values = vanishing gradient problem 
+
+        so, we scale the range based on number of neurons in layer 
+            2 neurons => range = [-1/2, 1/2]
+            3 neurons => range = [-1/3, 1/3]
+            n neurons => range = [-1/n, 1/n]
+
+            this way the maximum sum of weights is 1 no matter how many neurons
+                and the minimum sum of weights is -1 
+
+pytorch weight init methods 
+    Default method 
+        sample randomly from range of [-1/sqrt(Lin), 1/sqrt(Lin)]
+        for a linear layer with Lin neurons 
+
+    Xavier method 
+        aka glorot 
+
+        used with tanh activation layers 
+
+        considers both Lin and Lout
+        sample randomly from range of [-sqrt(6)/sqrt(Lout+Lin)  ,  sqrt(6)/sqrt(Lout+Lin)]
+    
+        linear = nn.Linear(input_size, output_size)
+        torch.nn.init.xavier_uniform_(linear.weight)
+
+    He method 
+        a.k.a. He sampling / He normal / He uniform
+        used with relu activation layers
+
+        He normal:
+            sample from a normal dist with mean of 0 and variance of 2/Lin 
+            the 2 on top corresponds to how relu turns off 1/2 of neurons
+        
+        He uniform: 
+            sample unformlu from range [-sqrt(6/Lin), +sqrt(6/Lin)]
+
+        linear = nn.Linear(input_size, output_size)
+        torch.nn.init.kaiming_uniform_(linear.weight, nonlinearity='relu')
+
+       
