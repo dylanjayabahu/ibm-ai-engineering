@@ -49,6 +49,7 @@ o-vs-r-split/
 img/
 **img.tar.gz
 data/
+**.data/
 
 # screenshots
 Final_Project_Screenshots/
