@@ -1,0 +1,27 @@
+Batch norm:
+    - calc mean and stdev for each batch 
+    - normalize outputs by scaling and shifting 
+        the mean and stdev are learnable params (γ and β) starting off at 0 and 1
+    ^ this is done an a per batch per neuron basis 
+        that is, normalize the output of that neuron based on the value of that neuron for this batch 
+
+    at inference, there arent flowing batches so we have to use a running mean and stdev computed during training 
+        running_mean = momentum * running_mean + (1 - momentum) * batch_mean
+        running_var  = momentum * running_var  + (1 - momentum) * batch_var
+
+# implementation in pytorch:
+same as usual but u can add batchnorm layers 
+class Net(nn.Module):
+    def __init__(...)
+
+        self.bn = nn.BatchNorm1d(num_neurons_as_prev_dense_layer)
+
+batch_norm works b/c:
+    - reduces **internal covariate shift** 
+        (keeps activations from drifting too much during training)
+    - stabilizes training → allows larger learning rates
+    - acts as a form of regularization 
+        (since batch statistics add randomness/noise during training)
+    - smooths the optimization landscape 
+        (gradients are more predictable, less exploding/vanishing issues)
+    - Helps deep networks train faster and generalize better
