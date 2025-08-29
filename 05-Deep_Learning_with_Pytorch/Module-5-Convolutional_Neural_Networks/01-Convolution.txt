@@ -1,0 +1,29 @@
+convolution
+    help look at relative pixel positions in an image rather than absolute positions
+    activation map = result of a convolution 
+
+    slide a kernel across image
+        we take the dot product of the kernel and portion image that the kernel is over 
+        this goes as the first element of the output activation map, z 
+        continue stepping by stride until u have convolved over entire images 
+
+    there is also a bias term that u add to the whole activation map 
+
+    for an input image of dims m,n
+    and a kernel of dims p,q
+    and stride of dims a, b 
+
+    the activation map will be of dims:
+        (m-p)//a + 1, (n-q)//b + 1
+    ^ assuming no padding; if we pad we are just modifying m and n
+    
+
+conv = nn.Conv2d(in_channels=1, out_channels=1, kernel_size=3, stride=2) # random init values initially for kernel
+
+# make a synthetix image and run a conv over it
+image = torch.zeros(1,1,5,5)
+image[0,0,:,2] =1 
+z = conv(image)
+
+padding:
+    add 0s around the input image so that our stride and kernel size map nicely onto the new image

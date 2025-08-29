@@ -1,0 +1,27 @@
+pytorch comes with several pretrained models for image classifications 
+    we can use these trained models with modified/extra output layers on our own datasets
+
+e.g. ResNet18 
+    residual cnn; uses skip connections (see deep learnign with tensorflow course)
+
+model = models.resnet18(pretrained=True)
+
+mean = [0.485, 0.456, 0.406]
+std = [0.229, 0.224, 0.225]
+#^ mean and std so that we can transform our images to match the ones resnet was trained on 
+
+composed = transforms.Compose([transforms.Resize(224), transforms.ToTensor(), transforms.Normalize(mean, std)])
+
+train_dataset = Datast(transform=composed, train=True)
+validation_data = Datast(transform=composed)
+
+# replace last output layer
+
+for parameter in model.parameters():
+    require_grad = False # equivalent to setting trainable=False in tensorflow 
+
+model.fc = nn.Linear(512, 7)
+
+# make train loader, test loader, criterion, loss, optimizer etc. 
+
+# train model as usual 

@@ -1,0 +1,21 @@
+Activation funtion with convs 
+    same thing as with dense layers; apply activation function to each element of the resulting activation map 
+
+    with multiple channels, apply separately to each chanel 
+
+    Z = conv(image)
+    A = nn.relu(Z)
+
+
+Max Pooling 
+    reduces size of activation maps 
+    makes model more robust to small changes in image 
+
+    for pooling with shake j by k, choose the max value in each j by k block of the image 
+        requires that j and k divides evenly into m and n respectively (dims of the image), assuming stride = none 
+    
+    just like convs, it can have diff stride values
+
+    maxpool = torch.nn.MaxPool2d(2, stride=1)
+        # if stride = none, we shift by the full size of maxpool block each time (no overlap)
+    max(image)

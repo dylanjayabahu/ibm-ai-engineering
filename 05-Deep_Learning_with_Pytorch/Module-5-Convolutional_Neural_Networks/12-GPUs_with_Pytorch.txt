@@ -1,0 +1,22 @@
+CUDA=computer unified device architecture 
+    made by nvidia 
+    used for computational tasks 
+
+torch.cuda.is_available() # make sure ur gpu is compatible 
+device = torch.device('cuda:0') # setup for gpu computation 
+
+
+torch.tensor([1.0, 2, 3, 4]).to(device) # run tensor comp on gpu 
+
+model architecture and definition stays the same 
+
+model = Model()
+model.to(device) # converts layers of model to cuda tensors
+
+# training is same as without gpu, except u send ur features and labels to gpu 
+
+for epoch in range(epochs):
+    for x,y in train_loader:
+        x,y = x.to(device), y.to(device)
+
+        # rest is same 

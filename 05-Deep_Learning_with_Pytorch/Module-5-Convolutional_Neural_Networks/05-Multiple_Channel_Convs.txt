@@ -1,0 +1,9 @@
+Channels = how many kernels (and corresponding biases); each kernel gives a new activation map 
+
+
+given many input channels, we apply the each kernel to each input channel and sum together 
+    so, given 3 input channels and 4 output channels (4 kernels, each with 3 filters, one for each channel):
+        for each kernel 
+            convolve kernel over channel 1, 2, and 3 
+            sum the resulting activation maps 
+        now we have {kernel} number of activation maps; so that many channels going into next layerx
