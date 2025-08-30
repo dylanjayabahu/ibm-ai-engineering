@@ -1,0 +1,25 @@
+
+Bulk Loading = Loads entire dataset into RAM at once.
+
+    Advantage: Very fast repeated access (no repeated disk I/O).
+    Disadvantage: Extremely memory heavy → scales poorly for large datasets.
+
+    Practical only for small-scale or research use cases.
+
+Sequential (Lazy) Loading = Loads only current batch from disk on demand.
+
+    Advantage: 
+        Very memory efficient → scalable to huge datasets.
+        No long initial loading phase → can start training quickly.
+
+    Disadvantage:
+        Slower due to repeated disk I/O.
+        Can cause GPU idle time (I/O bottleneck).
+        
+        Mitigation: parallel data loading (used in PyTorch, Keras, etc.).
+
+
+
+
+Bulk Loading → Fast access but not scalable.
+Sequential Loading → Scalable and memory-efficient but can be slow (fixed with parallel I/O).
