@@ -5,16 +5,11 @@ This repository contains projects and exercises completed as part of the **IBM A
 ---
 
 ## Certificates
-![Machine Learning with Python](https://github.com/user-attachments/assets/0f3bc710-5779-42ec-bd5c-2987eca16b8c)  
-> *IBM - Machine Learning with Python — 2025*  
-> **Final Grade: 100%**  
-> [View Verified Certificate on Coursera](https://coursera.org/share/1ce339d18628585ebfd21594628400ac)
 
-![Introduction to Deep Learning and Neural Networks with Keras](https://github.com/user-attachments/assets/122d4c36-47b3-40c3-a570-40682ac48b14)  
-> *IBM - Introduction to Deep Learning & Neural Networks with Keras — 2025*  
-> **Final Grade: 100%**  
-> [View Verified Certificate on Coursera](https://coursera.org/share/140e7616338316a908248c5a536a845d)
-> 
+![IBM_Deep_Learning_Professional_Certificate](https://github.com/user-attachments/assets/55b2f670-3399-4b00-a108-4d04384aa34a)
+> *Professional Certificate: IBM Deep Learning with PyTorch, Keras and Tensorflow*  
+> **5-Course Average Grade: 100.0%**  
+> [View Verified Certificate on Coursera](https://www.coursera.org/account/accomplishments/professional-cert/PI9XQI9QXTP6)
 ---
 
 ## Program Highlights
