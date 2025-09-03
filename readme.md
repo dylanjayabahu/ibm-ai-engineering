@@ -5,8 +5,7 @@ This repository contains projects and exercises completed as part of the **IBM A
 ---
 
 ## Certificates
-
-![IBM_Deep_Learning_Professional_Certificate](https://github.com/user-attachments/assets/55b2f670-3399-4b00-a108-4d04384aa34a)
+![IBM_Deep_Learning_Professional_Certificate](https://github.com/user-attachments/assets/116ba72c-6f88-4af7-b09c-506e4b59f678)
 > *Professional Certificate: IBM Deep Learning with PyTorch, Keras and Tensorflow*  
 > **5-Course Average Grade: 100.0%**  
 > [View Verified Certificate on Coursera](https://www.coursera.org/account/accomplishments/professional-cert/PI9XQI9QXTP6)
