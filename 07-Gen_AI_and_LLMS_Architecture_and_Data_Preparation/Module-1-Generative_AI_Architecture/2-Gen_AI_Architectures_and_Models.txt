@@ -1,0 +1,76 @@
+RNNs
+    recurrent neural networks
+    work on sequential or time series data 
+    use data with natural order or time based dependencies 
+
+    mechanism:
+        has a loop like mechanism; lets RNNS remember previous input to influence current input/output 
+
+    fine tuning 
+        adjust weights and structure 
+
+    applications 
+        nlp
+        language translation 
+        speech recognition 
+        image captioning
+
+
+
+
+Transformers 
+    take all data all at once; parallel processing 
+
+    mechanism:
+        self attention mechanism; lets model focus on long term relationships/focus on most important parts 
+        parallelization enabled 
+
+    fine tuning typically happens only to final output layers; leave rest of pretrained transformer intact 
+        self attention and other inner layers remain fixed usually 
+    
+    e.g. GPT for text generation
+
+
+GANs
+    generative adversarial network
+
+    mechanism   
+        has generator and discriminator
+        generator makes fake samples and sends to discriminator
+        discriminator looks at samples and tries to distinguish between them 
+
+        two models compete and learn together 
+    
+    useful for image/video generation 
+
+
+VAEs
+    variational autoencoders
+
+    mechanism 
+        encoder/decoder framework
+         
+        encoder comrpesses input data into an abstract embedding space 
+        decoder is trained to recreate original data 
+
+        gives a range of outputs for given input, lets u generate new things 
+    
+    useful for art and creative design 
+
+
+Diffusion models
+    learns to remove noise from training data step by step
+
+    depends on statistical property 
+
+    given a prompt it genreates highly creative images 
+
+    or restore old noisy photograph into fresh one 
+
+
+
+
+Relation to RL (reinforcement learning)
+    rl = agent interacts with env to maximize rewards 
+
+    gen ai uses rl techniques while training

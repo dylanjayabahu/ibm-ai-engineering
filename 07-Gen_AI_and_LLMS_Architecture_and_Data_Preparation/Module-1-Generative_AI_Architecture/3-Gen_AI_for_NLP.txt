@@ -1,0 +1,69 @@
+Gen AI Goals 
+    comprehend human language 
+    generate indistinguishable responses human vs ai
+
+    done by 
+        context awareness
+        coherent interactions 
+        predictive analytics
+        advanced modelling 
+    
+    sense feelings 
+    grasp intention of words, more understanding 
+
+
+Evolution of genai for nlp 
+    rule based systems 
+        predefined linguisting rules, very limited
+    ml based approach 
+        statistical methods from data but still limited 
+    dl architectures 
+        dl on large data, big breakthrough
+    traformer 
+        specifically designed for sequential data, perfect for nlp
+        latest improvement 
+
+NLP specific uses 
+    machine translation 
+        context aware convos
+    chatbot convos 
+        human lake/natural convos
+    sentiment analysis 
+        subtle language expressions
+    text summarization
+        recognize core meaning
+
+
+
+Language Models 
+    LLM = large language model 
+        use aAI and DL with vast datasets 
+            DL because involves datasets on the order of petabytes, with billions of parameters 
+
+            allows them to 
+                - understand lang structs and contexts 
+                - capture nuance of human lang 
+                - have more natural interaction 
+                - predict next word 
+                - creative content with minimal domain-specific 
+            
+        examples 
+            GPT
+                acts as a decoder; predicts next word 
+                good at making text 
+                used for chatbots
+            
+            BERT 
+                encoder only transformer 
+                understands context of word in sentence 
+                used in sentiment analysis and question answer 
+
+
+            Bart and T5
+                use encoder-decoder arch 
+                versatile for various NLP tasks
+    
+    Most llms based on transformer 
+        very versatile, can be trained for generic then fine tune on much smaller ds 
+    
+    May generature confidently incorrect info; learn bias from training data 

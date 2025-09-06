@@ -1,0 +1,29 @@
+
+Gen Ai = = Generative AI = deep learning models that can generate high quality images/test/etc based on what they were trained on 
+    understand patterns and structures in existing data; apply that to make new/relevant data 
+
+Types of models 
+    can make diff types of content (text/image/audio/3d objects/music)
+
+    text generation models  
+        find relationship b/w words and phrases and generate rest of a phrase
+        or translating b/w languages 
+            
+            e.g. GPT 
+    
+    image generation models 
+        generate image from text input 
+            e.g. DALL-E
+        or generate/modify image from image seed image/random input
+            see diffusion models lesson from Course 03 module 4
+            also GAN
+        or from sketches 
+
+    
+    audio generation 
+        e.g. wavenet 
+
+Gen ai applications 
+    healthcare - e.g. process image of test result and generate a patient report 
+    finance - e.g. make predictions and forecasts from massive datasets 
+    gaming - e.g. interactive elements/storylines developed with AI
