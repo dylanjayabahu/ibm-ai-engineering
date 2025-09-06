@@ -1,0 +1,77 @@
+Data loader = help u prepare and load data 
+    e.g. DataLoader class in pytorch 
+
+    let u efficiently load and preprocess textual data 
+    efficient batching an shuffling 
+    memory optimization; on the fly preprocessing and loading from dir
+    seamless integration with PyTorch 
+    simplified data aug / preprocessing
+
+
+Datasets 
+    split into train/val/test 
+
+
+#custom dataset in pytorch 
+
+from torch.utils.data import Dataset 
+sentences = ["yadayadayada"]
+
+class CustomDataset(Dataset):
+
+    ## overwrite these based on how u want to load ur data
+    def__init__(self, sentences):
+        self.sentences = sentences 
+    
+    def __len__(self):
+        return len(self.sentences)
+    
+    def __getitem__(self, index):
+        return self.sentences[idx]
+
+dataset = CustomDataset(sentences)
+# dataset[i] to access ith shample 
+
+# Data Loaders: iterator object in pytorch for batching shuffling, etc 
+    iterator = object that can be looped; iter() and next() function. next() returns next batch 
+from torch.utils.data import DataLoader
+custom_dataset = CustomDataset(sentences)
+batch_size=2 
+dataloader = DataLoader(custom_dataset, batch_size=batch_size, shuffle=True)
+
+
+for batch in dataloader:
+    # train on batch..
+    print(batch):
+
+# transformations on input text
+    tokenizing
+    numericalizing
+    resizing
+    turn into tensor 
+
+tokenizer = get_tokenizer("basic_english")
+vocab = build_vocab_from_iterator(map(tokenizer, sentences))
+
+# ensure padding is implemented 
+for batch in dataloader:
+    padded_batch = pad_sequence(batch, batch_first = True, padding_value=0) # pad to match length of longest sequecnce 
+        # if batch_first = true, first dim of batch is the batch_size 
+        # if not, first dim is the seq size 
+
+
+
+# Collate Function - used to keep og data untouched 
+    apply data transformation, tokenization, converting to indices, transforming into tensor
+    without modifying og data 
+
+def collate_fn(batch):
+    tensor_batch = []
+    for sample in batch:
+        tokens = tokenizer(sample)
+        tensor_batch.append(torch.tensor([vocab[token] for token in tokens]))
+    padded_batch = pad_sequence(tensor_batch, batch_first=True)
+    return padded_batch 
+
+dataloader = DataLoader(custom_dataset, batch_size=batch_size, shuffle=True, collate_fn = collate_fn)
+

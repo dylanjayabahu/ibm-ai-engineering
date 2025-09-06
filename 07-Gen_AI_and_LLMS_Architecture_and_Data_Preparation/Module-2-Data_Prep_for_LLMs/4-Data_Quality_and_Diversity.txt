@@ -1,0 +1,30 @@
+Data Quality = accuracy, consistency, and completeness of ds used for training 
+    poor quality data adds noise; lowers model accuracy and reliability 
+
+    improving data quality 
+        noise reduction = remove irrelvant noise or repetitive data; e.g. remove types, forum tags, etc. from a ds
+        consistency checks = very consistency to prevent conflicting labels or outdaded info confusing model; e.g. technical terms, public figure names must be consistently used in ds 
+        labeling quality = make sure labels are accurate; clear guidelines for human annotators 
+    
+
+Diverse Representation 
+    diverse ds enhances model inclusivity; responds well to variety of cultural/demographic/regional inputs
+        otherwise reflects narror views and unintentional bias 
+    
+    improve diversity 
+        use varied demographics 
+        balanced data sources (news, social media, literature, technial, etc)
+        regional and linguistic variety 
+
+
+
+Regular updates - rapidly shifting language 
+    new vocab and trends 
+    cultural and social norms
+
+    ^ both shift quickly, so update ur datasets and retrain models 
+
+Ethical considerations 
+    data privacy 
+    fair representation 
+    transparency in data sources
