@@ -1,0 +1,110 @@
+Tokenization = breaking text into smaller pieces; tokens
+    e.g. breaking down into words/subwords/phrases 
+
+Tokenizer breaks down text into tokens 
+
+Word based tokenization 
+    needs large vocabulary 
+    but preserves semantic meaning
+
+
+Character based
+    small vocab 
+    but single char cant convey same info as put-together words 
+    higher input dim; smaller tokens = more tokens = more computation
+
+Subword based
+    frequently used words remain unsplit 
+    infrequent words broken down 
+
+    combines advantages of word based and char based
+
+
+Implementing Subword Based Tokenization 
+    Wordpiece algo  
+        evaluates pros/cons of splitting or merging two symbols
+
+        from transformers import BertTokenizer 
+        tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+        tokenizer.tokenize("IBM taught me tokenization.")
+
+        ['ibm', 'taught', 'me', 'token', '##ization', '.']
+            ## means its conected to previous word
+
+    Unigram algo
+        break text into smaller pieces 
+        narrows down large list of possibilites
+            based on freq of appearance
+        iteratively narrows down
+
+
+    Sentence Piece algo 
+        split text into manageable parts and give unique IDs
+    
+
+        # code example
+        from transformers import XLNetTokenizer 
+        tokenizer = KLNetTokenizer.from_pretrained("xlnet-base-cased")
+        tokenizer.tokenize("IBM taught me tokenization")
+
+        ['_IBM', '_taught', '_me', '_token', 'ization', '.']
+            _means its on its own 
+            no _ means its connected
+
+
+
+Tokenization and indexing in PyTorch 
+    use torchtext 
+        build_vocab_from_iterator function
+            creates vacab from tokens 
+            assigns each token a unique index 
+    
+from torchtext.data.utils import get_tokenizer 
+
+tokenizer = get_tokenizer("basic_english") #will turn 'introduction to nlp' into ['introduction', 'to', 'nlp']
+tokenizer(dataset[0][1]) 
+
+def yeild_tokens(data_iter):
+    for _,text in data_iter:
+        yeild tokenizer(text) 
+my_iterator = yeild_tokens(dataset)
+
+next(my_iterator) fetches next set of tokens 
+
+vocab = build_vocab_from_iterator(yeild_tokens(dataset), specials=["<unk>"]) # unk is what is used when we encouter a word not in our vocab
+vocab.set_default_index(vocab["<unk>"]) # give a default index for any unrecognized tokens
+vocab.get_stoi()
+
+vocab([token1, token2, token3]) # returns [index1, index2, index3]
+
+
+def get_tokenized_sentence_and_indices(iterator):
+    tokenized_sentence = next(iterator)
+    token_indices = [vocab[token] for token in tokenized_sentence]
+    return tokenized_sentence, token_indices
+
+tokenized_sentence, token_indices = get_tokenized_sentence_and_indices(my_iterator)
+next(my_iterator)
+
+print(f"Tokenized Sentence:" {tokenized_sentence}; Tokenized Indices:" {token_indices})
+
+
+# adding special tokens: eos, bos, pad etc
+
+tokenizer_en = get_tokenizer('spacy', language='en_core_web_sm')
+tokens = []
+max_length = 0 
+
+# add eos and bos to beginning/end of sentence
+for line in lines:
+    tokenized_line = tokenizeer_en(line)
+    tokenized_line ['<bos>'] + tokenized_line + ['<eos>'] 
+        # special tokens
+        # bos = beginning of sentence; eos = end of sentence 
+    tokens.append(tokenized_line)
+    max_length = max(max_length, len(tokenized_line))
+
+
+# pad with pad tokens so all token lines are the same length
+for i in range(len(tokens)):
+    tokens[i] = tokens[i] + ['<pad>'] * (max_length - len(tokens[i]))
