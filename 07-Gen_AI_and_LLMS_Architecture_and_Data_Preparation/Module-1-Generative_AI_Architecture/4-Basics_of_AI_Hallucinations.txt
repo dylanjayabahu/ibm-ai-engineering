@@ -1,0 +1,22 @@
+AI Hallucinations = output from moel that it presents as accurate but is unrealistic/inaccurate/irrelvant/nonsensical 
+
+    causes:
+        Bias in training data, limited training, model complexity, lack of human oversight
+    
+    problems with hallucinations 
+        generation of inaccurate info 
+        creation of biased views or misleading info 
+        wrong input in sensitive applicaitions (self driving, medical, legal, etc)
+
+    mitigation 
+        eliminate bias in training data 
+            train models extensively on high quality data 
+        avoid manipulating inputs fed into model 
+        continuous eval/improvement of model 
+        fine tune pre-trained llm on specific data 
+    
+
+User ways to deal with AI hallucinations 
+    understand that models dont truly comprehend meaning of words; they just predict the next word based on patterns 
+    fact check with human oversight 
+    give more context in prompt so it can understand desired output and eliminate contextually irrelevant responses 
