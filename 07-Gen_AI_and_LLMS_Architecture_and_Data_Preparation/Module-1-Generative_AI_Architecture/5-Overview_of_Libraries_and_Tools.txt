@@ -1,0 +1,63 @@
+Pytorch, tensorflow, huggingface, langchain, pydantic 
+
+
+Pytorch 
+    made by meta
+
+    highly customizable 
+    used a openai and tesla
+
+    dynamic computation graphs (autograd)
+
+    rich ecosystem/community 
+        e.g. torchvision torchtext 
+
+    favored in research; adaptable env for experimenting/prototyping
+
+
+Tensorflow 
+    made by google 
+    built on keras
+
+    scalable => turn reserach prototypes into production 
+
+    tensorflow extended (tfx)
+        also tflite, tf.js etc. etc.
+
+    keras integration 
+        lets u rapidly prototype in tensorflow with tf.keras 
+    
+    large scale => preferred for enterprise-level NLP 
+    
+
+Hugging Face 
+    offers open source library w/ pretrained moels 
+    lets u streamline training/fine tuning of gen ai models 
+
+    extensive model repository 
+         mostly focused on NLP, easily shareable/discover/use models
+         supports models in popular frameworks (tensorflow/pytorch)
+
+    simple 
+        user friendly, accesible to all 
+    
+    community 
+
+
+    useful huggingface libraries 
+        Transformers library 
+        Datasets library 
+        Tokenizers library 
+
+LangChain
+    streamline AI app dev with LLMs 
+
+    Advanced prompt engineering 
+    Seamless integration with leading models (e.g. GPT, chatgpt)
+
+    NLP application; chatbots ez to integrate
+
+Pydantic 
+    streamlines data handling 
+    robust data validation; reliable 
+    manage settings easily 
