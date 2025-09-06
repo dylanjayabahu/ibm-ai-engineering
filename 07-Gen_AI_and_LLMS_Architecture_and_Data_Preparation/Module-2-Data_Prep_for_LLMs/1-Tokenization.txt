@@ -71,7 +71,7 @@ my_iterator = yeild_tokens(dataset)
 
 next(my_iterator) fetches next set of tokens 
 
-vocab = build_vocab_from_iterator(yeild_tokens(dataset), specials=["<unk>"]) # unk is what is used when we encouter a word not in our vocab
+vocab = build_vocab_from_iterator(yeild_tokens(dataset), specials=["<unk>"]) # unk is what is used when we encouter a word not in our vocab; short for unknown
 vocab.set_default_index(vocab["<unk>"]) # give a default index for any unrecognized tokens
 vocab.get_stoi()
 

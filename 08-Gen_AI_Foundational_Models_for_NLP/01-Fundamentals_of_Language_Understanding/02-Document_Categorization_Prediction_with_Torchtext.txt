@@ -1,0 +1,99 @@
+Document classifier - analyze text and system outputs the class label (e.g. science, sports, business etc)
+
+NN for classification 
+    input dim is dim of embedded vector (probably bag embedding for whole text doc)
+    output dim is num classes
+
+# nn in pytorch 
+train_iter = iter(AG_NEWS(split="train"))
+y, text = next(train_iter)
+print (y, text)
+    # y is class num 
+    # text is input 
+
+ag_news_label = {1: "World", 2:"Sports", 3:"Business", 4:"Sci/Tech"}
+ag_news_label[y] #allows us to access class label from class num 
+
+
+tokenizer = get_tokenizer("basic_english")
+
+def yield_tokens(data_iter):
+    for y, text in data_iter: 
+        yield (tokenizer(text))
+    
+vocab = build_vocab_from_iterator(yield_tokens(train_iter), specials=["<unk>"]) # unk is short for unknown
+vocab.set_default_index(vocab["unk"])
+
+def text_pipeline(x):
+    return vocab(tokenizer(x))
+
+def label_pipeline(y):
+    return int(y)-1 # labels start at 0 for training purposes 
+
+
+def collate_batch(batch):
+    label_list, text_list, offsets = [], [], [0]
+
+    for _label, _text in batch:
+        label_list.append(label_pipeline(_label))
+    
+        procesed_text = torch.tensor(text_pipeline(_text), dtype=torch.intg64)
+        text_list.append(processed_text)
+        offsets.append(processed_text.size(0))
+
+    label_list = torch.tensor(label_list, dtype=torch.int64)
+    offsets = torch.tensor(label_list, dtype=torch.int64)
+    text_list = torch.cat(text_list)
+
+    return label_list.to(device, text_list.to(device), offsets.to(device))
+
+BATCH_SIZE = 3 
+train_dataloader = DataLoader(
+    AG_NEWs(split="train")
+    batch_size=BATCH_SIZE, 
+    shuffle=True, 
+    collate_fun = collate_batch
+    )
+
+# explore a sample in a batch
+label, text, offsets = next(iter(train_dataloader))
+    # label is a 3 dim vector of the labels for thie batch of 3
+    # text is a concatenated vector with token indices of all 3 documents together
+    # offsets is the vector showing the start point of each new document 
+
+class TextClassificationModel(nn.Module):
+    def __init__(self, vocab_size, embed_dim, num_classes):
+        super(TextClassificationModel, self).__init__()
+        self.embedding = nn.EmbeddingBag(vocab_size, embed_dim, sparse=False)
+        self.fc = nn.Linear(embed_dim, num_classes)
+        self.init_weights()
+    
+    def init_weights():
+        initrange=0.5
+        self.embedding.weight.data.uniform_(-initrange, initrange)
+        self.fc.weight.data.uniform (-initrange, initrange)
+        self.fc.bias.data.zero_()
+
+    def forward(self, text, offsets):
+        embedded = self.embedding(text, offsets)
+        return self.fc(embedded)
+
+embed_dim = 64
+vocab_size = len(vocab)
+num_classes = 4 
+
+model = TextClassificationModel(vocab_size, emsize, num_classes)
+
+predicted_label = model(text, offsets) # note we havent trained model yet so it is rand prediction
+    # outputs logit values. Each row is a prediction for an item in the batch (3 rows, 3 items per batch)
+    # the vector in each row is the logits for each class; use argmax to find which class is predicted
+
+predicted_label.argmax(1) # gives index of max val in each row
+
+def predict(text, text_pipeline):
+    with torch.no_grad():
+        text = torch.tensor(text_pipeline(text))
+        output = model(text, torch.tensor[0])
+        return ag_news_label[output.argmax(1).item() + 1] # <-- this is the dict we made earlier
+    
+    ^ predicts given a text string 

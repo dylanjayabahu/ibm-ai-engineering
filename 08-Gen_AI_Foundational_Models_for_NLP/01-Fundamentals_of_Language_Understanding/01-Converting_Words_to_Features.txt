@@ -1,0 +1,80 @@
+Must convert words to numbers so nn can understand
+
+One hot encoding 
+    convert categorical data to feature vector 
+    len of vector is number words in vocabulary 
+    we set all elements to 0 except the index for the word we are encoding
+
+Bag of words - representation that portrays a string of text as an averaged-one hot encoded vector  
+    one hot encode all the words in the text document
+    sum the vectors 
+        this is classic the bag of words representation
+
+    u can also normalize it (divide by num vectors)
+        so that documents of diff lengths are comparable 
+        gives relative frequency distribution 
+    
+
+    bag embedding means u loose order of words (e.g. "dog eats man" and "man eats dog" embed the same way)
+        but fixed input size, good for when word order dont matter (e.g. smap detection)
+
+for a neural net, to embed the index into a vetor
+    you can either input the one hot encoded vector 
+    or simply input the token index
+
+    embedded dim is typically lower than vocab dim (one hot encoded dim)
+
+
+# embeddings and embeddingbag in pytorch 
+
+dataset=[
+    "i like cats",
+    "i hate dogs",
+    "im impartial to hippos"
+]
+
+tokenizer = get_tokenizer('spacy', language='en_core_web_sm')
+
+def yeild_tokens(data_iter):
+    for data_sample in data_iter:
+        yield tokenizer(data_sample)
+
+
+# input_ids = lambda x: [torch.tensor(vocab(tokenizer(data_sample))) for data_sample in dataset]
+# index = input_ids(dataset)
+
+index = [torch.tensor(vocab(tokenizer(data_sample))) for data_sample in dataset] # generates indexes for each data sample 
+    # each data_sample is a document 
+
+embedding_dim = 3 
+n_embedding = len(vocab) # 9 
+embeds = nn.Embedding(n_embedding, embedding_dim)
+
+i_like_cats = embeds(index[0]) # embed the index of each word in the 0th sample of dataset, containing 3 words 
+    u will get 3 embedding vectors (each rows) (one for each i, like, cats)
+    each one has 3 dims
+
+
+# very similar to embeddingbag layer
+embedding_dim = 3 
+n_embedding = len(vocab) # 9 
+embedding_bag = nn.EmbeddingBag(n_embedding, embedding_dim)
+
+i_like_cats = embedding_bag(index[0], offsets=torch.tensor([0])) # bag embed with the indices of all words in the 0th sample 
+    # a single averaged bag embedding vector for the i like cats phrase
+
+
+# offset parameter 
+index = [tensor([0,7,2]), tensor([0,4,3]), tensor([0,1,6,8,5])]
+    # we use the offset parameter 0 to capture the start pos of every document (document = chunk of text)
+index_flat = torch.cat(index)
+
+# to find starting position of each sequence, we make an offset vector 
+offset = [0] + [len(sample) for sample in index] 
+then cumulatively sum (prefix sum) the offset vector to get the starting position of each document
+    # thats why we need to add a 0 at the front 
+offset=torch.cumsum(offset,0)[0:-1]
+
+my_embedddings = embedding_bag(index_flat, offsets=offset)
+    # now u can get a list of bag_embeddings, one for each document 
+    # each row in the matrix is a documents bag embedding

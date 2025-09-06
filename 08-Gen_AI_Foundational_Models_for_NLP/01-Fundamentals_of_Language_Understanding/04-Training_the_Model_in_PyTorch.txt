@@ -1,0 +1,89 @@
+train_iter = iter(AG_NEWS(split="train"))
+y,text = next(train_iter)
+
+train_iter, test_iter = AG_NEWS()
+
+train_dataset = to_map_style_dataset(train_iter)
+test_dataset = to_map_style_dataset(test_iter)
+
+num_train = int(len(train_dataset) * 0.95)
+split_train_, split_valid_= random_split(train_dataset, [num_train, len_train_dataset-num_train])
+
+
+BATCH_SIZE = 64
+
+train_dataloader = DataLoader(
+        split_train_,
+        batch_size=BATCH_SIZE, 
+        shuffle=True, 
+        collate_fn=collate_batch,
+)
+
+valid_dataloader = DataLoader(
+        split_valid_,
+        batch_size=BATCH_SIZE, 
+        shuffle=True, 
+        collate_fn=collate_batch,
+)
+
+test_dataloader = DataLoader(
+    test_dataset, 
+    batch_size=BATCH_SIZE, 
+    shuffle=True,
+    collate_fn=collate_batch
+)
+
+class TextClaasificationModel(nn.Module):
+    def __init__(self, vocab_size, embed_dim, num_class):
+        super(TextClaasificationModel, self).__init__()
+        self.embedding = nn.EmbeddingBag(vocab_size, embed_dim, sparse=False)
+        self.fc = nn.Linear(embed_dim, num_classes)
+        self.init_weights()
+    
+    def init_weights(self):
+        initrange=0.5
+        self.embedding.weight.data.uniform_(-initrange, initrange)
+        self.fc.weight.data.uniform_(-initrange, initrange)
+        self.fc.bias.data.zero_()
+    
+    def forward(self, text, offsets):
+        embedded = self.embedding(text, offsets)
+        return self.fc(embedded)
+
+model = TextClaasificationModel(vocab_size, embed_dim, num_class)
+
+LR=0.1
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=LR)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1.0, gamma=0.1) 
+    # step_size is the period of lr decay 
+    # gamma is the factor to decay 
+
+
+EPOCHS = 10 
+cum_loss_list=[]
+acc_epoch=[]
+acc_old=0
+
+
+for epoch in tqdm(range(1, EPOCHS+1)): # tqdm shows progress bar 
+    model.train()
+    cum_loss = 0
+
+    for idx, (label, text, offsets) in enumerator(train_dataloader):
+        optimizer.zero_grad()
+        predicted_label = model(text, offsets)
+        loss = criterion(predicted_label, label)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
+        optimizer.step()
+        cum_loss += loss.item()
+
+    cum_loss_list.append(cum_loss)
+    val_acc = evaluate(valid_dataloader)
+    acc_epoch.append(val_acc)
+
+    # save model with highest val acc so far 
+    if val_acc > acc_old:
+        acc_old = val_acc 
+        torch.save(mode.state_dict(), 'model.pth')
