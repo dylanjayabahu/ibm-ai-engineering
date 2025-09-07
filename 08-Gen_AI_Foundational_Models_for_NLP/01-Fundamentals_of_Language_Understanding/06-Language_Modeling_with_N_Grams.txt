@@ -1,0 +1,47 @@
+Data:
+
+w1 | w2.  | w3.  
+i    like   vacation
+i    hate   surgery
+
+Bigram:     
+    bigram model: P(w3 | w2=like)
+        # context window of 1 token
+
+    e.g. P(w3=vacations | w2 = like) = 1 # from the small data given 
+    P(w3=surgery | w2 = like) = 0 
+
+
+
+
+
+Data:
+
+w1       |  w2.  | w3.  
+surgeons   like   surgery
+i          hate   surgery
+
+Trigram model:
+    # context window of 2 tokens; improves on bigram limitations 
+
+    P(w3=surgery | w1=i, w2=like) = 0 
+    p(w3=surgery | w1=surgeons, w2=like) = 1
+        
+
+N-gram is same thing but with context window of n-1 tokens
+    higher n = better estimate 
+    the probability calculations as N goes up become too hard 
+    we an approximate with a neural network 
+
+
+    we input the {..., w2, w3, w4} 
+        if we were to encode this as a bag_embedded vector, order wouldnt matter 
+        instead, we concatenate the individual one-hot encoded vectors
+        as such, the input context vector is of dim {one hot encoded size} * {num encoded vectors}
+                                                 = {vocab_size} * {context_size}
+                                                
+        we simply construct the NNs input by computing the individual one-hot embedding vectors and concatenating them 
+
+    the output is the probability distribution for w5; a softmax distribution over all vocab words
+        output[i] is an approximation of p(wn = vocab[i] | w2=_, w3=_, ... wn-1=_)
+        as susch, the output dim is the vocab size 

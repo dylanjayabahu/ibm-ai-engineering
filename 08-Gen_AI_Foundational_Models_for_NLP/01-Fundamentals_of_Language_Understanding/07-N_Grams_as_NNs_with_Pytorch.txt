@@ -1,0 +1,124 @@
+embedding_dim=3
+context_size=2
+vocab_size=4
+
+embeddings = nn.Embedding(vocab_size, embedding_dim) #note we improve on the one-hot embeddings (from l6)and use learnable embedding vectors instead
+
+linear = nn.Linear(context_size * embedding_dim, 2)
+
+inputs = torch.tensor([2,3]) # 2, 3 are mapped to words in vocab
+
+my_embeddings = embeddings(inputs)
+
+my_embeddings_c = torch.reshape(my_embeddings, (-1, context_size*embedding_dim))
+
+linear1(my_embeddings_c)
+
+
+class NGramLanguageModeler(nn.Module):
+
+    def __init__(self, vocab_size, embedding_dim, context_size):
+        super(NGramLanguageModeler, self).__init__()
+
+        self.context_size = context_size 
+        self.embedding_dim = embedding_dim 
+
+        self.embeddings = nn.Embedding(vocab_size, embedding_dim)
+        self.linear1 = nn.Linear(context_size * embedding_dim, 128)
+        self.linear2 = nn.Lineara(128, vocab size)
+    
+    def forward(self, inputs):
+        embeds = self.embeddings(inputs)
+        embeds = torch.reshape(embeds, (-1, self.context_size * self.embedding_dim))
+
+        out = F.relu(self.linear1(embeds))
+        out = self.linear2(out)
+        return out 
+    
+
+# N-gram language model 
+    # use a sliding window approach; use window context to predict word at end of window
+    # this lets us make batches of context and target words 
+
+CONTEXT_SIZE = 2 
+BATCH_SIZE=10
+EMBEDDING_DIM=10 
+
+def collate_batch(batch):
+    batch_size=len(batch)
+    context, target=[],[]
+    for i in range(CONTEXT_SIZE, batch_size)
+        target.append(vocab([batch[i]]))
+        context.append(vocab([batch[i-j-1] for j in range(CONTEXT_SIZE)]))
+    
+    return torch.tensor(context).to(device)
+
+
+songs = " song lyric text "
+
+tokenizer = get_tokenizer("basic_english")
+tokens=tokenizer(song)
+vocab = build_vocab_from_iterator(tokenized_song, specials=["<unk>"])
+vocab.set_default_index(vocab["<unk>"])
+text_pipeline = lambda x: vocab(tokenizer(x))
+
+def train(dataloader, model, epochs=100, show=10):
+    LOSSES = [] # prioritize loss over accuracy as key performance indicator
+
+    for epoch in tqdm(range(epochs)):
+
+        total_loss = 0
+
+        for context,target in dataloader:
+            model.zero_grad()
+            predicted = model(context)
+            loss = criterion(predicted, target.reshape(-1)) # criterion = nn.CrossEntropyLoss()
+            total_loss += loss.item()
+
+        LOSS.append(total_loss/len(dataloader))
+
+    return LOSSES
+
+padding = BATCH_SIZE-len(tokens)%BATCH_SIZE
+tokens_pad = tokens+tokens[0:padding]
+dataloader = DataLoader(
+    tokens_pad, 
+    batch_size=BATCH_SIZE, 
+    shuffle=False,
+    collate_fn=collate_batch
+)
+
+criterion = torch.nn.CrossEntropyLoss()
+
+model = NGramLanguageModeler(len(vocab), EMBEDDING_DIM)
+
+
+train(dataloader, model)
+
+
+# prediction 
+
+index_to_token = vocab.get_itos()   
+    # a list of tokens where the index is the numerical value for the token
+    # use this list for a decoder to retrieve the associated word when nn produces an output
+
+
+context = text_pipeline("Never gonna")
+x_c = torch.tensor(context).reshape(-1,1)
+
+out = model(x_c)
+predicted_index = torch.argmax(out,1)
+predicted_word = index_to_token[predicted_index]
+
+def write_song(model, num_words=100):
+    song = ""
+    for i in range(num_words):
+        with torch.no_grad():
+            context=torch.tensor(vocab([tokens[i-j-1]] for j in range(CONTEXT_SIZE)))
+            context = context.to(device)
+
+            word_indx = torch.argmax(model(context))
+            song += " " + index_to_token[word_indx.detach().item()]
+        
+    return song
+
