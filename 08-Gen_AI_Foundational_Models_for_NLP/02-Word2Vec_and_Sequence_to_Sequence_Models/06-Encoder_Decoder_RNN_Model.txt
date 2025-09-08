@@ -1,0 +1,75 @@
+#multi 30k dataset 
+    includes train/val/test for english to german text 
+
+# load datawith datalodaer 
+
+# train a seq to seq model (slightly diff than neural net)
+
+def train(model, iterator, optimizer, criterion, clip):
+    model.train()
+    epoch_loss = 0
+
+    train_iterator = tqdm(iterator, desc="Training", leave=False)
+
+    for i, (src, trg) in enumerate(iterator):
+        src = src.to(device)
+        trg = trg.to(device)
+
+        optimizer.zero_grad()
+
+        output = model(src, trg)
+
+        output_dim = output.shape[-1]
+        output = output[1:].view(-1, output_dim) # <- sequence models like rnn; output shape differs
+        trg = trg[1:].contiguous().view(-1)
+            # ^ now it is aligned for loss computatiton
+
+        loss = criterion(output, trg)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(mode.parameters(), clip)
+        optimizer.step()
+
+        train_iterator.set_postfix(loss=loss.item())
+        epoch_loss += loss.item()
+
+    return epoch_loss/len(list(iterator))
+
+
+def evaluate(model, iterator, criterion):
+    ##exact same as train but set model.eval()
+
+def generate_translation(model, src_sentence, src_vocab, trg_vocab, max_len=50):
+    model.eval()
+
+    with torch.no_grad():
+        src_tensor = text_transform[SRC_LANGUAGE](src_sentence).view(-1, 1).to(device)
+
+        hidden, cell = model.encoder(src_tensor)
+        trg_indexes = [trg_vocab.get_stoi()['<bos>']]
+
+        trg_tensor = torch.ongTensor(trg_indexes).unsqueeze(1)
+
+        trg_tensor = trg_tensor.to(model.device)
+    
+        for _ in range(max_len):
+            output, hidden, cell = model.decoder(trg_tensor[-1], hidden, cell)
+
+            pred_token = output.argmax(1)[-1].item()
+
+            trg_indexes.append(pred_token)
+
+            if pred_token == trg_vocab.get_stoi()['<eos>']:
+                break 
+            
+            trg_tensor = torch.LongTensor(trg_indexes).unsqueeze(1)
+            trg_tensor = trg_tensor.to(model.device)
+        
+        trg_tokens = [trg_vocab.get_itos()[i] for i in trg_indexes]
+
+        if trg_tokens[0] == '<bos>':
+            trg_tokens = trg_tokens[1:] # dont print out the bos in the outputed translation    
+        if trg_tokens[-1] == '<eos'>:
+            trg_tokens = trg_tokens[:-1] # dont print out eos in outputted tranlslation 
+        
+        translation = "".join(trg_tokens)
+        return translation

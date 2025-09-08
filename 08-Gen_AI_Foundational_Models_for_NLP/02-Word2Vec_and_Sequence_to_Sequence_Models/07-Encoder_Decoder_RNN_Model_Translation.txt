@@ -1,0 +1,115 @@
+Encoder decoder architecture 
+
+    encoder takes an input of x1 through xn 
+        turns it into context
+    decoder returns a sequence of y1 through ym 
+        using the context 
+
+    n != m necessarily
+
+    encoder uses rnn to pass hidden state encodings as the new inputs arrive 
+        no output is generated yet
+
+        encoder takes in an embedding of the next input token
+        then input from the previous hidden state along with embedding is processed by rnn cell to make new hidden state 
+            for the first input token the hidden state is a 0 vector
+    
+    last hidden state is passed into the decoder
+
+    each rnn step of the decoder generates a token 
+        that token along with hidden state is passed on to next rnn step 
+
+        encoder takes in an embedded token vector; the previously generated word 
+            for the first word it is just all 0s 
+        the previous hidden state alongw ith the embedding is passed into the rnn cell 
+        the rnn cell outputs the next hidden state 
+        and also passes to the linear which outputs the next output token
+    
+
+class Encoder(nn.Module):   
+    def __init__(self, vocab_len, emb_dim, hid_dim, n_layers, dropout_prob):
+        super().__init__() # dont need to specify Encoder and self
+
+        self.hid_dim = hid_dim 
+        self.n_layers = n_layers 
+
+        self.embedding = nn.Embedding(vocab_len, emb_dim)
+        self.lstm = nn.LSTM(emb_dim, hid_dim, n_layers, dropout=dropout_prob)
+        self.dropout = nn.Dropout(dropout_prob)
+    
+    def forward(self, input_batch):
+        embed = self.embedding(input_batch)
+        embed = self.dropout(embed)
+        embed.to(device)
+
+        outputs, (hidden, cell) = self.lstm(embed) # RNN CELL
+
+        return hidden, cell
+    
+
+class Decoder(nn.Module):
+    def __init__(self, output_dim, emb_dim, hid_dim, n_layers, dropout):
+        super().__init__()
+
+        self.output_dim = output_dim # target vocab length
+        self.hid_dim = hid_dim 
+        self.n_layers = n_layers 
+
+        self.embedding = nn.Embedding(output_dim, emb_dim)
+        self.lstm = nn.LSTM(emb_dim, hid_dim, n_layers, dropout=dropout)
+        self.fc_out = nn.Linear(hid_dim, output_dim)
+        self.softmax = nn.LogSoftmax(dim=1)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, input, hidden, cell):
+        input = input.unsqueeze(0)
+        embed = self.embedding(input)
+        embed = self.dropout(embed)
+        embed.to(device)
+
+        output, (hidden, cell) = self.lstm(embed, (hidden, cell))
+
+        prediction_logit = self.fc(output.squeeze(0))
+        prediction = self.dropout(prediction_logit)
+
+        return prediction, hidden, cell
+    
+
+class Seq2Seq(nn.Module):
+    def __init__(self, encoder, decoder, device, trg_vocab):
+        super().__init__()
+        self.encoder = encoder 
+        self.decoder = decoder
+        self.device = device 
+        self.trg_vocab = trg_vocab 
+    
+    def forward(self, src, trg, teacher_forcing_ratio=0.5)
+        # teacher forcing ratio; 
+            # sometimes, we force the correct answer; we use the correct output sequence from the traiing data as input to the decoder
+            # so instead of using the previously generated/predicted output as input to the decoder block, we input the previous correct output 
+    
+        batch_size = trg.shape[1]
+        trg_len = trg.shape[0]
+        trg_vocab_size = self.decoder.output_dim 
+        
+        outputs = torch.zeros(trg_len, batch_size, trg_vocab_size).to(self.device) # container to store our outputs
+
+        hidden, cell = self.encoder(src)
+        hidden = hidden.to(device)
+        cell = cell.to(device)
+        input = trg[0,:]
+
+        for t in range(1, trg_len):
+            output, hidden, cell = self.decoder(input, hidden, cell)
+            outputs[t] = output
+
+            teacher_force = random.random() < teacher_forcing_ratio
+
+            top1 = output.argmax(1)
+    
+            if teacher_force:
+                input = trg[t]
+            else:
+                input = top1 
+            
+        return outputs

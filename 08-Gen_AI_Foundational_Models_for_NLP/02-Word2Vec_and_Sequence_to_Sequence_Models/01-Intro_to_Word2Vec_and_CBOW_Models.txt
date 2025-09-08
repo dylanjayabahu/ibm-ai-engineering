@@ -1,0 +1,98 @@
+Word2Vec = word to vectors = group of models producing word embeddings
+    common example of vector for king - queen =~ vector for man - woman
+    captures word relationships 
+    better than random embeddings
+
+
+CBOW Word2Vec Model 
+    CBOW = continuous bag of words
+
+    We start with randomly generated embeddings 
+    
+    then train a NN that maps input contexts words to the target word 
+        we use context words on either side - remember we arent predicted next word just trying to find a way 
+    
+
+
+    the input to the NN is of shape 2*context_size 
+        if context size is one, we input word_t-1 and word_t+1 to the model (model will try to find w_t)
+        if context size is 2, we input words t-2,t-1 and t+1,t+2 to the model 
+        we input these words by providng their index in the vocab 
+        e.g. for context window of 1 [index_of_w_t-1, index_of_w_t+1] is inputted 
+    the next layer is the embedding layer (lookup from embedding matrix)
+        embeding matrix of of shape [vocab_size, embedding_dim]
+            each row i is the embedding for word i
+    then we combine context vectors (bag of words embedding)
+        ^ this is the context representation
+    then we have a linear hidden layer (s)
+    and finally a softmax output layer 
+        the dim is vocab_size, we produce a softmax over the vocab for which word should come next 
+    
+
+CBOW Model in Pytorch 
+
+class CBOW(nn.Module):
+    def __init__(self, vocab_size, embed_fim, num_class):
+        super(CBOW, self).__init__()
+
+        self.embedding = nn.EmbeddingBag(vocab_size, embed_dim, sparse=False)
+            # note that here the input dim is vocab_size, 
+        self.fc = nn.Linear(embed_dim, vocab_size)
+
+    def forward(self, text, offsets);
+        out = self.embedding(text, offsets)
+        out = torch.relu(out)
+        out = self.fc(out)
+        return out
+
+vocab_size = len(vocab)
+emsize = 24 
+model_cbow = CBOW(vocab_size, emsize, vocab_size).to(device)
+
+tokenizer = get_tokenizer('basic_english')
+
+def tokenize_data(sentences):
+    for sentence in sentences:
+        yield tokenizer(sentence)
+
+tokenized_toy_data = tokenizer(toy_data)
+
+vocab = build_vocab_from_iterator(tokenize_data(tokenized_toy_data), specials=['<unk>'])
+vocab.set_default_index(vocab["<unk"])
+
+
+
+CONTEXT_SIZE = 2 
+cbow_data = []
+for i in range(1, len(tokenized_toy_data)-CONTEXT_SIZE):
+    context = (
+        [tokenized_toy_data[i-j-1] for j in range(CONTEXT_SIZE)] + 
+        [tokenized_toy_data[i+j+1] for j in range(CONTEXT_SIZE)] 
+    )
+
+    target = tokenied_toy_data[i]
+    cbow_data.append((context, target))
+
+
+text_pipline = lambda tokens: [vocab[token] for token in tokens]
+
+def collate_batch(batch):
+    target_list, context_list, offsets = [], [], [0]
+
+    for _context, _target in batch:
+
+        target_list.append(vocab[_target])
+
+        processed_context = torch.tensor(text_pipeline(_context), dtype=torch.int64)
+        context_list.append(processed_context)
+
+        offsets.append(procssed_ontext.size(0))
+
+        target_list = torch.tensor(target_list, dtype=torch.int64)
+        offsets = torch.tensor(offsets[:-1]).cumsum(dim=0)
+        context_list = torch.cat(context_list)
+
+        return target_list.to(device), context_list.to(device), offsets.to(device)
+
+BATCH_SIZE = 64
+dataloader_cbow. DataLoader(cbow_data, batch_size=BATCH_SIZE, shuffle=True, collate_fn = collate_batch)

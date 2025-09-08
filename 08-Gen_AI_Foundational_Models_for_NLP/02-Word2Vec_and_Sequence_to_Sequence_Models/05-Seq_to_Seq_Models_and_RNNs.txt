@@ -1,0 +1,101 @@
+Seq to Seq
+    e.g.
+        translation; seq in 1 lang to seq in another
+        chatbots; seq of text to response seq 
+        summariztion; seq of long text to summarized seq
+        code generation; seq of description to seq of code 
+    
+    Process multiple inputs 
+    x1, x2, x3, x4, x5 
+
+    and outputs multiple outputs
+    y1 y2, y3, y4, y5
+
+
+Label to seq 
+    single input 
+    x 
+
+    outputs many outputs 
+    y1, y2, y3, y4, y5
+
+    e.g. gen ai 
+
+
+Context: 
+    man bites dog  vs  dog bites man would be same in bag of words model 
+
+    instead, if we represent it as a seq of one-hot encoded vectors, we capture this meaning
+
+    essentially we keep it as a sequence instead of mushing it into 1 vector to allow for better understanding
+        IID assumption: each sample is inidpendant and identicaly distributed 
+        seq to seq allows u to overcome the iid assumption, which models so far have relied on 
+
+        u need a model that has some sort of memory b/w each element in seq 
+    
+
+Sequence Model Training: 
+    sort ur sentences/documents by lenght; then batch similarly length sentences for model training 
+    within a batch sentence length must be the same
+
+
+
+RNNs = Recurrent Neural Networks 
+    type of NN 
+    uses sequential or time series data
+    designed to remember past info; 
+        use the info to influence future decisions 
+
+
+    RNN structure 
+        input; takes in the next thing, x_t
+        hidden layer/hidden state; at each run we update the hiddnen state, h_t
+            update with new input, x_t, and old hiddenstate, h_t-1
+            concatenate x_t and h_t-1
+            use that with an fc layer and activation(like tanh) to find h_t
+        output, z_t 
+            fc layer from the current hidden state, h_t 
+            z_t is what ur ultimately trying to do; 
+                e.g. the softmax over vocab for next word prediction, 
+
+            we pick the word that has highest probability (or use the topk and pick one)
+        
+        then we repeat with a new input
+
+Improvements to RNN 
+    vanilla rnns can only remember short term info; the more memory u add the more the older memories fade
+
+    Gated Recurrent Units (GRU)
+        has a reset gate and update gate
+        update gate = determines how much of previous hidden state to carry forward
+            denoted by z_t 
+            if z_t close to 1 => keep most of memory 
+            if z_t close to 0 => overwrite with new info 
+
+        reset gate = how much of previous hidden state to disregard 
+            denoted by r_t 
+            if r_t is small we reset and rely more on current input 
+
+
+        use the gates together to update hidden state
+        this lets us remember longer by choosing what to forget and preserve
+
+
+    LSTM (long short term memory)
+
+        uses cell state (like conveyor belt) to carry long term into 
+        on top of the hidden state for short term info 
+        
+        forget gate, f_t
+            decides what old info to throw away from cell state
+            "should i forget this memory?"
+        input gate, i_t 
+            decides what new info to store in cell state 
+            "should I write this new memory?"
+        output gate 
+            decides how much of the memory to use as the current hidden state 
+            "how much of my memories should influence the next step?"
+
+        support short term and long term memory recall
+        we can separately control long term mememory (cell state) and short term memory (hidden state)
+

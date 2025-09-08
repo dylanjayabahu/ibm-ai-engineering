@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+**.vector_cache
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
@@ -32,6 +33,7 @@ ignoreme.txt
 **.keras
 **model.png
 **.pth
+**.pt
 
 # Datasets and logs
 aircraft_damage_dataset_v1/

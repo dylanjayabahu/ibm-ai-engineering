@@ -1,0 +1,164 @@
+Skip-Gram 
+    reverse of CBOW odel 
+    predicts context words from target word 
+
+    e.g. if context is 1 
+        skip gram tries to predict word t-1 and t+1 given word t 
+    
+    the architecture is kind of the reverse of CBOW 
+
+    input is of dim vocab_size, which is 1 hot encoded target word 
+    hidden layer (embedding lookup)
+    output is a vector of dim vocab_size, 
+        representing one hots (softmax) over the vocab as the target word 
+    
+    we get 2*c training examples this way (we predict 1 context word at a time)
+        e.g. if sentence is a b c d e f g 
+        and c = 2
+        and target = c 
+
+        then training pairs are:
+            c, a 
+            c, b 
+            c, d 
+            c, e
+
+
+class SkipGram_Model(nn.Module):
+    def __init__(self, vocab_size, embed_dim):
+        super (SkipGram_Model, self).__init__()
+
+        self.embeddings = nn.Embedding(num_embeddings=vocab_size, embedding_dim=embed_dim)
+        self.fc = nn.Linear(in_features=embed_dim, out_features=vocab_size)
+    
+    def forward(self, text):
+        out = self.embeddings(text)
+        out = torch.relu(out)
+        out = self.fc(out)
+        return out
+
+model_sg = SkipGram_Model(vocab_size, emsize).to(device)
+
+CONTEXT_SIZE = 2 
+skip_data = []
+
+for i in range(CONTEXT_SIZE, len(tokenized_toy_data)-1):
+    context = (
+        [tokenized_toy_data[i-j-1] for j in range(CONTEXT_SIZE)] + 
+        [tokenized_toy_data[i+j+1] for j in range(CONTEXT_SIZE)]
+    )
+
+    target = tokenized_toy_data[i]
+
+    skip_data.append((target,context))
+
+# split the 2c context words into 2c different training pairs 
+skip_data_ = []
+for sample in skip_data:
+    target_ = sample[0]
+    words_ = sample[1]
+    for word_ in words_:
+        skip_data.append((target_, word_))
+
+skip_data_ = [[(sample[0],word) for word in sample[1]] for sample in skip_data] # more concise way of doing same thing as above
+
+skip_data_flat = [item for items in skip_data_ for item in items]
+
+
+def collate_fn(batch):
+    target_list, context_list = [], []
+    for _context, _target in batch:
+        target_list.append(vocab[_target])
+        context_list.append(vocab[_context])
+        target_list = torch.tensor(target_list, dtype=torch.int64)
+        context_list = torch.tensor(context_list, dtype=torch.int64)
+    
+    return target_list.to(device), context_list.to(device)
+
+dataloader = DataLoader(skip_data_flat, batch_size=BATCH_SIZE, collate_fn = collate_fn)
+
+target, context = next(dataloader) # usage 
+
+
+LR = 5
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model_sg.parameters(), lr=LR)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.1)
+
+
+def train_model(model, dataloader, criterion, optimizer, epochs=1000):
+    epoch_losses=[]
+
+    for epoch in tqdm(range(epochs)):
+        running_loss = 0.0
+
+        for idx, samples in enumerate(dataloader);
+            optimizer.zero_grad()
+
+            ## CBOW
+            if any(isinstance(module, nn.EmbeddingBag)) for _, module in model.named_modules(): 
+                target, context, offsets = samples 
+                predicted = model(context)
+
+            
+            ## Skipgram
+            elif any(isinstance(module, nn.Embedding) for _, module in model.named_modules()):
+                target, context = samples 
+                predicted = model(context)
+            
+            loss = criterion(predicted, target)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 0.1)
+            optimizer.step()
+            running_loss += loss.item()
+        
+        epoch_losses.append(running_loss / len(dataloader))
+    return model, epoch_losses
+
+
+
+model_cbow, epoch_losses = train_model(model_cbow, dataloader_cbow, criterion, optimizer, epochs=400)
+# or model_sg, epoch_losses = train_model(model_sg, dataloader_sg, criterion, optimizer, epochs=400), if using skipgram 
+
+
+word_embeddings = model_cbow.embedding.weight.detach().cpu().numpy()
+word = 'baller'
+word_index = vocab.get_stoi()[word] # acces dict mapping tokens to indices
+print (word_embeddings[word_index]) # we can embed the word baller now
+
+
+
+# GloVe - Pretrained word embeddings
+from torchtext.vocab import GloVe,vocab 
+
+glove_vectors_6B = GloVe(name='6B')
+    # load with format: GloVe(840B, dim=300)
+
+vocab = vocab(glove_vectors_6b.stoi, 0, specials=('<unk>', '<pad>'))
+vocab.set_default_index(vocab["<unk>"])
+
+
+class TextClassificationModel(nn.Module):
+    def __init__(self, vocab_size, embed_dim, num_class):
+        super(TextClassificationModel, self).__init__()
+        self.embedding = torch.nn.Embedding.from_pretrained(glove_vetors_6b.vectors, freeze=True)
+        self.fc = nn.Linear(embed_dim, num_class)
+        self.init_weights()
+    
+    
+    def init_weights(self):
+        initrange = 0.5
+        self.fc.weight.data.unfiform_(-initrange, initrange)
+        self.fc.bias.data.zero_()
+    
+    def forward(self, text, offsets):
+        embedded = self.embedding(text)
+
+        # extract individual documents from text using offsets
+        means = []
+        for i in range(1, len(offsets)):
+            text_tmp = embedded[offsets[i-1]:offsets[i]]
+            means.append(text_tmp.mean(0))
+        
+    
+        return self.fc(torch.stack(means))
