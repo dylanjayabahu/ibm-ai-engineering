@@ -1,0 +1,18 @@
+Ethical Implications of Word Embeddings & LMs
+
+- Bias
+  - W2V/embeddings capture stereotypes (e.g., gender + jobs).
+  - Risks: biased outputs, unfair automation.
+  - Fixes: debias algos, fairness eval, ongoing checks.
+
+- Privacy
+  - Train data may leak sensitive info.
+  - Fixes: data anon, differential privacy (DP), informed consent, transparency.
+
+- Fair Representation
+  - Risk: underperformance for under-rep groups.
+  - Fixes: diverse data, inclusive metrics, continuous monitoring/updates.
+
+- Conclusion
+  - Key: reduce bias, protect privacy, ensure inclusivity.
+  - Need: transparency + accountability → trustworthy AI.

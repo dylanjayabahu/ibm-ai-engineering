@@ -1,0 +1,112 @@
+Perplexity: metric for evaluating efficiency of LLMS/GENAI
+    e.g. I love to travel 
+
+    P(I) is simple; no preceding context 
+    P(love | I) is harder; have to consider P(L) given I 
+    P(to | I love) is even harder 
+    etc etc 
+
+
+    in general: 
+    P(wT, wT-1, ..., w1) =P(w1) * P(w2|w1) * P(w3|w1,w2) * ... * P(wT | WT-1,...,w2,w1)
+        P for true probability
+
+    to evaluate performance, we compare model output to actual likelihood, as calculated above
+
+    our model estimates this probability with a bigram model and the model parameters, Theta
+    Q(wT, wT-1, ..., w1) = P(w1|theta) * P(w2|w1, theta) * ... * P(wT | WT-1, Theta)
+        Q for predicted probability
+    
+
+    we can use crossentropy loss to find the error b/w P and Q 
+
+
+    perplexity = e^{Crossentropy_loss}
+
+    we undo the logarithm with exponentiation so the units are more interpretable
+        exponential function makes diff b/w good/bad models clearer
+    
+
+    preplexity is typically used to see how well model fits to training set 
+
+    other metrics like bleu and rouge etc are used as well, more so on test/val 
+
+N-gram matching 
+    N=1:
+        we count the number of unigrams (single words) that match in the predicted text given the reference text 
+
+    N=2:
+        we count the number of bigrams that appear in both predicted text and reference text 
+    
+    etc. 
+
+
+    Precision = CountMatch/CountGenerated = {Num common n-grams}/{num total n grams in prediction}
+        measures accuracy of generated translation (why not just call it accuracy tf?)
+    Recall = CountMatch/CountReference = {Num common n grams}/{num total n-grams in reference}
+        measures completeness of generated translation
+    F1-score is same; harmonic mean of prec and rec
+
+# implementing eval metrics 
+NLTK  
+    BLUE
+    METEOR
+PyTorch
+    Perplexity
+    Crossentropy loss
+    
+    TorchText
+        BLUE
+    Torchmetrics 
+        ROUGE
+
+
+from nltk.translate.bleu_score import sentence_bleu
+
+def calculate_belu_score(generated, reference):
+    references = [reference.split() for reference in references]
+    hypotheses generated.split()
+
+    bleu_score = sentence_bleu(references, hypothesis)
+
+    return belu_score
+
+reference_translations = ["Monkey man sweeping the walkway ." ... ]
+
+# make generated translation 
+
+bleu_score = calculate_belu_score(generated_translation, reference_translations)
+
+
+
+
+
+ROUGE  = Recall Oriented Understudy for Gisting Evaluation 
+    set of metrics  
+    measure overlap between generated summary and one or more references
+    many metrics 
+        ROUGE-N = n-gram overlap
+        ROUGE-L = longest common subsequence 
+    higher ROUGE = better 
+
+BLEU = BiLingual Evaluation Understudy
+    primary metric used for machine translation 
+    compares generated w/ one or more references
+
+    counts number of n-grams that appear in both 
+
+    higher BLEU = better
+
+METEOR = Metric for Evaluation of Translation with Explicit ORdering 
+    commonly used for machine translation evaluation 
+
+    considers precision, recall, alignment 
+    uses various criteria 
+        exact word matches 
+        synonymy
+        stemming
+        reordering of words 
+        paraphrases
+        partial matches 
+        
+    higher meteor = better
