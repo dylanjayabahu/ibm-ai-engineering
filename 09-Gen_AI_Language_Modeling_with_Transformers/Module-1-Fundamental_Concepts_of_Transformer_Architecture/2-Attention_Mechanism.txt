@@ -1,0 +1,43 @@
+Attention mechanism is like a python dict 
+    e.g. if u want to map french words to english word 
+    have a dict with key as french word and value as english word 
+
+    Attention mech has similar structure 
+        Instead of keys as a bunch of strings, keys is a bunch of one hot encoded vectors 
+        We combine all these vectors into a matrix, K 
+
+        for querying, we need to lookup a key, so the query vectors are identical to elements of the K matrix 
+        This matrix is Q 
+
+        The values are also a bunch of one hot encoded vectors 
+        We combine these vectors into a matrix, V 
+
+        Corresponding elements in K and V should represent the same thing
+    
+    We transpose the key matrix, K so the shapes match (each key is a column now)
+
+    Attention(q, K, V) = q^T k^T V
+        the q vector dot with k^T ends up being how similar q and K are for each row in K 
+            if query is similar to key, that element in the vector has high valkue 
+            else it has low value 
+            How close is this French word to each possible dictionary key?
+
+            Note we technically normalize this by dividing by sqrt(d)
+            and we also softmax it after 
+
+            so rlly the formula is Attention(q, K, V) = softmax( q k^T / sqrt(d_k)) V
+
+            Note this is where the query vector interacts with all the other keys 
+        then we take that result and multiply it with V 
+            combines all the values, but weighted by how much the query matched each key.
+            gives a weighted combination of possible translations
+
+        h is now a context vector; we have applied attention
+
+        we can map hidden states (context vector) to vocabulary prediction with:
+            argmax(h * V^T)
+    
+    The same can be applied to word embeddings rather than onehot vectors over vocab
+
+Now, instead of q being a single query vector, it s a query matrix of several vectors 
+The same is applied to each vector in the matrix 

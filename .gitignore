@@ -53,6 +53,7 @@ img/
 data/
 **.data/
 **images_dataSAT
+**.pkl
 
 # screenshots
 Final_Project_Screenshots/

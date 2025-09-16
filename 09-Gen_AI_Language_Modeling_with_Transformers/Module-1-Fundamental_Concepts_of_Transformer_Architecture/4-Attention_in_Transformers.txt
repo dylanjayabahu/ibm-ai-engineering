@@ -1,0 +1,158 @@
+Scaled Dot Product Attention 
+    compute Q,K,V from learnable W matrices on X
+    Q = W_Q X 
+    K = W_K X 
+    V = W_V X 
+        # for cross attention, 
+        V = W_V * R, R is a different input from the other seq (e.g from other language)
+
+    # compute similarity scores 
+    scores = Q*K 
+    scores = scores/scale (usually sqrt(d))
+    scores = mask(scores) # optional 
+    scores = softmax(scores)
+
+    H' = scores*V
+
+Multi Head Attention: 
+    applies several scaled dot product attentions in parallel 
+
+    for i in range num_heads:
+
+        Q = W_Q(i) X 
+        K = W_K(i) X 
+        V = W_V(i) X 
+
+        Hi' = softmax(QK^T/sqrt(d)) * V ## same as scaled dot product attention formula 
+        each H is called an output head 
+
+    H' = Concantate all H'i
+        the concantated result has size num_heads * dim_head 
+    
+    then, we can project back down to H with fc layers 
+    H = H' * W_o
+    
+
+
+    this way each head can attend to distinct segments of the input sequence 
+        each token can still attend to every other token 
+            but we compute it in different learned subspaces (the separate W_Q(i), W_K(i), W_V(i))
+        each set has its own parameters
+
+        each head can focus on a diff relationship
+
+        num heads is a hyperparameter, 
+            but d_model must be divisible by num_heads 
+
+            when we have h heads, we want each head to handle a part of the embedding 
+            dk = dmodel/num_heads <= hence why it must be divisible 
+
+
+# implementation in pytorch 
+import torch 
+import torch.nn as nn 
+
+embed_dim = 4
+num_heads = 2 
+
+if embed_dim % num_heads != 0:
+    raise ValueError("Embedding dim must be a multiple of num heads")
+
+multihead_attn = nn.MultiheadAttention(embed_dim=embed_dim, num_heads=num_heads, batch_first = False)
+    # set batch_first to false by convention 
+
+
+
+# create random Q, K, and V vectors 
+seq_length = 10 
+batch_size = 5
+
+query = torch.rand((seq_length, batch_size, embed_dim))
+key = torch.rand((seq_length, batch_size, embed_dim))
+value = torch.rand((seq_length, batch_size, embed_dim))
+
+att_output, _ = multihead_attn(query, key, value)
+
+print("Attention output shape:", attn_output.shape)
+
+
+
+
+
+
+
+
+
+
+
+
+
+Encoder/Decoder Transformers 
+    Encoder:
+        inputs => input embedding => add positional_encodings
+
+        => multi head attention 
+            (no masking)
+
+        => add and norm 
+            add = skip step; add processed attention with og embeddings to allow skip connections; allows for deep network
+            norm to prevent vanishing gradients 
+
+        => additional attention blocks (mha + add/norm) can be added 
+        
+        => fc layers 
+            1 mini-nn done on each vector column of the matrix 
+        
+        => add and norm again 
+
+        
+        additional layers can be integrated
+
+
+    Decoder: 
+        outputs => input embedding => + positional encodings
+
+        => masked multi headed attention 
+            (masking so that future data doesnt impact current predictions)
+            each position can only attend to early positions 
+        
+        => add and norm 
+
+        => additional attention blocks (mha + add/norm) can be added 
+
+        => fc layers 
+            1 mini-nn done on each vector column of the matrix 
+        
+        => add and norm 
+
+
+        => linear
+        => softmax activation 
+            for word predictions; softmax over vocab
+        
+
+Multiple Transformer layers => e.g. can stack encoder layers 
+
+
+# implementation in pytorch 
+embed_dim = 4 
+num_heads = 2
+
+if embed_dim % num_heads != 0:
+    raise ValueError("embed_dim must be multiple of num_heads)
+
+num_layers = 6 # how many encoders to stack 
+
+encoder_layer = nn.TransformerEncoderLayer(d_model=embed_dim, nhead=num_heads)
+trasnformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers = num_layers)
+
+
+seq_length = 10
+batch_size = 5
+
+x = torch.rand((seq_length, batch_size, embed_dim))
+
+encoded = transformer_encoder(x)
+
+print(encoded.shape)
+    # same size as input, but enriched with attention and processing

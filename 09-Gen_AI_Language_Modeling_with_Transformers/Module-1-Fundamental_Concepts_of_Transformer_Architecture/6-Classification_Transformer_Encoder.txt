@@ -1,0 +1,88 @@
+# traditional nn for classification on tasks that require contextual analysis yields poor results
+# transformers can yield much better results
+
+train_iter = iter(AG_NEWS(split="train"))
+y,text = next(train_iter)
+print(y,text)
+
+
+ag_news_label = {1:"World", 2:"Sports", 3:"Business:, 4:"Sci/Tech"}
+ag_bes_label[y]
+
+
+train_iter, test_iter = AG_NEWS()
+train_dataset = to_map_style_dataset(train_iter)
+test_dataset = to_map_style_dataset(test_iter)
+num_train = int(len(train_dataset)*0.95)
+split_train_, split_valid_ = random_split(train_dataset, [num_train, len(train_dataset) - num_train])
+
+
+
+tokenizer = get_tokenizer("basic_english")
+def yield_tokens(data_iter):
+    for _,text in data_iter:
+        yield tokenizer(text)
+
+vocab = build_vocab_from_iterator(yield_tokens(dataset), specials=["<unk>"])
+vocab.set_default_index(vocab["<unk>"])
+
+
+from torch.nn.utils import pad_sequence 
+
+def collate_batch(batch):
+    label_list, text_list = [], []
+    for _label, _text in batch:
+        label_list.append(label_piepline(_label))
+        text_list.append(torch.tensor(text_pipeline(_text), dtype=torch.int64))
+    
+    label_list = torch.tensor(label_list, dtype=torch.int64)
+    text_list = pad_sequence(text_list, batch_first=True)
+
+    return label_list.to(device), text_list.to(device)
+
+
+BATCH_SIZE = 64
+
+train_dataloader = DataLoader(split_train_, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch)
+valid_dataloader = DataLoader(split_valid_, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch)
+test_dataloader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_batch)
+
+
+
+class Net(nn.Module):
+    def __init__(self, vocab_size, num_class, emebdding_dim=100, nhead=5, num_layers=6):
+        super().__init__()
+        self.emb = nn.Embedding(vocab_size, embedding_dim)
+        self.pos_encoder = PositionalEncoding(d_model, embedding_dim, dropout=dropout, vocab_size=vocab_size)
+        encoder_layer = nn.TransformerEncoderLayer(d_model=embedding_dim, nhead=nhead)
+        self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+    
+        self.classifier = nn.Linear(embedding_dim, num_class)
+        self.d_model = embedding_dim 
+    
+    def forward(self, x):
+        x = self.emb(x) * math.sqrt(self.d_model)
+        x = self.pos_encoder(x)
+
+        x = self.transformer_encoder(x)
+
+        x = x.mean(dim=0) # instead of take the last column, average columns
+
+        x = self.classifier(x)
+
+        return x 
+
+model = Net(...)
+
+LR=0.1
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=LR)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer,1.0, gamma=0.1)
+
+EPOCHS = 10
+cum_loss_list = []
+acc_epoch = []
+acc_old = 0
+
+# training is same as standard 
+

@@ -1,0 +1,97 @@
+Order of tokens matters => must encode position somehow 
+    “dog bites man” ≠ “man bites dog”.
+
+
+we add positional encoding, which adds a vector to the og encodings which contains positional info
+    note we add a positional encoding vector, not concatenate 
+
+PE(pos, 2i)   = sin[ pos / 1000 ^ {2i / d_model}  ]
+PE(pos, 2i+1) = cos[ pos / 1000 ^ {2i / d_model}]
+
+
+
+pos = position of token in sequence 
+i = index of dimension in the vector 
+d_model = size of embedding vector
+
+at each dimension of the positional vetor, we have a sine/cos at a diff freq 
+
+for even dims, use sin 
+for odd dims, use cos 
+
+we scale the denominator, 1000 ^ {2i / d_model} so that each dimension has a sinusoid w. diff wavelength 
+    some dims vary slow => coarse position (beginning vs end) 
+    some dims vary fast => fine precision 
+
+together we have a unique signature for each position 
+
+
+this way we give absolute and relative positional encodings 
+
+
+instead of defining positional embedding concretly as above, we can alos make it learning 
+    We learn a big matrix P with L rows and d_embed cols 
+    L is max seq length 
+    d_model is embedding size 
+    each row P_pos is a trainable vector for a specific position 
+    at training: for position i just look up the ith row in the vector 
+        instead of computing all the sines 
+
+Segment embeddings can also be added 
+ => adds a "which group am i from" tag attached to every token 
+    there is one segment vector for each token type 
+
+
+#implementation in pytorch
+VOCAB_SIZE=len(vocab)
+EMBEDDING_DIM = 10 
+embedding = nn.Embedding(VOCAB_SIZE, EMBEDDING_DIM)
+
+my_embeddings = embedding(token_indexs)
+
+
+# Positional Encoding with hard pos encoding ( with sin and cos )
+class PositionalEncoding(nn.Module):
+    def __init__(self, emb_size, dropout, maxlen = 5000):
+        super(PositionalEncoding, self).__init__()
+
+        den = torch.exp(-torch.arange(0, em_size, 2) * math.log(10000)/emb_size)
+        pos = torch.arange(0, maxlen).reshape(maxlen, 1)
+            # we precompute all possible positions up to maxlen at once
+            # this fills the entire lookup matrix 
+
+        pos_embedding = torch.zeros((maxlen, emb_size))
+        pos_embedding[:, 0::2] = torch.sin(pos*den) # assign even dims sin 
+        pos_embedding[:, 1::2] = torch.cos(pos*den) # and odd dims cos
+        pos_embedding = pos_embedding.unsqueeze(-2)
+
+        self.dropout = nn.Dropout(dropout)
+        self.register_buffer('pos_embedding', pos_embedding) # save this in model dict so it can be reloaded; part of model but not trainable 
+
+    def forward(self, token_embedding):
+        token_embedding is a torch.Tensor 
+
+        return self.dropout(
+            token_embedding + self.pos_embedding[:token_embedding.size(0), :] 
+                token_embedding is of shape [seq_len, batch_size, emb_size]
+                extract only the first seq_len rows (max_len may be much bigger, so we dont need to use everything)
+        )
+
+
+# Learnable Positional Encoding 
+class PositionalEncoding(nn.Module):
+    def __init__(self, emb_size, dropout, maxlen=5000):
+        super(PositionalEncoding, self).__init__()
+        self.dropout = nn.Dropout(dropout)
+
+        # learning positional encoding parameter 
+        self.pos_embedding = nn.Parameter(torch.zeros(maxlen, emb_size))
+        nn.init.kaiming_uniform_(self.pos_embedding, a=math.sqrt(5))
+    
+    def forward(self, token_embedding: torch.Tensor):
+        seq_len = token_embedding.size(0)
+        pe = self.pos_embedding[:seq_len, :]
+        token_embedding = token_embedding + pe.unsqueeze(1)
+        return self.dropout(token_embedding)
+
+encoded_tokens = positional_encoding(my_embeddings)

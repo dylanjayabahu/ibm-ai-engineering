@@ -1,0 +1,43 @@
+Lets say we have a bunch of words as part of a sequence 
+Each word is embedded into a vector 
+
+The vectors are put side by side into a matrix, X. 
+X = [x_embed_1, x_embed_2]
+
+Then we calculate Q, K, and V with X using learnable parameters 
+Q = X * W_Q ( + b_Q*1^T) # can also add a bias terms vector for all of the below; bias is not always included (and hence ommited below)
+K = X * W_K 
+V = X * W_V
+
+each W is a parameter matrix 
+
+scores = Q * K^T /sqrt(d)
+
+H' = softmax(scores) * V 
+    these are the contextual embeddings
+
+    the num embeddings aligns with input seq len
+    we have applied attention over Q for each input sequence
+
+We refine H' with extra learnable parameters 
+H = W_o 8 H' + b_o*1^T
+    a fc layer 
+
+Now, given H, 
+    in the dictionay lookup analgoy we would take: 
+        H V^T <= projects contextual embeddings back into value space 
+        Then apply argmax to pick the closest word 
+    but in actual transformers, we add another nn layer 
+        First fc layer, Z1 
+            we could average the embedding/contextual embedding fed in 
+                averaging loses info and is a simplified framework
+            Or, more commonly 
+            use just the last token's embedding 
+        Final output layer, Z2
+            dimension = size of vocab 
+            produces logits 
+            take softmax to get probability over vocabular 
+            for inference pick argmax 
+
+Note these operations can be paralellized 
+Hence self attention can outperform other methods like RNN which requires computation in series 

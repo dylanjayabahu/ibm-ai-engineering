@@ -1,0 +1,15 @@
+1. Gradient Accumulation – Simulates large batch sizes by accumulating gradients over several smaller mini-batches before updating. This saves memory and can stabilize training.
+
+2. Mixed-Precision Training – Uses lower-precision (FP16) math where possible. This reduces memory usage and speeds up computation. Frameworks like PyTorch/TensorFlow provide Automatic Mixed Precision (AMP) to handle this seamlessly.
+
+3. Distributed Training – Speeds up training by using multiple GPUs/TPUs:
+
+    Data Parallelism: Splits the dataset across devices, then synchronizes gradients.
+
+    Model Parallelism: Splits the model itself across devices if it’s too large for one GPU.
+
+4. Efficient Optimizers –
+
+    AdamW: Improves generalization by combining Adam with weight decay.
+
+    LAMB: Enables efficient large-batch training, scaling well to massive datasets.
