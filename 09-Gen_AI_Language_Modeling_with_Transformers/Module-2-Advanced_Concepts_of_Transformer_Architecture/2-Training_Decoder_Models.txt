@@ -1,0 +1,28 @@
+to start off, generate an initial contextual embedding (with positional encoding)
+then pass it through the decoder, to produce z_1 -> omega_1 (w_1) -> x_1
+    z_1 = logits over vocab
+    w_1 = argmax(z_t) //index of predicted word 
+    x_1 = corresponding word 
+
+then we add x_1 to the contextual embedding and repeat, generating z_2, w_2, x_2
+
+keeps going and the number of words in our contextual embedding grows 
+
+
+For training itself
+    each sequence is a distinct sample 
+    for a sample, we have inputs x0, x1, x2, x3 as tokens which goi through the pipeline above 
+    the targets are (w0), w1, w2, w3
+
+    loss is calculated between predicted omegas(ws) and target ws 
+
+    we can train on batches of sequences at a type
+
+    
+    Teacher Forcing:
+        instead of letting the model use w_n' (its own generated previous output) as context for the next output
+        we instead use w_n true (works regardless of shit previous predictions)
+    
+    Causal Attention Masking 
+        we add -inf values to the upper right diagonal of the attention matrix 
+        this way no future values can be used to predict current ones; each token can only attend to previous tokens or itself 

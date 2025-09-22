@@ -1,0 +1,36 @@
+Transformers:
+    Encoder
+
+    Decoder 
+        Foundation for sophisticaded models 
+    
+
+GPT = Generative Pretrained 
+    self supervised
+    involves decoder training to predict next word 
+    autoregressive models   
+        designed to generate new seqences
+        predict each new token from prev generated tokens
+    
+Fine-tuning
+    optimizes iniitally trained gpt for specific task
+    used for Q and A tasks
+RLHF = reinforcement learning from human feedback
+    fine tuned approach to enhance model performance
+    effective in chatbot development
+
+
+differs from pervious example (translation):
+    decoder operates without encoder input
+    no cross attention
+
+    instead we predict subsequent word given prev generated word 
+
+masked multihead attention = decoder diff from encoderm
+    dont want to use future words to predict next word 
+    this facilitates the autoregressive generation
+    u can use an encoder as a decoder if u add a mask 
+
+
+each time we generate a new word we add it to the updated input sequence 
+to generate the next word 

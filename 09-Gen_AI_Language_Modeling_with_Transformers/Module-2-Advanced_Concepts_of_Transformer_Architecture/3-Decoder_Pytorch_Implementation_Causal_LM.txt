@@ -1,0 +1,140 @@
+Note: Decoder model =~ autoregressive model 
+    predict next word 
+    similar to GPT 
+
+
+
+
+train_iter, val_iter = IMBD()
+data_itr = iter(train_iter)
+next(data_itr) //gives a sample sequence
+    //we ignore the sentiment label in this case; we are not trying to classify sentiment 
+
+
+# add custom vocab for tokenizing start/pad/end 
+UNK_IDX, PAD_IDX, EOS_INDX = 0,1,2
+special_symbols = ['<unk>', '<pad>', '<|eos|>']
+tokenizer = get_tokenizer("basic_english")
+
+def yield_tokens(data_iter):
+    for _,data_sample in data_iter:
+        yield tokenizer(data_sample) + ['<eos>']
+
+vocab = build_vocab_from_iterator(yield_tokens(train_iter), specials=special_symbols, special_first=True)
+vocab.set_default_index(UNK_IDX)
+
+test_to_index = lambda text: [vocab(token) for token in tokenizer(text)] + [EOS_IDX]
+index to_en = lambda seq_en: " ".join([vocab.get_itos()[index] for index in seq_en if index != EOS_IDX])
+
+
+def get_sample(block_size, text):
+    sample_leg= len(text) # choose a random seq sample from the text
+
+    random_sample_stop = sample_leg - block_size
+
+    if random_sample_stop >= 1: # if the text we have is long enough for our sample length 
+        random_start = torch.randint(low=0, high=random_sample_stop, size=(1,)).item()
+
+        stop = random_start + block_size
+
+        src_sequence = text[random_start:stop]
+        trg_sequence = text[random start+1: stop+1]
+
+    else:
+        #text isnt long enough; use whole text and indicate end of sequence
+        random_start = 0
+        stop = sample_leg 
+        src_sequence = text[random_start:stop]
+        tgt_sequence = text[random_start+1:stop]
+
+        tgt_sequence.append('<|endoftext|>')
+
+    return src_sequence, target_sequence
+
+
+block_size = 10 ##like context size 
+src_seq, trt_seq = get_sample(block_size, text)
+
+print(src_seq)
+print(trt_seq) # same as src_seq but 1 token forward shifted 
+
+
+BLOCK_SIZE = 30 
+def collate_batch(batch):
+    src_batch, tgt_batch = [], []
+    DEVICE = torch.device("cuda") # select appropriate device 
+
+    for_,_textt in batch:
+        src_sequence,tgt_sequence = get_sample(BLOCK_SIZE, tokenizer(_textt))
+        src_sequence = vocab(src_sequence)
+        tgt_sequence = vocab(tgt_sequence)
+        src_sequence = torch.tensor(src_sequence, dtype=torch.int64)
+        tgt_sequence = torch.tensor(tgt_sequence, dtype=torch.int64)
+        src_batch.append(src_sequence)
+        tgt_batch.append(tgt_sequence)
+    
+    src_batch = pad_sequence(src_batch, padding_value=PAD_IDX, batch_first=False)
+    tgt_batch = pad_sequence(tgt_batch, padding_value=PAD_IDX, batch_first=False)
+
+    return src_batch.to(DEVICE), tgt_batch.to(DEVICE)
+
+BATCH_SIZE = 1
+dataloader = DataLoader(train_iter, batch_size = BATCH_SIZE, shuffle=True, collate_fn = collate_batch)
+val_dataloader = DataLoader(val_iter, batch_size = BATCH_SIZE, shuffle=True, collate_fn = collate_batch)
+
+
+# MAKE CAUSAL MASK 
+def generate_square_subsequent_mask(sz, device=DEVICE):
+    # sz = matrix dim 
+
+    mask = (torch.triu(torch.ones((sz, sz), device=device))==1).transpose(0, 1) #triu = upper triangle
+    mask = mask.float().masked_fill(mask==0, float('-inf')).masked_fill(mask==1, float(0.0))
+    return mask
+
+#pytorch can do it for us too 
+def create_mask(src, device=DEVICE):
+    src_seq_len = src.shape[0]
+    src_mask=nn.Transformer.generalte_square_subsequent_mask(None, src_seq_len).to(device)
+    return src_mask
+
+src_padding_mask = (src==PAD_IDX).transpose(0,1)
+
+class CustomGPTModel(nn.Module):
+    def __init__(self, embed_size, vocab_size, num_heads, num_layers, max_seq_len=500, dropout=0.1):
+        super().__init__()
+
+        self.init_weights()
+
+        self.embed = nn.Embedding(vocab_size, embed_size)
+        self.positional_encoding = PositionalEncoding(embed_size, dropout=dropout)
+
+        encoder_layers = nn.TransformerEncoderLayer(d_model = embed_size, nhead=num_heads, dropout=dropout)
+        self.transformer_encoder = nn.Transformer(encoder_layers, num_layers=num_layers)
+        
+        self.embed_size = embed_size
+        self.lm_head = nn.Linear(embed_size, vocab_size)
+
+    
+    def init_weights(self);
+        for p in self.parameters():
+            if p.dim()>1:
+                nn.init.xavier_uniform_(p)
+
+    def create_ask(src, device=DEVICE):
+        src_seq_len = src.shape[0]
+        src_mask = nn.Transformer.generate_square_subsequent_mask(src_seq_len)
+        src_padding_mask = (src==PAD_IDX).transpose(0,1)
+
+        return src_mask, src_padding_mask
+    
+    def forward(self, x, src_mask=None, key_padding_mask = None):
+        if src_mask is None or key_padding_mask is None:
+            src_mask, key_padding_mask = self.creat_mask(x, device=self.device)
+
+        
+        x = self.embed(x) * math.sqrt(self.embed_size)
+        x = self.positional_encoding(x)
+
+        output = self.transformer_encoder(x, src_mask key_padding_mask)
+
+        x = self.lm_head(x)

@@ -1,0 +1,140 @@
+ntokens = len(vocab)
+emsize = 200 # embedding dim
+nlayers = 2 #num transformer layer blocks 
+nhead = 2 # num attention heads 
+dropout = 0.2
+
+model = CustomGPTModel(
+    embed_size=emsize, 
+    vocab_size=ntokens,
+    num_heads=nhead, 
+    num_layers=nlayers, 
+    dropout=dropout).to(DEVICE)
+
+srctgt = next(dataloader)
+src = srctgt[0]
+tgt = srctgt[1] #is of shape [seq_length, batch_size]
+
+
+logits = model(src) # is of dim [seq_len, batch_size, num_classes]
+    # num_classes = vocab
+
+logits_flat = logits.reshape(-1, logits.shape[-1]) 
+    # we reshape into dims [seq_len*batch_size, vocab_size]
+    this way each row is a prediction for each word at a timestep; logits over vocab 
+
+loss = loss_fn(logits_flat, tgt.reshape(-1))
+    # logits_flat is of shape [seq_len * batch_size, vocab_size]; vocab size dim is the logits vector over vocab
+    # [seq_len * batch_size]; each element is a single integer index 
+
+Optimizer = Adam(model.parameters(), lr=0.01, weight_decay = 0.01, betas=(0.9, 0.999))
+schedluer = torch.optim.lr_schedulre.StepLR(optimizer, 10000, gamma=0.9)
+
+def train(model: nn.Module, train_data):
+    model.train()
+
+    total_loss = 0
+    log_interval = 10000
+    start_time = time.time()
+
+    num_batches = len(list(train_data)) //block_size 
+
+    for batch, srctgt in enumerate(train_data):
+        src = srctgt[0]
+        tgt = srctgt[1]
+        logits = model(src, src_mask=None, key_padding_mask=None)
+        logits_flat = logits.reshape(-1, logits.shape[-1])
+        loss = loss_fn(logits_flat, tgt.reshape(-1))
+
+        optimizer.zero_grad()
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
+        optimizer.step()
+        total_loss += loss.item()
+
+    if (batch % log_interval == 0 and batch>0):
+        lr = schedulre.get_last_lr()[0]
+        ms_per_batch = (time.time() - start_time) * 1000 / log_interval 
+        cur_loss = total_loss / batch 
+        ppl = math.exp(cur_loss) # perplexity
+
+        print(f"| epoch {epoch} | {barch//block_size}/{num_batches} batches")
+        print(f"lr {lr} | ms/batch {ms_per_batch}")
+        print(f"loss {curr_loss} | perplexity {ppl}")
+        print("-"*30)
+
+        start_time = time.time()
+    
+    scheduler.step()
+
+
+def evaluate(model, eval_data):
+    model.eval()
+    total_loss = 0
+
+    with torch.no_grad():
+        for src,tgt = in eval_data:
+            tgt = tgt.to(DEVICE)
+            logits = model(src, src_mask=None, key_padding_mask=None)
+            total_loss += loss_fn(logits.reshape(-1, logits.shape[-1]), tgt.reshape(-1)).item()
+    
+    return total_loss / len(list(eval_data))
+
+
+# inference 
+def encode_prompt(prompt, block_size=BLOCK_SIZE):
+    # block_size is like context size 
+
+
+    if prompt is None:
+        prompt = '<pad>' * block_size
+    else:
+        tokens = tokenizer(prompt)
+        number_of_tokens = len(tokens)
+
+        if number_of_tokens > block_size:
+            #tokens = tokens[:block_size]
+            tokens = tokens[-block_size:] # use the last tokens instead of first tokens 
+
+        elif number_of_tokens < block_size:
+            padding = ['<pad>'] * (block_size - number_of_tokens)
+            tokens = padding + tokens
+    
+    prompt_indices = vocab(tokens)
+    prompt_encoded = torch.tensor(prompt_indices, dtype=torch.int64).reshape(-1,1)
+
+    return prompt_encoded
+
+
+prompt_encoded = encode_prompt("this is a prompt to get model generate next word") # encoded prompt as a tensor 
+
+def generate(model, prompt=None, max_new_tokens-500, block_size=BLOCK_SIZE, vocab=vocab, tokenizer=tokenizer):
+    model.to(DEVICE)
+
+    prompt_encoded = encode_prompt(prompt).to(DEVICE)
+
+    tokens = []
+
+    # generate tokens up to max_new_tokens 
+    for _ in range(max_new_tokens):
+        logits = model(prompt_encoded)
+
+        logits = logits.transpose(0,1)
+
+        logit_prediction = logits[:,-1]
+
+        # use greedy decoding; choose token with highest probability
+        next_token_encoded = torch.argmax(logit_prediction, dim=-1).reshape(-1,1)
+
+        #If EOS, stop generation 
+        if next_token_encoded.item() == EOS_IDX:
+            break
+        
+        prompt_encoded = torch.cat((prompt_encoded, next_token_encoded), dim=0)[-block_size:]
+            ## add the previoulsly generated word to the context (prompt_encoded)
+        
+        token_id = next_token_encoded.to('cpu').item()
+
+        tokens.append(vocab.get_itos()[token_id]) # vocab.get_itos returns the tokens as strings
+
+    return ' '.join(tokens)
