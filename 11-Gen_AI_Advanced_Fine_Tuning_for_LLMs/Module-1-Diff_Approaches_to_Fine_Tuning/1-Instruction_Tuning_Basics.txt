@@ -1,0 +1,44 @@
+Instruction Tuning (type of SFT; supervised fine tuning)
+    Used to teach an LLM how to follow instructions 
+        right now the model is only trained on how to predict next word, not follow instructions like (summarize this paragraph, etc)
+
+    trains model with expert database
+    enhance model performance
+    applicable before performing DPO (direct preference optimization) or RLHF (reinforcement learning w human feedback)
+    precise and reliable model outputs 
+
+    like giving the model lessons with examples so it learns how to respond; right now i
+
+Typical Flow
+    pretrain model/get pretrained model (learn to predict next word)
+    -> use instruction tuning (learn to follow instructions with labelled examples)
+    -> apply RLHF Or DPO (learns human preferences; safety, quality, politeness)
+
+As mentioned above, we train by passing in an example for the model to learn from; 
+Each example consists of:
+    Instruction (what the user wants)
+    Input (extra details or context; this is optional) 
+    and Output (the correct result)
+
+    e.g. Instruction: Translate to spanish.
+         Input: Hello, how are you?
+         Output: HOla, como estas?
+        
+Special symbols and formatting 
+    We need to use special tokens or formatting ot separate instruction and output clearly
+    
+    e.g.: 
+    ### Instruction:
+    Write a poem about the ocean.
+    ### Response:
+    The waves whisper to the shore...
+
+    ^ doest have to be that specifically; could be "### Human:" and "### Assistant"
+
+
+Instruction Masking
+    During training, model shouldn't be punished for predicting the instruction text correctly/incorrectly; 
+    As such, we only vompute the training losson the output part 
+    This is instruction masking; we mask the instruction so model only learns to produce good responses, not repeat instructions
+
+    We need to specify whether or not to mask the instructins; insome cases unmasked instructions may be better performing

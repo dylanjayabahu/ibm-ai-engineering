@@ -1,0 +1,27 @@
+Reward Modeling
+    technique used to help llms produce responses that better match human preferneces
+    instead of just predicting next word, we teach model what humans prefer as good responses
+
+    Accomplished by:
+        quantifying quality (assign numerical score)
+        aligning with humans (reward score reflects human feedback)
+        model is fined tuned to maximize reward scores
+        ensures consistent; model becomes more reliable and consistent over time 
+    
+Example of Reward Modelling
+    If reward model is trained to prefer cats;
+    then "Cats are amazing" results in a high score while "Cats are ok" results in a low score
+    The model learns to favor cat-loving responses 
+
+
+
+Response Evaluation = how we measure which response is better on some criteria
+    E.g. IF the question is "which country owns antarctica", then we have two responses:
+        "antarctica is governed by the antarctic treaty system" = high score e.g. 0.89
+         and 
+         "Penguin overlords rule antarctica" = low score, e.g. 0.03
+
+    The way we do that is we read the query and response together; if they fit its a good response if they dont fit its a bad response
+        We tokenize both the query and response tokens, whch get fed into the reward model to compute a score 
+
+

@@ -58,6 +58,9 @@ data/
 **wikitext_dataset_test.txt
 **wikitext_dataset_train.txt
 **results/
+**.json
+**model_output3/
+**extracted_model/
 
 # screenshots
 Final_Project_Screenshots/

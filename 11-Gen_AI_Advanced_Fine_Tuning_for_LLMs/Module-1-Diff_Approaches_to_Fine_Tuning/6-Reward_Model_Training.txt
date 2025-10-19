@@ -1,0 +1,49 @@
+Reward model training 
+    teaching ai model how to udge responses so it can help improve another model using scores/preferences 
+    we have a separate model to tell how good a response is; that is the reward model; and we must train it 
+        we need a model to do this b/c humans cant assign exact numeric scores; but its easy to pick which is better of two responses
+        we use a pairwise ranking for that reason 
+
+
+Goal of reward model traning is to teach a reward system such that 
+    Reward(good response) > Reward(Bad response)
+
+Reward model function 
+    r(X,Y_a | \phi)
+     where r is the function, \phi is the model parameters, and x is query,yis response
+
+Training Process
+    1. 
+        Collect data; for each question, ask humans to compare two responses and tell which is better 
+            which we are good at 
+    
+    2. 
+        Then, we pass each response through the model as a datapoint
+
+        The Reward model is a transformer that outputs a single score z 
+
+        Z_a = reward(x, Y_a)
+        Z_b = reward(x, Y_b)
+
+        such that Z_a > Z_b
+
+    3. Define reward loss (Bradley-Terry loss)
+        Delta = Z_a-Z_b
+
+        sigmoid(Delta) = probability that response A is better 
+
+        to maximize Delta, we minimize loss 
+
+        Loss = -sigmoid (Delta)
+
+        technically we can use loss = ln(-sigmoid(Delta))
+            this way we can turn the products into sums for easier grad computations
+
+        as delta goes up, loss goes down 
+    
+    4. we optimize for loss with gradient descent 
+        convert to negative log likelihood for easier optimzation
+        update the parameters \phi
+        keep going until good responses get better scores than bad ones
+    
+
