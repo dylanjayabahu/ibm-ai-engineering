@@ -1,0 +1,33 @@
+NSP=next sentence prediction 
+
+BERT Training = self supervised on large text corpuses (e.g. wikipedia)
+    Given a context sentence, determine if the subsequent sentence is "good" or not 
+
+Tokenizing:
+    CLS token for start
+    SEP token for end of sentence (separator)
+    rest is word piece tokenization 
+
+Embedding: 
+    embed the tokens
+    also include segment encoding (add a diff embedding depending on which sentence a token is in )
+    as well as positional encodings 
+
+
+binary y label value
+    0 if not next sentence 
+    1 if it is next sentence
+
+
+passing through BERT:
+    use 0 padding for same size sentence input lenghts
+
+now we do standard classification; 
+    input two sentences
+    train on data of whether or not second sentence logically follows the first (bsaed on the binary y labels)
+
+    training is just like a binary classification problem 
+
+
+U can fine tune for things like sentiment analysis
+Provide the cls (start) token for model prediction

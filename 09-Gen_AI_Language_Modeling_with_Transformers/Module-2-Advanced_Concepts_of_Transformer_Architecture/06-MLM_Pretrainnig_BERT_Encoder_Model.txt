@@ -1,0 +1,39 @@
+BERT = bidirectional encoder representations from transformers
+MLM = masked language modelling 
+
+BERT is pretrained via self-supervised learning on big text corpora 
+
+U can fine tune to specific tasks like summarization/classificaiton/QA/sentiment analysis etc 
+
+
+Bert = encoder only architecture 
+    u can process the whole entire sequence of text at once
+
+    Not used for text gen tasks; more for language comprehension 
+    
+    We mask a certain word, give it all the rest of the words, and make it predict the masked word (MLM)
+    We give context on both sides of the masked token 
+    BERT also implements segment embedding along with input_embedding and positional encoding 
+
+
+MLM = masked language modelling = masking specific token and making model predict it 
+    helps model learn contextual representations and relationships
+
+    prediction/forward pass is standard; (same as for decoder)
+        only diff is that encoder has access to entire seq 
+    
+    Bi-Directional = context on both sides of the masked word 
+        No causal attention mask 
+    
+    Typically we mask 15% of the words to predict them; remaining 85% of the words are used to predict the masked ones
+        We mask with the [MASK] token 
+
+    Only downside is that when pre-training we use the [MASK] token but no such token will appear during fine tuning
+        we specialize pre training for a task that isn't directly used  
+
+        So, we dont aleays replcae masked wrods with [MASK]
+
+    of the 15% of words for prediction: 
+        12% = replace with mask token 
+        1.5% = replace with random token 
+        1.5% = remain unchanged

@@ -54,6 +54,7 @@ data/
 **.data/
 **images_dataSAT
 **.pkl
+**bert_dataset/
 
 # screenshots
 Final_Project_Screenshots/

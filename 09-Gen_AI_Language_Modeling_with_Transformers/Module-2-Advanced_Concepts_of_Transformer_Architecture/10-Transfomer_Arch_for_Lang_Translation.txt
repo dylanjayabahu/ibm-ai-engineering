@@ -1,0 +1,40 @@
+Use encoder/decoder transformer model for translation 
+
+With rnns we can only do 1 word at time 
+with transformers we can analyze whole seq at once 
+    faster and more efficient 
+    have beter understanding of contextual relationships; regarldess of sentence lentgth 
+
+Transformers for Translation: 
+    Encoding Phase: 
+        - embed tokens -> position embedding -> encoder model 
+        More in depth:
+            Input text gets embedded to vecs 
+            Add positional encoding 
+            Then pass through encoder (multi-head attention, add and norm, feed forward, add and norm), with the skip connections through adding 
+            Memory is thus seq_length x dim size (used later in MEMORY**)
+        
+        basically, whatever is encoded by the encoder is considered the memory, which is used again upon decoding
+
+    Decoding Phase: 
+        - encoder outputs -> token embedding (starting with BOS token) -> positional encoding -> decoder output 
+        More in depth: 
+            Output embedding from previously generated output (use <BOS> if nothing generated yet; BOS=beginning of sentence)
+            Add position encoding 
+            Pass through decoder (masked multi-head attention, add and norm, multi-head cross attention with MEMORY**, add and norm, feed forward, add an norm )
+                again with skip connections through the adding
+            Then goes through a final linear+softmax layer for prediction of next token (logits into probabilities), which gets back into as the output embedding
+        
+        Repeat until max size reached or <EOS> token is produced
+
+        Cross Attention 
+            u can attend both to diff parts of input sequence, as well as previouslly generated parts of the output sequence
+
+    ^ all same as before for enc/dec arch
+
+
+For actually training, you would have inputs as text in one language and outputs as text in another language 
+    Then you train as you would any other tranfsormer
+
+
+
