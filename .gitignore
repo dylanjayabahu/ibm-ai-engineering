@@ -55,6 +55,9 @@ data/
 **images_dataSAT
 **.pkl
 **bert_dataset/
+**wikitext_dataset_test.txt
+**wikitext_dataset_train.txt
+**results/
 
 # screenshots
 Final_Project_Screenshots/

@@ -1,0 +1,79 @@
+PEFT = Parameter Efficient Fine Tuning 
+
+SFT = supervised fine tuning 
+    adapting previous knowledge from training to a new task 
+
+Full fine tuning (FFT)
+    supdate learning parameters,layers, neurons of LLM
+    Requires lots of comp resources and memory
+    Needs lots of task-specific data
+    RIsk of overfitting
+    Takes long time
+    Complex to implemenent 
+    Prone to catastrophig forgetting; forgetting prelearned model 
+
+
+
+PEFT overcomes the issues with FFT
+    reduces total number of trainable params to be updated 
+    decrease total comp resources and memory 
+
+
+PEFT Methods:
+    selective fine tuning 
+    additive fine tuning 
+    reparameterization fine tuning 
+
+    ^ all more stable than full fine tuning 
+
+
+Selective fine tuning 
+    select on a susbet of all params to update; e.g. just the last few layers or last layer 
+
+Additive fine tuning 
+    we dont modify the existing arch but add an extra layer or two onto the end for our task 
+    additional layers are trained and pretrained portion is fixed 
+
+    u can inject extra layers anywhere (doesnt have to be just at the end)
+        ^ e.g. adapters add an extra new layer b/w the feed-forward and add-norm skip connections of a standard transformer block
+        with adapters u can use a transformer and just insert adapters in for ur specific task, updating only the adapter neurons 
+
+    Soft prompts = type of additive fine tuning 
+        they are learnable tensors concatenated with input embeddings; instead of fine tuning the arch we fine tune the embeddings
+        
+        Methods
+            prompt tuning
+            prefix tuning 
+            P-tuning
+            multitask prompt tuning
+
+
+        Prefix Tuning 
+            e.g. u want to train from general chatbot to medical chatbot
+            simply append parameter embeddings to the usual embeddings
+            train model by freezing all params except embeddings
+
+Repaarameterization fine tuning 
+    Recall rank from lin alg (the minimum num vectors needed to span a space); aka the dimension 
+
+    The input/output dims of a neural net have fixed dimensions
+
+    BUT we can use lower rank operationsto reduce the num parameters
+        essentially a temporary dimension reduction 
+    
+    makes model more efficient 
+
+    LoRA = Low Rank Adapatation (uses reparameterixing network weights; low rank transformations)
+        Instead of going from a layer with 10 neurons to a layer with 8 neurons (requiring 80 parameters)
+        we can go from 10-3-8, which requires (10x3+3x8=54 parameters)
+
+    Other methods
+        LoRA (see above)
+        Quantied Low Rank Adapatation (QLoRA)
+            combines Lora with quantization; lowerm emory footprint and computationr equirements
+        Weight decomposed Low-Rank Adaptation (DoRA)
+            adjust rank of the low rank spaces based on component magnitude
+            optimizes performance and efficiency
+
+
+    

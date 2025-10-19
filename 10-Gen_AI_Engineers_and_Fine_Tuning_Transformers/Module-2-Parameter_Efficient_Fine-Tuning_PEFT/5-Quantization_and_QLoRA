@@ -1,0 +1,28 @@
+QLora = Quantized LoRA
+
+Quantization:
+- reduces precision of continuous values to discrete values 
+    - (just like how charge is quantized in physics by the charge on an electron)
+- e.g. if we have a grayscale images with pixel vals from 0-255, (256 vals), 
+    - we could quantize it to reduce from 128, 64, 32 or even just 2 vals 
+    - the image is still recognizatble but takes less memory 
+
+
+- the number of bits used to represent the quantized values determines the quantization level 
+    - e.g. 3-bit quantization means there are 8 levels ($2^3=8$), so within the range the discrete values would be, for example, -1, -0.75, -0.5, -0.25, 0.25, 0.5, 0.75, and 1
+
+    we quantize the continuous values by rounding to the nearest discrete value. 
+
+QLora:
+- 
+- uses a unique quantization method
+    - 4-bit NF4
+    - Double quantization 
+- uses paged optimizers (dynmically load and unload model parameters)
+
+
+Quantization is iseful for models with large nums of params (e.g. 7 billion parameters)
+$\\ \quad$ - we reduce memory footprint by 98 gigabytes of memory by using 16-bit quantization on such a $\\ \quad$ - model
+    and by 24.5 gigs by using 4-bit quantization
+
+this allows us to run models on less powerful hardware
