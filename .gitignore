@@ -61,6 +61,11 @@ data/
 **.json
 **model_output3/
 **extracted_model/
+**.gz
+**/ppov3new_bad1
+**/ppov3new1/
+**/dpo/
+**.tar
 
 # screenshots
 Final_Project_Screenshots/
