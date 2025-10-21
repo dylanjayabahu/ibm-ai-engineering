@@ -1,0 +1,26 @@
+RAG = Retreival Augmented Generation 
+    - ai framework to improve responses from LLMs by combining them with external knowledge
+    - useful when question involves domain specific knolwedge that isnt part of model's trianing data 
+
+Why RAG is needed:
+    - LLMS are trained on general public data
+    - The struggle with private/specialized info
+    - E.g. companies mobile device policy is private; so an LLM alone can't answer questions about it 
+    - RAG solves this by retreiving relevant documents from a private knowledge base 
+
+How RAG works:
+    1. text embedding 
+        - user query and documents are converted to vectors with an emebedding model 
+    2. vector database 
+        - company documents arebroken into small text chunks, embedded as vectors, and stored with chunk IDs
+    3. Retreival 
+        - system finds chunks most similar to the query with distance metrics 
+            (distance in high dim space; eg. cosine sim or dot product)
+        - use the top-k retreival (retrieve the top k chunks to augment)
+    4. Augmented query  
+        - the top relevant chunks are combined with the user query to give more context 
+        
+    5. Generation 
+        - llm uses the extra context to produce a better and accurate answer
+
+Note documents in this context means any unit of text; not necessarily literal documents

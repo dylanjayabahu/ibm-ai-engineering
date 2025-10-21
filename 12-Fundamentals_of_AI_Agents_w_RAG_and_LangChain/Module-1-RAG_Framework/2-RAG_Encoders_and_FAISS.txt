@@ -1,0 +1,47 @@
+RAG is made of a retreiver and generator
+    Retreiver: finds relevant info from a knolwedge base using embeddings 
+    Generator: uses the retrieved context to produce an answer 
+
+DPR Context Encoder 
+    DPR = Dense Passage Retreival 
+    Goal is to convert documents/passages into embeddings so they can be searched 
+
+    from transformers import DPRContextEncoder, DPRContextEncoderTokenizer 
+
+Facebook AI Similarity Search (FAISS)
+    Fast similarity search over vectors 
+    useful in step 3 of RAG process from the previous lesson notes 
+    We do it by computing distance between vectors (L2 Euclidean distance in this case)
+
+
+    index = faiss.IndexFlatL2(768)
+    index.add(context_embeddings)
+    distances, indices = index.search(question_embedding, k=3)
+
+
+DPR Question Encoder 
+    We use this to encode user questions into embedding vectors 
+    Similar to the context encoder from above, but trained specifically for questions 
+
+    from transformers import DPRQuestionEncoder, DPRQuestionEncoderTokenizer
+
+
+
+
+
+
+
+
+Generator (BART=Bidirectional and AutoRegressive Transformers)
+    from transformers import BartForConditionalGeneration, BartTokenizer
+
+    If we first generate without the context, we get a rubbish result
+    If we generate with RAG context, we get good result
+
+
+
+Overall RAG Pipeline
+    1. Context Encoder (DPR) to embed documents into a vector database 
+    2. Question Encoder (DPR) to embed the user question 
+    3. We apply FAISS to see which embeddings from the user query match with relevant documents in the document vector database 
+    4. We provide the RAG Context (top K results form FAISS) alongw ith user query to the generator (BART) to get an answer 
