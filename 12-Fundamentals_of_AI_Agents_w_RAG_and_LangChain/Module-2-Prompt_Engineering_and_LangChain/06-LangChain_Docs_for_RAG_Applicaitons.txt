@@ -1,0 +1,34 @@
+What LangChain provides for RAG 
+    - Gives tools to handle the retreival pipeline. 
+    Tools listed below.
+
+1. Document Object 
+    Each document in langchain is stored as a DOcument object 
+        page_content is the text content
+        metadata is extra info (filename, page number, URL)
+
+2. Document Loaders 
+    used to import documents from diff sources 
+    PDFs, HTML, websites, text files, Notion, S3 Buckets, APIs, etc
+    E.g.: Web loader fetches content from URL 
+
+
+3. Text Splitters 
+    Big documents need to be split into chunks so relevant parts cna be effectively found 
+
+    RecursiveCharacterTextSplitter - splits by paragraph/sentence intelligently 
+    MarkdownHeaderTextSplitter - splits using # headers in markdown 
+
+4. Embeddings 
+    Convert each text cunk to vectors; e.g. WatsonX embedding model 
+
+5. Vector Databases     
+    Store and search embeddings; e.g. ChromaDB 
+    Support similarity search; finds chunks similar to a user query 
+
+6. Retrievers 
+    Pull the best matching chunks from storage
+
+    VectorStoreRetreiver = basic similarity search 
+    ParentDocumentRetreiver = keeps chunk context 
+    SelfQueryRetreiver = uses LLM to improve search filters

@@ -1,0 +1,42 @@
+In Context Learning (ICL)
+    Method where LLM learns a new dask during inference; just from examples in the prompt 
+
+    We dont update the weights at all (no training or fine tuning)
+
+    But the model learns by pattern 
+
+    Examples:
+        Prompt with 
+        """
+        Translate English to French:
+        cat → chat
+        house → maison
+        tree → arbre
+        dog → 
+        """
+
+Advantages of ICL 
+    No fine tuning needed, save time and computation 
+    Fast to adapt; quickly works on new tasks
+    Flexible; can swap tasks with new prompt 
+
+Limitations of ICL
+    Limited context window = limited examples
+    Complex tasks cant be learned from example; need training/fine tuning
+    Not always consistent; changes a based on how examples are formatted
+
+
+
+Prompt Engineering = process of designing effective inputs (prompt) to guide an LLM to produce better responses 
+    prompt = instructions + context + input + output indicater 
+
+    Instruction: tells model what to do, e.g. "classify the sentiment"
+    Context: backround info, e.g. "This is customer feedback on a new product"
+    Input data: what the model acts on, e.g. "Review: The product arrived late but works well"
+    Output Indicator: where the answer goes "Sentiment: "
+
+Why Prompt eng matters
+    higher accuracy
+    more relevant
+    less misunderstandings
+    less fine tuning needed

@@ -1,0 +1,54 @@
+LangChain 
+    framework makes it ez to build applications with LLMS (like GPT, IBM Granite, Gemini, etc)
+    instead of writing messy code every time u want to chat with model,fetch data, or analyze outputs
+        ^ langchain gives a structured pipeline 
+    
+
+1. Languages Models 
+    generate text from text input; these are the foundation 
+
+    eg providers: IBM Watsonx, OpenAI, Google, Meta 
+
+    Can simply say:
+    prompt = "Give me a new email subject for a sales campaign about shoes."
+    # LLM → "Step Up Your Style – New Shoe Collection Now Live!"
+
+    with settings like max tokens, temperature, top_p/top_k etc 
+
+
+2. Chat Models 
+    specialized models for conversations; understand message history 
+
+    Chats use roles (system, human, ai, tool, function)
+        e.g. A user asks a chatbot: "What's the weather in Toronto and should I bring an umbrella?"
+
+        The chatbot uses:
+            system → define its behavior
+            human → user message
+            ai → model thinking and making decisions
+            tool → calling external info (like a weather API)
+            function → structuring the tool invocation
+
+3. Chat Messages 
+    Every message has 
+        role - who is speaking 
+        content - what they say 
+    the let chatbot to remember context from prev parts of conversation 
+
+4. Prompt Templates
+    Prompts = instructions to the model 
+
+    Instead of writing plain text prompts every time, LangChain lets you template them using variables.
+
+    Types:
+        StringPromptTemplate
+        ChatPromptTemplate
+        FewShotPromptTemplate ← gives examples to improve output
+        MessagePromptTemplate
+
+
+
+5. Output Parsers
+    LLM output is plain text by default.
+
+    Output parsers convert it into structured formats like: JSON, CSV, XML, pandas DataFrame, Lists

@@ -1,0 +1,60 @@
+Chains 
+    Chain = sequence of steps
+    Each step takes input -> processes it -> outputs a result 
+
+
+    Sequential Chain Example
+        Goal: given a location, return 
+            1. famous dish from that region 
+            2. recipe for that dish
+            3. estimated cooking time 
+        
+        We bild 3 chains 
+            Chain 1: input location, output meal 
+            Chain 2: input meal, output recipe 
+            Chain 3: input recipe, output time 
+        
+        Combine these 3 into a SequentialChain
+
+Building a chain in Code 
+    1. PromptTemplate defines what to askt he LLM
+    2. LLMChain connects prompt to model and defines output key 
+
+    E.g. for CHain1 from above:
+        template = "Name a famous dish from {location}."
+        prompt = PromptTemplate(template=template, input_variables=["location"])
+        location_chain = LLMChain(llm=chat_model, prompt=prompt, output_key="meal")
+
+        overall_chain = SequentialChain(
+            chains=[location_chain, dish_chain, recipe_chain],
+            verbose=True
+            )
+
+Memory in LangChain 
+    Lets apps remember past conversation context 
+        Memory maintains context, supports natural conversation, stores chat history
+    Chains can read and write to memroy automatically 
+
+
+    LangChain uses ChatMessageHistory to store messages:
+        history = ChatMessageHistory()
+        history.add_ai_message("Hi")
+        history.add_user_message("What is the capital of France?")
+
+
+
+Agents 
+    Smarter than chains
+    Chains have fixed sequence, while agents dont 
+    Chains cant make dynamic decisions, but agents can 
+    Chains can only use limited external tooks 
+    Agents are more flexible 
+
+
+    Agents decide "What tool should I use next based on the user's request?"
+
+    E.g. 
+        agent = create_pandas_dataframe_agent(chat_model, dataframe, verbose=True)
+        agent.invoke("How many rows are in the DataFrame?")
+
+    The agent understands the question, generates python code, executes it behind the scens, and returns that there are X rows

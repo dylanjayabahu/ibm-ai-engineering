@@ -1,0 +1,29 @@
+LangChain = Open source framework that helps developers build AI applications using LLMs 
+    Bridge b/w llms and real world applications 
+    Devs can connect AI to data, tools, workflows 
+
+
+Problems tthat Langchain solves 
+    Hard to integrate LLMS into apps => Langchain provides easy interfaces and components 
+    Need external data => connects LLMs to databases & APIs 
+    Need control over outputs => uses prompt templates and chains 
+    Need flexible AI pipelines => lets ubuild custom ai workflows 
+
+
+Components of Langchain 
+    Lancghain: high level componetents like chains, agents and retreivers 
+    Lanchain Core: foundation layer, defines core abstractions like models and prompts 
+    Lanchain Community - third party integrations (openai, antrhopic, ibm, etc)
+
+Chains: Connect LLM calls together in a sequence 
+Agnets: LLMs that decide actions dynamically (Call tools, APIs)
+Retreival: add extra knowledge (like in RAG)
+
+
+Things u can build with LangChain 
+    Chatbots & AI assistants
+    Document Q&A and retrieval (RAG)
+    Text summarization
+    Connect AI with APIs & databases
+    Code understanding & analysis
+    Content management automation

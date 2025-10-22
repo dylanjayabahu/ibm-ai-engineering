@@ -1,0 +1,69 @@
+1. Zero-Shot Prompting 
+    Give no examples;
+    Model performs a task without any prior examples, only clear instructions 
+
+
+    e.g. “Classify whether this statement is true or false: The Eiffel Tower is located in Berlin.”
+
+    Model must rely on internal knowledge; no fine tuning or examples
+    Good for factual/well known tasks
+
+2. One shot prompting 
+    Give 1 example on a similar task as well as instructions 
+
+    Single example acts like template 
+    Useful if u want consistent formatting/structure
+
+
+3. Few shot prompting 
+    Give a few examples (e.g. 2-5) to learn the pattern before generating response 
+
+    Helps model generalize from small dataset 
+    Improves acc and consistency
+
+
+4. Chain of Thought (CoT) Prompting 
+    Instructs LLM to show its reasoning step by step before giving an answer 
+    
+    Encourages logical reasoning and transparency
+    Good for math, logic, and multi-step problems 
+
+5. Self-Consistency Prompting 
+    Model generates multiple independant answers and chooses most consistent result 
+
+
+    E.g. Example:
+    “When I was 6, my sister was half my age.
+    Now I’m 70 — how old is my sister?”
+    Model produces 3 reasoning paths → picks the most consistent final answer (67).
+
+
+    Inreases acc and reliability
+    Prevents single-chain reasoning errors
+
+
+
+
+
+Tools for Prompt Eng 
+    OpenAI Playground	Experiment with prompts and parameters interactively
+    LangChain	Build structured prompt workflows and agents
+    Hugging Face Model Hub	Access pre-trained LLMs for various tasks
+    IBM AI Classroom	Educational + experimentation environment
+
+    with these u can design/test/eval prompts in real time; access many LLMs, collaborate, and optimize metrics
+
+
+
+LangChain Prompt Templates
+    = reusable recipse for structure prompt design 
+
+    from langchain_core.prompts import PromptTemplate
+
+    prompt = PromptTemplate(
+        input_variables=["adjective", "content"],
+        template="Tell me a {adjective} joke about {content}."
+    )
+
+    print(prompt.format(adjective="funny", content="chickens"))
+    # Output: "Tell me a funny joke about chickens."
