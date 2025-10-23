@@ -1,0 +1,77 @@
+Text Splitting
+    LLMs can only handle limited amount of text at a atime 
+    If u have a long document u have to split it into smaller chunks before sending it to model 
+    LangChain gives text splitters to do this smartly 
+
+
+Text Splitters 
+    1. Break text into small pieces (e.g. sentences)
+        Can also by by char, word, sentence, header (u choose)
+    2. Group into large chunks up to target size 
+        Chunk size can be in characters, words, tokens, etc (u hcoose as well)
+    3. Add overlab b/w chunks so context flows smoothly 
+
+
+Parameters for Text Splitters 
+    Parameter	        Description	                                            Default
+    separator	        What to split on (e.g., newline \n, space, paragraph).	Paragraphs
+    chunk_size	        Max characters per chunk.	                            1000
+    chunk_overlap	    How many characters overlap between chunks.	            200
+    length_function	    How chunk length is measured.	                        Characters
+
+
+Types of Text Splitters 
+    1. CharacterTextSplitter 
+        #Splits text based on a char separate (e.g. '\n' or ' ')
+        
+        from langchain.text_splitter import CharacterTextSplitter
+        splitter = CharacterTextSplitter(
+            separator="\n",
+            chunk_size=200,
+            chunk_overlap=20
+        )
+        chunks = splitter.split_text(long_text)
+
+
+    2. RecursiveCharacterTextSplitter 
+        # most common 
+        # splits text in a smart hierarchical way 
+            # tries firs by paragraph, then sentence, then word, then char 
+        # ensures chunks are small enough w/o breaking up structure
+
+        from langchain.text_splitter import RecursiveCharacterTextSplitter
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=100,
+            chunk_overlap=20
+        )
+        chunks = splitter.split_text(long_text)
+
+
+    3. CodeTextSplitter 
+        # designed for splitting code 
+        # keeps functions/classes/logical blocks together 
+        # supports multiple languages (python, js, java etc)
+
+
+        from langchain.text_splitter import RecursiveCharacterTextSplitter
+        from langchain.text_splitter import Language
+
+        splitter = RecursiveCharacterTextSplitter.from_language(
+            language=Language.PYTHON,
+            chunk_size=200,
+            chunk_overlap=20
+        )
+        chunks = splitter.split_text(code_string)
+
+
+    4. MarkdownHeaderTextSplitter 
+        # for .md files 
+        # splits by headinsg like #, ##, ###
+        # keeps sections grouped by topic 
+
+        from langchain.text_splitter import MarkdownHeaderTextSplitter
+
+        splitter = MarkdownHeaderTextSplitter(
+            headers=["#", "##", "###"]
+        )
+        chunks = splitter.split_text(markdown_text)

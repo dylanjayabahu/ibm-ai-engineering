@@ -1,0 +1,19 @@
+Document Loaders:
+    like connectors
+    import data from files, webistes, databases
+    convert to standard document format with:
+        page_content(text)
+        metadata(page number, source name, etc)
+
+Types of document loaders 
+    TextLoader (.txt)
+    PyPDFLoader or PyMuPDFLoader (.pdf)
+    UnstructuredMarkdownLoader (.md)
+    JSONLoader (.json)
+    CSVLoader or UNstructuredCSVLoader (.csv)
+    Docx2txtLoader (.docx)
+    BeutifulSoup (html but with cluttered tags)
+    WebBaseLoader (html; text only)
+        e.g.loader = WebBaseLoader(["https://example.com", "https://another.com"])
+            docs = loader.load()
+    UnstructuredFileLoader (handles files of many type; pdf, html, images, ppt, etc)
