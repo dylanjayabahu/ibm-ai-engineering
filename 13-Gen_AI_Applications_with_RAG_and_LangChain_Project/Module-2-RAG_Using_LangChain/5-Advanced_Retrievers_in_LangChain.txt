@@ -1,0 +1,63 @@
+LangChain Retreivers 
+    Interface in LangCHain that returns documents based on a text query 
+    Unlike vector store; retriever doesnt store data just retreives relevant chunks 
+
+
+    You give an input as a string query 
+    The retriever outputs a list of relevant document chunks 
+
+0. Vector-Store Based Retriever (Base Retreiver)
+    Simplest/most common retriever 
+    Retrieves chunks form a vector db 
+
+    
+    1. Turn query text to embedding 
+    2. Compare query embedding with stored embeddings by some search method **
+    3. Return most similar chunks 
+
+    ** Search Methods 
+        - Similarity Search - use a similarity metric (e.g. cosine similarity, euclidean dist, etc)
+        - MMR (Max Marginal Relevance)
+            Balances relevance and diversity; avoids duplicate/redundant results 
+            MMR makes sure results raent repetitive and cover diff angles of the query 
+    
+    No LLM is needed for retrieval
+
+
+Advanced Retriever Types 
+
+1. Multi-Query Retriever 
+    Uses an LLM to generate multiple versions of the query 
+
+    Overcomes poor embedding understanding and query phrasing differences 
+
+    1. Generate alternative queries with LLM
+    2. Retrieve results for each 
+    3. Combine results (union the two sets)
+
+
+2. Self-Query Retriever 
+    Works with documents+metadata 
+
+    Converts query into semantic text query and a metadata filter (e.g. year > 2015)
+
+    Requires 
+        Vector store
+        Metadata field descriptions 
+        LLM to interpret filters 
+    
+    E.g. query: "Movies rated above 8.5" -> retrieves only documents matching text+metadata condition 
+
+3. Parent Document Retreiver 
+    Solves the tradeoff between 
+        Small chunks = better embeddings 
+        Large chunks = better context 
+
+    Uses two splitters 
+        Child splitter splits into small chunks for embeddings
+        Parents plitter splits into large chunks for retrieval 
+
+
+    1. Search using small chunks 
+    2. Get parent document IDS
+    3. Return the larger parent chunks with full context as the retrieved documents

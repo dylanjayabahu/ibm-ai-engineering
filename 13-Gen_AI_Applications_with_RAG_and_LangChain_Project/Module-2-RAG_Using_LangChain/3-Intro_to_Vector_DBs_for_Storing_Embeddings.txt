@@ -1,0 +1,40 @@
+Vector Databases 
+    After converting text to embeddings, u need somewhere to store and search them => this is a vector database 
+    Lets us store embeddings and retreive similar ones using similarity search 
+
+
+Diff b/w normal databases and vector databases 
+    SQL dbs are made for rows and cols; not high dim vectors 
+    They are also slow and inefficient for similarity search 
+    Vector dbs are fast and optimized for comparing vectors 
+
+
+Simlarity Search 
+    U ask a query 
+    Query converted to embeddding w/ same embedding model 
+    Vector db compares this embedding to stored ones 
+    Finds and returns most similar chunks of text 
+
+
+    Similarity methods :
+        cosine similarity (w/ dot product)
+        euclidean distance (||u-v||)
+        manhattan distance (sum of component wise diff)
+
+
+Chroma DB = open source vector store supported by LangChain 
+    Stores embeddings and metadata (doc ID, source etc)
+    used for semantic earch and RAG 
+
+    How to use 
+        load ur docs 
+        split into chunks
+        have an embedding model 
+
+        then u can use:
+
+        from langchain.vectorstores import Chroma
+        vectorstore = Chroma.from_documents(chunks, embedding_model)
+
+    Similarity search with Chroma
+        result = vectorstore.similarity_search("email policy", k=4) # k is how many of the top most similar results to give 
