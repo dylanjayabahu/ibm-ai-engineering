@@ -4,13 +4,13 @@ This repository contains hands-on implementations, exercises, and applied machin
 
 ---
 
-## Certificates
+## Professional Certificates
 
 
 | Certification | Credential |
 |---------------|------------|
-| ![IBM AI Engineering Certificate](https://github.com/user-attachments/assets/71a38829-1d18-4ba1-b73d-3137467e159b) | [IBM – AI Engineering Professional Certificate (13 Courses)]( https://coursera.org/verify/professional-cert/614QIV7YQSGN) |
-| ![IBM Generative AI Engineering Certificate](https://github.com/user-attachments/assets/a7ed45f5-b1d8-4975-8565-73088546debe) | [IBM – Generative AI Engineering with LLMs](https://coursera.org/verify/specialization/T619RSS3X9XB) |
+| ![IBM AI Engineering Certificate](https://github.com/user-attachments/assets/71a38829-1d18-4ba1-b73d-3137467e159b) | [IBM – AI Engineering]( https://coursera.org/verify/professional-cert/614QIV7YQSGN) |
+| ![IBM Generative AI Engineering Certificate](https://github.com/user-attachments/assets/a7ed45f5-b1d8-4975-8565-73088546debe) | [IBM – Generative AI Engineering with LLMs Pr](https://coursera.org/verify/specialization/T619RSS3X9XB) |
 | ![IBM Deep Learning Certificate](https://github.com/user-attachments/assets/949a5483-a93e-40b5-bd41-80f54fa284fe) | [IBM – Deep Learning with TensorFlow, Keras, and PyTorch](https://coursera.org/verify/professional-cert/PI9XQI9QXTP6) |
 
 
