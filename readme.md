@@ -71,7 +71,7 @@ Each folder in this repository corresponds to a course module or applied lab fro
 ---
 
 ### Academic Integrity
-All work in this repository represents original implementations. Content respects Coursera’s Honor Code and IBM Skills Network academic policy.
+All work in this repository represents original implementations. Please do not copy this work; doing so would violate Coursera's Honor Code and IBM Skills Network's academic policy. 
 
 ---
 
