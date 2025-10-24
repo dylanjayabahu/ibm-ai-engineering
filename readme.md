@@ -1,4 +1,4 @@
-# IBM AI Engineering – (13-Course Specialization)
+# IBM AI Engineering – (13 Course Specialization)
 
 This repository contains hands-on implementations, exercises, and applied machine learning workflows completed as part of the **IBM AI Engineering Professional Certificate**. The program focuses on practical AI engineering using **machine learning, deep learning, and large language models (LLMs)** with **PyTorch, TensorFlow, and modern MLOps practices**.
 
